@@ -1,4 +1,4 @@
-treatment "GIMS_v7.3.2_2016-08-23.ztt"{
+treatment "GIMS_v7.3.3_2016-08-24.ztt"{
 	background{
 		table globals{
 		}
@@ -111,10 +111,10 @@ treatment "GIMS_v7.3.2_2016-08-23.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.3.2 #####
+				//##### GIMS Version 7.3.3 #####
 				
-				GIMSVersion="7.3.2";
-				GIMSDate="23.08.2016";
+				GIMSVersion="7.3.3";
+				GIMSDate="24.08.2016";
 			}
 		}
 		program{
@@ -755,6 +755,7 @@ treatment "GIMS_v7.3.2_2016-08-23.ztt"{
 		}
 		program{
 			table = profit;
+			condition = FALSE;
 			do{
 				//Variable initialization profit 1/2
 				
