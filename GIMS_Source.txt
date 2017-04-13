@@ -1,4 +1,4 @@
-treatment "GIMS_v7.3.1_2016-08-08.ztt"{
+treatment "GIMS_v7.3.2_2016-08-23.ztt"{
 	background{
 		table globals{
 		}
@@ -111,10 +111,10 @@ treatment "GIMS_v7.3.1_2016-08-08.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.3.1 #####
+				//##### GIMS Version 7.3.2 #####
 				
-				GIMSVersion="7.3.1";
-				GIMSDate="08.08.2016";
+				GIMSVersion="7.3.2";
+				GIMSDate="23.08.2016";
 			}
 		}
 		program{
@@ -18541,7 +18541,7 @@ treatment "GIMS_v7.3.1_2016-08-08.ztt"{
 							buttonsequence = HORIZONTAL;
 							item{
 								variable = DisplayMarket[1];
-								format = "<>!text: 1=\"{\\rtf \\fs26 \\qc \\b <\\Language|!text:1=\"Market\";2=\"Markt\"> <|!text:1=\"A\";2=\"B\";3=\"C\">}\";";
+								format = "<>!text: 1=\"{\\rtf \\fs26 \\qc \\b <\\Language|!text:1=\"Market\";2=\"Markt\"> <|1>}\";";
 								input = FALSE;
 							}
 						}
