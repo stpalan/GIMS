@@ -1,4 +1,4 @@
-treatment "GIMS_v7.0.8_2015-05-13.ztt"{
+treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 	background{
 		table globals{
 		}
@@ -84,6 +84,10 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
+		table marketsummary{
+			lifetime = PERIOD;
+			execute = WITHEACH;
+		}
 		numsubjects = 3;
 		numgroups = 1;
 		numpracticeperiods = 0;
@@ -143,7 +147,8 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 				
 				PracticePeriod=0;
 				NumExperimenterSubjects=1;
-				Language=2;    //1=English, 2=German
+				Language=1;    //1=English, 2=German
+				TimerInterval=1;
 				
 				//Questionnaire settings
 				CurrentYear=2015;
@@ -164,7 +169,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 				//### P2: Stage settings ###
 				
 				//Switching on and off program modules
-				ContinuousDoubleAuction=0;
+				ContinuousDoubleAuction=1;
 				CallAuction=1-ContinuousDoubleAuction;
 				CRTBefore=if(PracticePeriod==1,0,0);
 				CRTAfter=0;//if(PracticePeriod==1,0,0);
@@ -187,7 +192,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 			do{
 				//### P3: General market parameters ###
 				
-				NumMarkets=2;
+				NumMarkets=1;
 				array MultiUnitTrading[NumMarkets];
 				PresetDividends=0;
 				PresetSignals=0;
@@ -252,6 +257,9 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 				ContinuousDoubleAuctionSignals=1;
 				array OrderBookDepth[\NumMarkets];
 				EarlyEndingVote=1;
+				PriceHighlightScheme=1;
+				PriceHighlightDuration=2;
+				CDATimer=TimerInterval;
 				
 				iterator(Market, \NumMarkets).do{
 				    \OfferImprovementRule[Market]=0;
@@ -305,6 +313,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 			do{
 				//Variable initialization layout
 				
+				IDNumeric=\I;
 				ID="";
 				R=0;
 				G=0;
@@ -369,6 +378,8 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 				FontSizeStandard=18;
 				FontSizeHeading=22;
 				FontSizeSubHeading=20;
+				array PriceHighlightColor[\NumMarkets];
+				array PriceHighlightTime[\NumMarkets];
 				
 				//Input
 				MinPrice=1;
@@ -391,25 +402,32 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 				    ChartXMax[Market]=\TimeContinuousDoubleAuction;
 				    ChartXTickDistance[Market]=10;
 				    ChartXLabelDistance[Market]=30;
+				    PriceHighlightColor[Market]=20;
+				    PriceHighlightTime[Market]=\I;
 				    }
 				
 				//Colors
-				layout.new{ID="CA_Signals_BG";R=0.88;G=1;B=0.85;}
-				layout.new{ID="CA_PriceList_BG";R=1;G=0.83;B=0.83;}
-				layout.new{ID="CA_BuyOffers_BG";R=1;G=0.9;B=0.8;}
-				layout.new{ID="CA_SellOffers_BG";R=1;G=0.9;B=0.8;}
-				layout.new{ID="CA_OrderSubmission_BG";R=1;G=1;B=0.8;}
-				layout.new{ID="CA_History_BG";R=0.82;G=0.85;B=1;}
-				layout.new{ID="CA_BG";R=1;G=1;B=1;}
-				layout.new{ID="CDA_Signals_BG";R=0.88;G=1;B=0.85;}
-				layout.new{ID="CDA_PriceList_BG";R=1;G=0.83;B=0.83;}
-				layout.new{ID="CDA_BuyOffers_BG";R=1;G=0.9;B=0.8;}
-				layout.new{ID="CDA_SellOffers_BG";R=1;G=0.9;B=0.8;}
-				layout.new{ID="CDA_OrderSubmission_BG";R=1;G=1;B=0.8;}
-				layout.new{ID="CDA_History_BG";R=0.82;G=0.85;B=1;}
-				layout.new{ID="CDA_Chart_Line";R=0;G=0;B=1;}
-				layout.new{ID="CDA_Chart_BG";R=1;G=1;B=1;}
-				layout.new{ID="CDA_BG";R=1;G=1;B=1;}
+				layout.new{IDNumeric=1;ID="CA_Signals_BG";R=0.88;G=1;B=0.85;}
+				layout.new{IDNumeric=2;ID="CA_PriceList_BG";R=1;G=0.83;B=0.83;}
+				layout.new{IDNumeric=3;ID="CA_BuyOffers_BG";R=1;G=0.9;B=0.8;}
+				layout.new{IDNumeric=4;ID="CA_SellOffers_BG";R=1;G=0.9;B=0.8;}
+				layout.new{IDNumeric=5;ID="CA_OrderSubmission_BG";R=1;G=1;B=0.8;}
+				layout.new{IDNumeric=6;ID="CA_History_BG";R=0.82;G=0.85;B=1;}
+				layout.new{IDNumeric=7;ID="CA_BG";R=1;G=1;B=1;}
+				layout.new{IDNumeric=8;ID="CDA_Signals_BG";R=0.88;G=1;B=0.85;}
+				layout.new{IDNumeric=9;ID="CDA_PriceList_BG";R=1;G=0.83;B=0.83;}
+				layout.new{IDNumeric=10;ID="CDA_BuyOffers_BG";R=1;G=0.9;B=0.8;}
+				layout.new{IDNumeric=11;ID="CDA_SellOffers_BG";R=1;G=0.9;B=0.8;}
+				layout.new{IDNumeric=12;ID="CDA_OrderSubmission_BG";R=1;G=1;B=0.8;}
+				layout.new{IDNumeric=13;ID="CDA_History_BG";R=0.82;G=0.85;B=1;}
+				layout.new{IDNumeric=14;ID="CDA_Chart_Line";R=0;G=0;B=1;}
+				layout.new{IDNumeric=15;ID="CDA_Chart_BG";R=1;G=1;B=1;}
+				layout.new{IDNumeric=16;ID="CDA_BG";R=1;G=1;B=1;}
+				layout.new{IDNumeric=17;ID="Highlighting_Scheme0";R=0.94;G=0.94;B=0.94;}
+				layout.new{IDNumeric=18;ID="Highlighting_Scheme1_Up";R=0;G=0.79;B=0;}
+				layout.new{IDNumeric=19;ID="Highlighting_Scheme1_Down";R=1;G=0;B=0;}
+				layout.new{IDNumeric=20;ID="Highlighting_Scheme2_Up";R=1;G=0.5;B=0;}
+				layout.new{IDNumeric=21;ID="Highlighting_Scheme2_Down";R=0;G=0;B=1;}
 			}
 		}
 		program{
@@ -527,6 +545,20 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 				Type=\I;
 				Cash=\I;
 				array Assets[\NumMarkets];
+			}
+		}
+		program{
+			table = globals;
+			do{
+				//Variable initialization marketsummary
+				
+				iterator(Market,\NumMarkets).do{
+				    marketsummary.new{
+				        Market=:Market;
+				        Price=\I;
+				        Volume=0;
+				        }
+				    }
 			}
 		}
 		program{
@@ -4137,6 +4169,22 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 									
 								}
 							}
+							program{
+								table = subjects;
+								ownervariable = Subject;
+								do{
+									//Timelog
+									
+									timelog.new
+									    {
+									    ID=timelog.maximum(ID)+1;
+									    Time=gettime()-\StartTime;
+									    Period=\Period;
+									    Subject=:Subject;
+									    Event=111;
+									    }
+								}
+							}
 						}
 					}
 					standardbox "OKButtonEN"{
@@ -4186,6 +4234,22 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 									    subjects.do{
 									        LeaveStage=1;
 									        }
+									    }
+								}
+							}
+							program{
+								table = subjects;
+								ownervariable = Subject;
+								do{
+									//Timelog
+									
+									timelog.new
+									    {
+									    ID=timelog.maximum(ID)+1;
+									    Time=gettime()-\StartTime;
+									    Period=\Period;
+									    Subject=:Subject;
+									    Event=111;
 									    }
 								}
 							}
@@ -10919,7 +10983,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 				
 				                //Copies relevant offer from auctionoffers to tbsa table
 				                auctionoffers.do{
-				                    if(ID==\Temp[2]) {
+				                    if(ID==\Temp[2]&same(Market)) {
 				                        tbsa.new{
 				                            Market=:Market;
 				                            offersID=:ID;
@@ -10962,7 +11026,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 				
 				                //Copies relevant offer from auctionoffers to tbsb table
 				                auctionoffers.do{
-				                    if(Price==\Temp[1]&ID==\Temp[2]) {
+				                    if(Price==\Temp[1]&ID==\Temp[2]&same(Market)) {
 				                        tbsb.new{
 				                            Market=:Market;
 				                            offersID=:ID;
@@ -11020,7 +11084,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 				
 				                    //Copies relevant offer from auctionoffers to tbsa table
 				                    auctionoffers.do{
-				                        if(ID==\Temp[2]) {
+				                        if(ID==\Temp[2]&same(Market)) {
 				                            tbsa.new{
 				                                Market=:Market;
 				                                offersID=:ID;
@@ -11056,7 +11120,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 				
 				                    //Copies relevant offer from auctionoffers to tbsb table
 				                    auctionoffers.do{
-				                        if(ID==\Temp[2]) {
+				                        if(ID==\Temp[2]&same(Market)) {
 				                            tbsb.new{
 				                                Market=:Market;
 				                                offersID=:ID;
@@ -11107,7 +11171,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 				
 				                //Copies relevant offer from auctionoffers to tbsa table
 				                auctionoffers.do{
-				                    if(ID==\Temp[2]) {
+				                    if(ID==\Temp[2]&same(Market)) {
 				                        tbsa.new{
 				                            Market=:Market;
 				                            offersID=:ID;
@@ -11144,7 +11208,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 				
 				                //Copies relevant offer from auctionoffers to tbsb table
 				                auctionoffers.do{
-				                    if(ID==\Temp[2]) {
+				                    if(ID==\Temp[2]&same(Market)) {
 				                        tbsb.new{
 				                            Market=:Market;
 				                            offersID=:ID;
@@ -11195,7 +11259,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 				
 				                    //Copies relevant offer from auctionoffers to tbsa table
 				                    auctionoffers.do{
-				                        if(ID==\Temp[2]) {
+				                        if(ID==\Temp[2]&same(Market)) {
 				                            tbsa.new{
 				                                Market=:Market;
 				                                offersID=:ID;
@@ -11231,7 +11295,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 				
 				                    //Copies relevant offer from auctionoffers to tbsb table
 				                    auctionoffers.do{
-				                        if(ID==\Temp[2]) {
+				                        if(ID==\Temp[2]&same(Market)) {
 				                            tbsb.new{
 				                                Market=:Market;
 				                                offersID=:ID;
@@ -11790,6 +11854,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 						hasframe = FALSE;
 						height = 100p;
 						top = 0p;
+						displaycondition = \Language==2;
 						table = results;
 						buttonposition = BOTTOMRIGHT;
 						buttonsequence = HORIZONTAL;
@@ -11833,6 +11898,59 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 						}
 						item{
 							label = "Dividende gesamt";
+							variable = Dividend*Amount;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
+					}
+					selectcontractbox "AssetDataEN"{
+						hasframe = FALSE;
+						height = 100p;
+						top = 0p;
+						displaycondition = \Language==1;
+						table = results;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						emptyallowed = FALSE;
+						allemptyallowed = FALSE;
+						condition = same(Subject)&Phase==1;
+						sortfields = "DisplayMarket";
+						tablelayout = LIST;
+						scrollatstart = FALSE;
+						scrollatEnd = TRUE;
+						selectbest = TRUE;
+						item{
+							label = "Asset";
+							variable = DisplayMarket;
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "Price";
+							variable = Price;
+							format = "<>!text: -1=\"-\";0=\"<Price|\\PricePrecision>\"";
+							input = FALSE;
+						}
+						item{
+							label = "Assets bought/sold in this period";
+							variable = 1;
+							format = "<>!text: 0=\"<NumBought|1> / <NumSold|1>\"";
+							input = FALSE;
+						}
+						item{
+							label = "Asset balance";
+							variable = Amount;
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "Dividend per asset";
+							variable = Dividend;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
+						item{
+							label = "Total dividend";
 							variable = Dividend*Amount;
 							format = "\\PricePrecision";
 							input = FALSE;
@@ -12033,6 +12151,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 						hasframe = FALSE;
 						height = 100p;
 						top = 0p;
+						displaycondition = \Language==2;
 						table = results;
 						buttonposition = BOTTOMRIGHT;
 						buttonsequence = HORIZONTAL;
@@ -12081,6 +12200,59 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 							input = FALSE;
 						}
 					}
+					selectcontractbox "AssetDataEN"{
+						hasframe = FALSE;
+						height = 100p;
+						top = 0p;
+						displaycondition = \Language==1;
+						table = results;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						emptyallowed = FALSE;
+						allemptyallowed = FALSE;
+						condition = same(Subject)&Phase==1;
+						sortfields = "DisplayMarket";
+						tablelayout = LIST;
+						scrollatstart = FALSE;
+						scrollatEnd = TRUE;
+						selectbest = TRUE;
+						item{
+							label = "Asset";
+							variable = DisplayMarket;
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "Price";
+							variable = Price;
+							format = "<>!text: -1=\"-\";0=\"<Price|\\PricePrecision>\"";
+							input = FALSE;
+						}
+						item{
+							label = "Assets bought/sold in this period";
+							variable = 1;
+							format = "<>!text: 0=\"<NumBought|1> / <NumSold|1>\"";
+							input = FALSE;
+						}
+						item{
+							label = "Asset balance";
+							variable = Amount;
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "Dividend per asset";
+							variable = Dividend;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
+						item{
+							label = "Total dividend";
+							variable = Dividend*Amount;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
+					}
 				}
 			}
 		}
@@ -12118,6 +12290,23 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 			do{
 				//Records start time for chart display
 				StartTimeCDA=gettime();
+			}
+		}
+		program{
+			table = globals;
+			condition = \PriceHighlightScheme>0;
+			do{
+				//CDA Timer task
+				later (CDATimer) repeat{
+				    //Price highlighting
+				    iterator(Market,NumMarkets).do{
+				        if(\PriceHighlightColor[Market]>0){
+				            if(\PriceHighlightTime[Market]<gettime()){
+				                \PriceHighlightColor[Market]=1;
+				                }
+				            }
+				        }
+				    }
 			}
 		}
 		screen action{
@@ -12165,6 +12354,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 								EarlyEndingVote=1;
 								
 								if (subjects.sum(EarlyEndingVote)==NumSubjects) {
+								    \CDATimer=-1;
 								    subjects.do{
 								        LeaveStage=1;
 								        }
@@ -12261,6 +12451,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 								EarlyEndingVote=1;
 								
 								if (subjects.sum(EarlyEndingVote)==NumSubjects) {
+								    \CDATimer=-1;
 								    subjects.do{
 								        LeaveStage=1;
 								        }
@@ -13806,6 +13997,26 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															    Phase=2;
 															    }
 															
+															//Price highlighting
+															if(\LastPrice[Market]>\I){
+															    if(\PriceHighlightScheme==1){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],18,if(Price<\LastPrice[Market],19,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.5;
+															        }
+															    elsif(\PriceHighlightScheme==2){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],20,if(Price<\LastPrice[Market],21,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.1;
+															        }
+															    }
+															
+															//Updates marketsummary
+															marketsummary.do{
+															    if(same(Market)){
+															        Price=:Price;
+															        Volume=Volume+:Volume;
+															        }
+															    }
+															
 															//Updates last price
 															\LastPrice[DisplayMarket[1]]=Price;
 														}
@@ -14153,6 +14364,26 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															    Offerer=:Offerer;
 															    Accepter=::Subject;
 															    Phase=2;
+															    }
+															
+															//Price highlighting
+															if(\LastPrice[Market]>\I){
+															    if(\PriceHighlightScheme==1){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],18,if(Price<\LastPrice[Market],19,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.5;
+															        }
+															    elsif(\PriceHighlightScheme==2){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],20,if(Price<\LastPrice[Market],21,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.1;
+															        }
+															    }
+															
+															//Updates marketsummary
+															marketsummary.do{
+															    if(same(Market)){
+															        Price=:Price;
+															        Volume=Volume+:Volume;
+															        }
 															    }
 															
 															//Updates last price
@@ -14524,6 +14755,26 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															    Offerer=:Offerer;
 															    Accepter=::Subject;
 															    Phase=2;
+															    }
+															
+															//Price highlighting
+															if(\LastPrice[Market]>\I){
+															    if(\PriceHighlightScheme==1){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],18,if(Price<\LastPrice[Market],19,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.5;
+															        }
+															    elsif(\PriceHighlightScheme==2){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],20,if(Price<\LastPrice[Market],21,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.1;
+															        }
+															    }
+															
+															//Updates marketsummary
+															marketsummary.do{
+															    if(same(Market)){
+															        Price=:Price;
+															        Volume=Volume+:Volume;
+															        }
 															    }
 															
 															//Updates last price
@@ -14898,6 +15149,26 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															    Phase=2;
 															    }
 															
+															//Price highlighting
+															if(\LastPrice[Market]>\I){
+															    if(\PriceHighlightScheme==1){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],18,if(Price<\LastPrice[Market],19,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.5;
+															        }
+															    elsif(\PriceHighlightScheme==2){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],20,if(Price<\LastPrice[Market],21,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.1;
+															        }
+															    }
+															
+															//Updates marketsummary
+															marketsummary.do{
+															    if(same(Market)){
+															        Price=:Price;
+															        Volume=Volume+:Volume;
+															        }
+															    }
+															
 															//Updates last price
 															\LastPrice[Market]=Price;
 														}
@@ -15238,6 +15509,26 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															    Offerer=:Offerer;
 															    Accepter=::Subject;
 															    Phase=2;
+															    }
+															
+															//Price highlighting
+															if(\LastPrice[Market]>\I){
+															    if(\PriceHighlightScheme==1){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],18,if(Price<\LastPrice[Market],19,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.5;
+															        }
+															    elsif(\PriceHighlightScheme==2){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],20,if(Price<\LastPrice[Market],21,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.1;
+															        }
+															    }
+															
+															//Updates marketsummary
+															marketsummary.do{
+															    if(same(Market)){
+															        Price=:Price;
+															        Volume=Volume+:Volume;
+															        }
 															    }
 															
 															//Updates last price
@@ -15615,6 +15906,26 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															    Phase=2;
 															    }
 															
+															//Price highlighting
+															if(\LastPrice[Market]>\I){
+															    if(\PriceHighlightScheme==1){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],18,if(Price<\LastPrice[Market],19,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.5;
+															        }
+															    elsif(\PriceHighlightScheme==2){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],20,if(Price<\LastPrice[Market],21,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.1;
+															        }
+															    }
+															
+															//Updates marketsummary
+															marketsummary.do{
+															    if(same(Market)){
+															        Price=:Price;
+															        Volume=Volume+:Volume;
+															        }
+															    }
+															
 															//Updates last price
 															\LastPrice[Market]=Price;
 														}
@@ -15965,6 +16276,26 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															    Offerer=:Offerer;
 															    Accepter=::Subject;
 															    Phase=2;
+															    }
+															
+															//Price highlighting
+															if(\LastPrice[Market]>\I){
+															    if(\PriceHighlightScheme==1){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],18,if(Price<\LastPrice[Market],19,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.5;
+															        }
+															    elsif(\PriceHighlightScheme==2){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],20,if(Price<\LastPrice[Market],21,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.1;
+															        }
+															    }
+															
+															//Updates marketsummary
+															marketsummary.do{
+															    if(same(Market)){
+															        Price=:Price;
+															        Volume=Volume+:Volume;
+															        }
 															    }
 															
 															//Updates last price
@@ -16320,6 +16651,26 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															    Phase=2;
 															    }
 															
+															//Price highlighting
+															if(\LastPrice[Market]>\I){
+															    if(\PriceHighlightScheme==1){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],18,if(Price<\LastPrice[Market],19,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.5;
+															        }
+															    elsif(\PriceHighlightScheme==2){
+															        \PriceHighlightColor[Market]=if(Price>\LastPrice[Market],20,if(Price<\LastPrice[Market],21,1));
+															        \PriceHighlightTime[Market]=gettime()+\PriceHighlightDuration-0.1;
+															        }
+															    }
+															
+															//Updates marketsummary
+															marketsummary.do{
+															    if(same(Market)){
+															        Price=:Price;
+															        Volume=Volume+:Volume;
+															        }
+															    }
+															
 															//Updates last price
 															\LastPrice[Market]=Price;
 														}
@@ -16651,7 +17002,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															do{
 																//Creates offer
 																
-																Market=1;
+																Market=:DisplayMarket[1];
 																Period=\Period;
 																ID = offers.maximum (same(Market),ID) + 1;
 																Volume=1;
@@ -16719,7 +17070,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															do{
 																//Creates offer
 																
-																Market=1;
+																Market=:DisplayMarket[1];
 																Period=\Period;
 																ID = offers.maximum(same(Market),ID) + 1;
 																Volume=1;
@@ -16808,7 +17159,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															do{
 																//Creates offer
 																
-																Market=1;
+																Market=:DisplayMarket[1];
 																Period=\Period;
 																ID = offers.maximum (same(Market),ID) + 1;
 																Volume=1;
@@ -16876,7 +17227,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															do{
 																//Creates offer
 																
-																Market=1;
+																Market=:DisplayMarket[1];
 																Period=\Period;
 																ID = offers.maximum (same(Market),ID) + 1;
 																Volume=1;
@@ -16980,7 +17331,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															do{
 																//Creates offer
 																
-																Market=1;
+																Market=:DisplayMarket[1];
 																Period=\Period;
 																ID = offers.maximum (same(Market),ID) + 1;
 																Offerer = :Subject;
@@ -17052,7 +17403,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															do{
 																//Creates offer
 																
-																Market=1;
+																Market=:DisplayMarket[1];
 																Period=\Period;
 																ID = offers.maximum (same(Market),ID ) + 1;
 																Offerer = :Subject;
@@ -17155,7 +17506,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															do{
 																//Creates offer
 																
-																Market=1;
+																Market=:DisplayMarket[1];
 																Period=\Period;
 																ID = offers.maximum (same(Market),ID) + 1;
 																Offerer = :Subject;
@@ -17227,7 +17578,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 															do{
 																//Creates offer
 																
-																Market=1;
+																Market=:DisplayMarket[1];
 																Period=\Period;
 																ID = offers.maximum (same(Market),ID) + 1;
 																Offerer = :Subject;
@@ -17265,10 +17616,9 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 													}
 												}
 											}
-											standardbox "SummaryInformation"{
+											standardbox "SummaryInformationSingleMarket"{
 												hasframe = TRUE;
 												bottom = 0p;
-												cutbottom = TRUE;
 												buttonposition = BOTTOMRIGHT;
 												buttonsequence = HORIZONTAL;
 												item{
@@ -17286,7 +17636,38 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 												item{
 													label = "<><\\Language|!text: 1=\"Last price:\";2=\"Letzter Preis:\";>";
 													variable = \LastPrice[DisplayMarket[1]];
-													format = "<>!text: \\I-1=\"<\\LastPrice[DisplayMarket[1]]|1>\"; \\I=\"<\\Language|!text: 1=\"No trade\";2=\"Kein Handel\";>\"; \\I+1=\"<\\LastPrice[DisplayMarket[1]]|\\PricePrecision>\";";
+													format = "<>!text: \\I-1=\"\r\n{\\rtf {\\colortbl;\\red0\\green0\\blue0;\\red0\\green160\\blue0;\\red255\\green0\\blue0;\\red247\\green150\\blue70;\\red0\\green0\\blue255;}\r\n\\cf<\\PriceHighlightColor[DisplayMarket[1]]|1> <\\LastPrice[DisplayMarket[1]]|\\PricePrecision>}\"; \\I=\"<\\Language|!text: 1=\"No trade\";2=\"Kein Handel\";>\"; \\I+1=\"{\\rtf {\\colortbl;\\red0\\green0\\blue0;\\red0\\green160\\blue0;\\red255\\green0\\blue0;\\red247\\green150\\blue70;\\red0\\green0\\blue255;}\r\n\\cf<\\PriceHighlightColor[DisplayMarket[1]]|1> <\\LastPrice[DisplayMarket[1]]|\\PricePrecision>}\";";
+													input = FALSE;
+												}
+											}
+											standardbox "SummaryInformationMultiMarket"{
+												hasframe = TRUE;
+												bottom = 0p;
+												displaycondition = \NumMarkets>1;
+												buttonposition = BOTTOMRIGHT;
+												buttonsequence = HORIZONTAL;
+												item{
+													label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Market:\";2=\"Markt:\";>}";
+													variable = DisplayMarket[1];
+													format = "<>!text: 1=\"{\\rtf \\fs18 \\qc \\b <|1>}\";";
+													input = FALSE;
+												}
+												item{
+													label = "<><\\Language|!text: 1=\"Cash:\";2=\"Geld:\";>";
+													variable = Cash;
+													format = "<>!text: 1=\"<|0.01>\";";
+													input = FALSE;
+												}
+												item{
+													label = "<><\\Language|!text: 1=\"Assets:\";2=\"Aktien:\";>";
+													variable = Assets[DisplayMarket[1]];
+													format = "<>!text: 1=\"<|1>\";";
+													input = FALSE;
+												}
+												item{
+													label = "<><\\Language|!text: 1=\"Last price:\";2=\"Letzter Preis:\";>";
+													variable = \LastPrice[DisplayMarket[1]];
+													format = "<>!text: \\I-1=\"\r\n{\\rtf {\\colortbl;\\red0\\green0\\blue0;\\red0\\green160\\blue0;\\red255\\green0\\blue0;\\red247\\green150\\blue70;\\red0\\green0\\blue255;}\r\n\\cf<\\PriceHighlightColor[DisplayMarket[1]]|1> <\\LastPrice[DisplayMarket[1]]|\\PricePrecision>}\"; \\I=\"<\\Language|!text: 1=\"No trade\";2=\"Kein Handel\";>\"; \\I+1=\"{\\rtf {\\colortbl;\\red0\\green0\\blue0;\\red0\\green160\\blue0;\\red255\\green0\\blue0;\\red247\\green150\\blue70;\\red0\\green0\\blue255;}\r\n\\cf<\\PriceHighlightColor[DisplayMarket[1]]|1> <\\LastPrice[DisplayMarket[1]]|\\PricePrecision>}\";";
 													input = FALSE;
 												}
 											}
@@ -17422,6 +17803,385 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 												label = "Signale";
 												variable = Signal;
 												format = "\\SignalPrecision";
+												input = FALSE;
+											}
+										}
+									}
+									containerbox "MarketOverview"{
+										hasframe = TRUE;
+										displaycondition = \NumMarkets>1;
+										plotbox "Background"{
+											hasframe = TRUE;
+											bgcolor = rgb(layout.find(ID=="CDA_Signals_BG",R),layout.find(ID=="CDA_Signals_BG",G),layout.find(ID=="CDA_Signals_BG",B));
+											maintainaspectratio = FALSE;
+											xaxistype = LINEAR;
+											yaxistype = LINEAR;
+											xleft = -100;
+											xright = 100;
+											ybottom = -100;
+											ytop = 100;
+										}
+										containerbox "MarketButtons"{
+											hasframe = FALSE;
+											width = 74p;
+											right = 5p;
+											top = 5p;
+											bottom = 5p;
+											cutright = TRUE;
+											containerbox "DE"{
+												hasframe = FALSE;
+												displaycondition = \Language==2;
+												standardbox "Button1"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Markt 1"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=1;
+															}
+														}
+													}
+												}
+												standardbox "Button2"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Markt 2"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=2;
+															}
+														}
+													}
+												}
+												standardbox "Button3"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													displaycondition = \NumMarkets>2;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Markt 3"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=3;
+															}
+														}
+													}
+												}
+												standardbox "Button4"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													displaycondition = \NumMarkets>=4;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Markt 4"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=4;
+															}
+														}
+													}
+												}
+												standardbox "Button5"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													displaycondition = \NumMarkets==5;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Markt 5"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=5;
+															}
+														}
+													}
+												}
+											}
+											containerbox "EN"{
+												hasframe = FALSE;
+												displaycondition = \Language==1;
+												standardbox "Button1"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Market 1"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=1;
+															}
+														}
+													}
+												}
+												standardbox "Button2"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Market 2"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=2;
+															}
+														}
+													}
+												}
+												standardbox "Button3"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													displaycondition = \NumMarkets>2;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Market 3"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=3;
+															}
+														}
+													}
+												}
+												standardbox "Button4"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													displaycondition = \NumMarkets>=4;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Market 4"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=4;
+															}
+														}
+													}
+												}
+												standardbox "Button5"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													displaycondition = \NumMarkets==5;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Market 5"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=5;
+															}
+														}
+													}
+												}
+											}
+										}
+										plotbox "Highlighting"{
+											hasframe = FALSE;
+											width = 13p;
+											left = 5p;
+											top = 5p;
+											bottom = 5p;
+											cutleft = TRUE;
+											bgcolor = rgb(layout.find(ID=="CDA_Signals_BG",R),layout.find(ID=="CDA_Signals_BG",G),layout.find(ID=="CDA_Signals_BG",B));
+											maintainaspectratio = FALSE;
+											xaxistype = LINEAR;
+											yaxistype = LINEAR;
+											xleft = 0;
+											xright = 100;
+											ybottom = 0;
+											ytop = 100;
+											plotrect "Market1"{
+												x = 50;
+												y = 84;
+												width = 100;
+												height = 7;
+												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[1],R),layout.find(IDNumeric==\PriceHighlightColor[1],G),layout.find(IDNumeric==\PriceHighlightColor[1],B));
+											}
+											plotrect "Market2"{
+												x = 50;
+												y = 74.625;
+												width = 100;
+												height = 7;
+												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[2],R),layout.find(IDNumeric==\PriceHighlightColor[2],G),layout.find(IDNumeric==\PriceHighlightColor[2],B));
+											}
+											plotrect "Market3"{
+												displaycondition = \NumMarkets>=3;
+												x = 50;
+												y = 65.25;
+												width = 100;
+												height = 7;
+												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[3],R),layout.find(IDNumeric==\PriceHighlightColor[3],G),layout.find(IDNumeric==\PriceHighlightColor[3],B));
+											}
+											plotrect "Market4"{
+												displaycondition = \NumMarkets>=4;
+												x = 50;
+												y = 55.875;
+												width = 100;
+												height = 7;
+												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[4],R),layout.find(IDNumeric==\PriceHighlightColor[4],G),layout.find(IDNumeric==\PriceHighlightColor[4],B));
+											}
+											plotrect "Market5"{
+												displaycondition = \NumMarkets>=5;
+												x = 50;
+												y = 46.5;
+												width = 100;
+												height = 7;
+												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[5],R),layout.find(IDNumeric==\PriceHighlightColor[5],G),layout.find(IDNumeric==\PriceHighlightColor[5],B));
+											}
+										}
+										selectcontractbox "MarketOverviewEN"{
+											hasframe = TRUE;
+											top = 5p;
+											bottom = 5p;
+											displaycondition = \Language==1;
+											table = marketsummary;
+											buttonposition = BOTTOMRIGHT;
+											buttonsequence = HORIZONTAL;
+											emptyallowed = FALSE;
+											allemptyallowed = FALSE;
+											condition = TRUE;
+											tablelayout = LIST;
+											scrollatstart = FALSE;
+											scrollatEnd = TRUE;
+											selectbest = TRUE;
+											item{
+												label = "Market";
+												variable = Market;
+												format = "1";
+												input = FALSE;
+											}
+											item{
+												label = "Price";
+												variable = Price;
+												format = "<>!text:\\I-0.0001=\"<|0.01>\";\\I=\"-\";\\I+0.0001=\"<|0.01>\";";
+												input = FALSE;
+											}
+											item{
+												label = "Assets";
+												variable = :Assets[Market];
+												format = "\\AssetPrecision";
+												input = FALSE;
+											}
+										}
+										selectcontractbox "MarketOverviewDE"{
+											hasframe = TRUE;
+											top = 5p;
+											bottom = 5p;
+											displaycondition = \Language==2;
+											table = marketsummary;
+											buttonposition = BOTTOMRIGHT;
+											buttonsequence = HORIZONTAL;
+											emptyallowed = FALSE;
+											allemptyallowed = FALSE;
+											condition = TRUE;
+											tablelayout = LIST;
+											scrollatstart = FALSE;
+											scrollatEnd = TRUE;
+											selectbest = TRUE;
+											item{
+												label = "Markt";
+												variable = Market;
+												format = "1";
+												input = FALSE;
+											}
+											item{
+												label = "Preis";
+												variable = Price;
+												format = "<>!text:\\I-0.0001=\"<|0.01>\";\\I=\"-\";\\I+0.0001=\"<|0.01>\";";
+												input = FALSE;
+											}
+											item{
+												label = "Aktien";
+												variable = :Assets[Market];
+												format = "\\AssetPrecision";
 												input = FALSE;
 											}
 										}
@@ -19264,6 +20024,385 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 											}
 										}
 									}
+									containerbox "MarketOverview"{
+										hasframe = TRUE;
+										displaycondition = \NumMarkets>1;
+										plotbox "Background"{
+											hasframe = TRUE;
+											bgcolor = rgb(layout.find(ID=="CDA_Signals_BG",R),layout.find(ID=="CDA_Signals_BG",G),layout.find(ID=="CDA_Signals_BG",B));
+											maintainaspectratio = FALSE;
+											xaxistype = LINEAR;
+											yaxistype = LINEAR;
+											xleft = -100;
+											xright = 100;
+											ybottom = -100;
+											ytop = 100;
+										}
+										containerbox "MarketButtons"{
+											hasframe = FALSE;
+											width = 74p;
+											right = 5p;
+											top = 5p;
+											bottom = 5p;
+											cutright = TRUE;
+											containerbox "DE"{
+												hasframe = FALSE;
+												displaycondition = \Language==2;
+												standardbox "Button1"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Markt 1"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=1;
+															}
+														}
+													}
+												}
+												standardbox "Button2"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Markt 2"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=2;
+															}
+														}
+													}
+												}
+												standardbox "Button3"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													displaycondition = \NumMarkets>2;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Markt 3"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=3;
+															}
+														}
+													}
+												}
+												standardbox "Button4"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													displaycondition = \NumMarkets>=4;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Markt 4"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=4;
+															}
+														}
+													}
+												}
+												standardbox "Button5"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													displaycondition = \NumMarkets==5;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Markt 5"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=5;
+															}
+														}
+													}
+												}
+											}
+											containerbox "EN"{
+												hasframe = FALSE;
+												displaycondition = \Language==1;
+												standardbox "Button1"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Market 1"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=1;
+															}
+														}
+													}
+												}
+												standardbox "Button2"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Market 2"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=2;
+															}
+														}
+													}
+												}
+												standardbox "Button3"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													displaycondition = \NumMarkets>2;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Market 3"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=3;
+															}
+														}
+													}
+												}
+												standardbox "Button4"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													displaycondition = \NumMarkets>=4;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Market 4"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=4;
+															}
+														}
+													}
+												}
+												standardbox "Button5"{
+													hasframe = FALSE;
+													height = 35p;
+													top = 0p;
+													cuttop = TRUE;
+													displaycondition = \NumMarkets==5;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													button "Market 5"{
+														clearinputafterok = FALSE;
+														norecordmadeorselected = FALSE;
+														terminatestage = FALSE;
+														donotterminatestage = TRUE;
+														specialbuttoncolor = TRUE;
+														buttoncolor = 13158600;
+														program{
+															table = subjects;
+															do{
+																DisplayMarket[1]=5;
+															}
+														}
+													}
+												}
+											}
+										}
+										plotbox "Highlighting"{
+											hasframe = FALSE;
+											width = 13p;
+											left = 5p;
+											top = 5p;
+											bottom = 5p;
+											cutleft = TRUE;
+											bgcolor = rgb(layout.find(ID=="CDA_Signals_BG",R),layout.find(ID=="CDA_Signals_BG",G),layout.find(ID=="CDA_Signals_BG",B));
+											maintainaspectratio = FALSE;
+											xaxistype = LINEAR;
+											yaxistype = LINEAR;
+											xleft = 0;
+											xright = 100;
+											ybottom = 0;
+											ytop = 100;
+											plotrect "Market1"{
+												x = 50;
+												y = 84;
+												width = 100;
+												height = 7;
+												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[1],R),layout.find(IDNumeric==\PriceHighlightColor[1],G),layout.find(IDNumeric==\PriceHighlightColor[1],B));
+											}
+											plotrect "Market2"{
+												x = 50;
+												y = 74.625;
+												width = 100;
+												height = 7;
+												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[2],R),layout.find(IDNumeric==\PriceHighlightColor[2],G),layout.find(IDNumeric==\PriceHighlightColor[2],B));
+											}
+											plotrect "Market3"{
+												displaycondition = \NumMarkets>=3;
+												x = 50;
+												y = 65.25;
+												width = 100;
+												height = 7;
+												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[3],R),layout.find(IDNumeric==\PriceHighlightColor[3],G),layout.find(IDNumeric==\PriceHighlightColor[3],B));
+											}
+											plotrect "Market4"{
+												displaycondition = \NumMarkets>=4;
+												x = 50;
+												y = 55.875;
+												width = 100;
+												height = 7;
+												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[4],R),layout.find(IDNumeric==\PriceHighlightColor[4],G),layout.find(IDNumeric==\PriceHighlightColor[4],B));
+											}
+											plotrect "Market5"{
+												displaycondition = \NumMarkets>=5;
+												x = 50;
+												y = 46.5;
+												width = 100;
+												height = 7;
+												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[5],R),layout.find(IDNumeric==\PriceHighlightColor[5],G),layout.find(IDNumeric==\PriceHighlightColor[5],B));
+											}
+										}
+										selectcontractbox "MarketOverviewEN"{
+											hasframe = TRUE;
+											top = 5p;
+											bottom = 5p;
+											displaycondition = \Language==1;
+											table = marketsummary;
+											buttonposition = BOTTOMRIGHT;
+											buttonsequence = HORIZONTAL;
+											emptyallowed = FALSE;
+											allemptyallowed = FALSE;
+											condition = TRUE;
+											tablelayout = LIST;
+											scrollatstart = FALSE;
+											scrollatEnd = TRUE;
+											selectbest = TRUE;
+											item{
+												label = "Market";
+												variable = Market;
+												format = "1";
+												input = FALSE;
+											}
+											item{
+												label = "Price";
+												variable = Price;
+												format = "<>!text:\\I-0.0001=\"<|0.01>\";\\I=\"-\";\\I+0.0001=\"<|0.01>\";";
+												input = FALSE;
+											}
+											item{
+												label = "Assets";
+												variable = :Assets[Market];
+												format = "\\AssetPrecision";
+												input = FALSE;
+											}
+										}
+										selectcontractbox "MarketOverviewDE"{
+											hasframe = TRUE;
+											top = 5p;
+											bottom = 5p;
+											displaycondition = \Language==2;
+											table = marketsummary;
+											buttonposition = BOTTOMRIGHT;
+											buttonsequence = HORIZONTAL;
+											emptyallowed = FALSE;
+											allemptyallowed = FALSE;
+											condition = TRUE;
+											tablelayout = LIST;
+											scrollatstart = FALSE;
+											scrollatEnd = TRUE;
+											selectbest = TRUE;
+											item{
+												label = "Markt";
+												variable = Market;
+												format = "1";
+												input = FALSE;
+											}
+											item{
+												label = "Preis";
+												variable = Price;
+												format = "<>!text:\\I-0.0001=\"<|0.01>\";\\I=\"-\";\\I+0.0001=\"<|0.01>\";";
+												input = FALSE;
+											}
+											item{
+												label = "Aktien";
+												variable = :Assets[Market];
+												format = "\\AssetPrecision";
+												input = FALSE;
+											}
+										}
+									}
 								}
 							}
 						}
@@ -19427,6 +20566,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 						do{
 							subjects.do{LeaveStage=1;}
 							\ForcedExitExperiment=1;
+							CDATimer=-1;
 						}
 					}
 					program{
@@ -19457,6 +20597,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 						do{
 							subjects.do{LeaveStage=1;}
 							\ForcedExitPeriod=1;
+							CDATimer=-1;
 						}
 					}
 					program{
@@ -19486,6 +20627,7 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 						table = globals;
 						do{
 							subjects.do{LeaveStage=1;}
+							CDATimer=-1;
 						}
 					}
 					program{
@@ -19547,6 +20689,14 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 		singleentrycontinuation = FALSE;
 		timeouttype = ifnoinput;
 		timeout = if(\Period==\NumPeriods&(\CRTAfter==1|FinLit==1),-1,\TimeContinuousDoubleAuctionResults);
+		program{
+			table = globals;
+			do{
+				//Ends CDA Timer and resets ResultsDone
+				CDATimer=-1;
+				ResultsDone=0;
+			}
+		}
 		program{
 			table = subjects;
 			do{
@@ -19779,47 +20929,185 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 						}
 					}
 				}
-				standardbox "Content"{
+				containerbox "ContentSingleMarket"{
+					hasframe = FALSE;
+					displaycondition = \NumMarkets==1;
+					standardbox "Content"{
+						hasframe = TRUE;
+						displaycondition = \PracticePeriod==0;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						item{
+							variable = \Language;
+							format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Period <Period|1>}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Periode <Period|1>}\"";
+							input = FALSE;
+						}
+						item{
+						}
+						item{
+							label = "<><\\Language|!text:1=\"Your money before dividend distribution:\";2=\"Ihr Geldbestand vor der Dividendenzahlung:\">";
+							variable = Cash-Assets[DisplayMarket[1]]*\Dividend[DisplayMarket[1]];
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "<><\\Language|!text:1=\"Dividends per share:\"; 2=\"Dividende je Aktie:\">";
+							variable = \Dividend[DisplayMarket[1]];
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "<><\\Language|!text:1=\"Your share holdings are:\"; 2=\"Ihr Aktienbestand:\">";
+							variable = Assets[DisplayMarket[1]];
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "<><\\Language|!text:1=\"Total dividends:\"; 2=\"Gesamte Dividendenzahlung:\">";
+							variable = Assets[DisplayMarket[1]]*\Dividend[DisplayMarket[1]];
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "<><\\Language|!text:1=\"Total cash:\"; 2=\"Gesamter Geldbestand:\">";
+							variable = Cash;
+							format = "1";
+							input = FALSE;
+						}
+					}
+				}
+				containerbox "ContentMultiMarket"{
 					hasframe = TRUE;
-					displaycondition = \PracticePeriod==0;
-					buttonposition = BOTTOMRIGHT;
-					buttonsequence = HORIZONTAL;
-					item{
-						variable = \Language;
-						format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Period <Period|1>}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Periode <Period|1>}\"";
-						input = FALSE;
+					displaycondition = \NumMarkets>1;
+					standardbox "Text"{
+						hasframe = TRUE;
+						height = 200p;
+						top = 0p;
+						cuttop = TRUE;
+						displaycondition = \PracticePeriod==0&\NumMarkets>1;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						item{
+							variable = \Language;
+							format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Period <Period|1>}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Periode <Period|1>}\"";
+							input = FALSE;
+						}
+						item{
+						}
+						item{
+							label = "<><\\Language|!text:1=\"Total cash:\"; 2=\"Gesamter Geldbestand:\">";
+							variable = Cash;
+							format = "<>!text: 1=\"<|1>\"";
+							input = FALSE;
+						}
+						item{
+						}
 					}
-					item{
+					selectcontractbox "AssetDataDE"{
+						hasframe = FALSE;
+						height = 100p;
+						top = 0p;
+						displaycondition = \Language==1;
+						table = results;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						emptyallowed = FALSE;
+						allemptyallowed = FALSE;
+						condition = same(Subject)&Phase==2;
+						sortfields = "DisplayMarket";
+						tablelayout = LIST;
+						scrollatstart = FALSE;
+						scrollatEnd = TRUE;
+						selectbest = TRUE;
+						item{
+							label = "Aktie";
+							variable = DisplayMarket;
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "Preis";
+							variable = Price;
+							format = "<>!text: -1=\"-\";0=\"<Price|\\PricePrecision>\"";
+							input = FALSE;
+						}
+						item{
+							label = "In dieser Periode gekauft / verkauft";
+							variable = 1;
+							format = "<>!text: 0=\"<NumBought|1> / <NumSold|1>\"";
+							input = FALSE;
+						}
+						item{
+							label = "Bestand";
+							variable = Amount;
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "Dividende je Aktie";
+							variable = Dividend;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
+						item{
+							label = "Dividende gesamt";
+							variable = Dividend*Amount;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
 					}
-					item{
-						label = "<><\\Language|!text:1=\"Your money before dividend distribution:\";2=\"Ihr Geldbestand vor der Dividendenzahlung:\">";
-						variable = Cash-Assets[DisplayMarket[1]]*\Dividend[DisplayMarket[1]];
-						format = "1";
-						input = FALSE;
-					}
-					item{
-						label = "<><\\Language|!text:1=\"Dividends per share:\"; 2=\"Dividende je Aktie:\">";
-						variable = \Dividend[DisplayMarket[1]];
-						format = "1";
-						input = FALSE;
-					}
-					item{
-						label = "<><\\Language|!text:1=\"Your share holdings are:\"; 2=\"Ihr Aktienbestand:\">";
-						variable = Assets[DisplayMarket[1]];
-						format = "1";
-						input = FALSE;
-					}
-					item{
-						label = "<><\\Language|!text:1=\"Total dividends:\"; 2=\"Gesamte Dividendenzahlung:\">";
-						variable = Assets[DisplayMarket[1]]*\Dividend[DisplayMarket[1]];
-						format = "1";
-						input = FALSE;
-					}
-					item{
-						label = "<><\\Language|!text:1=\"Total cash:\"; 2=\"Gesamter Geldbestand:\">";
-						variable = Cash;
-						format = "1";
-						input = FALSE;
+					selectcontractbox "AssetDataEN"{
+						hasframe = FALSE;
+						height = 100p;
+						top = 0p;
+						displaycondition = \Language==1;
+						table = results;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						emptyallowed = FALSE;
+						allemptyallowed = FALSE;
+						condition = same(Subject)&Phase==2;
+						sortfields = "DisplayMarket";
+						tablelayout = LIST;
+						scrollatstart = FALSE;
+						scrollatEnd = TRUE;
+						selectbest = TRUE;
+						item{
+							label = "Asset";
+							variable = DisplayMarket;
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "Price";
+							variable = Price;
+							format = "<>!text: -1=\"-\";0=\"<Price|\\PricePrecision>\"";
+							input = FALSE;
+						}
+						item{
+							label = "Assets bought/sold in this period";
+							variable = 1;
+							format = "<>!text: 0=\"<NumBought|1> / <NumSold|1>\"";
+							input = FALSE;
+						}
+						item{
+							label = "Asset balance";
+							variable = Amount;
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "Dividend per asset";
+							variable = Dividend;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
+						item{
+							label = "Total dividend";
+							variable = Dividend*Amount;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
 					}
 				}
 			}
@@ -19925,9 +21213,9 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 			usesbg = FALSE;
 			withalertscreen = FALSE;
 			noalertscreen = FALSE;
-			containerbox "TraderContainer"{
+			containerbox "ContentSingleMarket"{
 				hasframe = FALSE;
-				displaycondition = IsExperimenter==0&\PracticePeriod==0;
+				displaycondition = \NumMarkets==1;
 				standardbox "Content"{
 					hasframe = TRUE;
 					displaycondition = \PracticePeriod==0;
@@ -19947,15 +21235,13 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 						input = FALSE;
 					}
 					item{
-					}
-					item{
 						label = "<><\\Language|!text:1=\"Dividends per share:\"; 2=\"Dividende je Aktie:\">";
 						variable = \Dividend[DisplayMarket[1]];
 						format = "1";
 						input = FALSE;
 					}
 					item{
-						label = "<><\\Language|!text:1=\"Your assets:\"; 2=\"Ihr Aktienbestand:\">";
+						label = "<><\\Language|!text:1=\"Your share holdings are:\"; 2=\"Ihr Aktienbestand:\">";
 						variable = Assets[DisplayMarket[1]];
 						format = "1";
 						input = FALSE;
@@ -19967,17 +21253,143 @@ treatment "GIMS_v7.0.8_2015-05-13.ztt"{
 						input = FALSE;
 					}
 					item{
-					}
-					item{
 						label = "<><\\Language|!text:1=\"Total cash:\"; 2=\"Gesamter Geldbestand:\">";
 						variable = Cash;
 						format = "1";
 						input = FALSE;
 					}
+				}
+			}
+			containerbox "ContentMultiMarket"{
+				hasframe = TRUE;
+				displaycondition = \NumMarkets>1;
+				standardbox "Text"{
+					hasframe = TRUE;
+					height = 200p;
+					top = 0p;
+					cuttop = TRUE;
+					displaycondition = \PracticePeriod==0&\NumMarkets>1;
+					buttonposition = BOTTOMRIGHT;
+					buttonsequence = HORIZONTAL;
 					item{
-						label = "<><\\Language|!text:1=\"Total assets:\"; 2=\"Gesamter Aktienbestand:\">";
-						variable = Assets[DisplayMarket[1]];
+						variable = \Language;
+						format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Period <Period|1>}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Periode <Period|1>}\"";
+						input = FALSE;
+					}
+					item{
+					}
+					item{
+						label = "<><\\Language|!text:1=\"Total cash:\"; 2=\"Gesamter Geldbestand:\">";
+						variable = Cash;
+						format = "<>!text: 1=\"<|1>\"";
+						input = FALSE;
+					}
+					item{
+					}
+				}
+				selectcontractbox "AssetDataDE"{
+					hasframe = FALSE;
+					height = 100p;
+					top = 0p;
+					displaycondition = \Language==1;
+					table = results;
+					buttonposition = BOTTOMRIGHT;
+					buttonsequence = HORIZONTAL;
+					emptyallowed = FALSE;
+					allemptyallowed = FALSE;
+					condition = same(Subject)&Phase==2;
+					sortfields = "DisplayMarket";
+					tablelayout = LIST;
+					scrollatstart = FALSE;
+					scrollatEnd = TRUE;
+					selectbest = TRUE;
+					item{
+						label = "Aktie";
+						variable = DisplayMarket;
 						format = "1";
+						input = FALSE;
+					}
+					item{
+						label = "Preis";
+						variable = Price;
+						format = "<>!text: -1=\"-\";0=\"<Price|\\PricePrecision>\"";
+						input = FALSE;
+					}
+					item{
+						label = "In dieser Periode gekauft / verkauft";
+						variable = 1;
+						format = "<>!text: 0=\"<NumBought|1> / <NumSold|1>\"";
+						input = FALSE;
+					}
+					item{
+						label = "Bestand";
+						variable = Amount;
+						format = "1";
+						input = FALSE;
+					}
+					item{
+						label = "Dividende je Aktie";
+						variable = Dividend;
+						format = "\\PricePrecision";
+						input = FALSE;
+					}
+					item{
+						label = "Dividende gesamt";
+						variable = Dividend*Amount;
+						format = "\\PricePrecision";
+						input = FALSE;
+					}
+				}
+				selectcontractbox "AssetDataEN"{
+					hasframe = FALSE;
+					height = 100p;
+					top = 0p;
+					displaycondition = \Language==1;
+					table = results;
+					buttonposition = BOTTOMRIGHT;
+					buttonsequence = HORIZONTAL;
+					emptyallowed = FALSE;
+					allemptyallowed = FALSE;
+					condition = same(Subject)&Phase==2;
+					sortfields = "DisplayMarket";
+					tablelayout = LIST;
+					scrollatstart = FALSE;
+					scrollatEnd = TRUE;
+					selectbest = TRUE;
+					item{
+						label = "Asset";
+						variable = DisplayMarket;
+						format = "1";
+						input = FALSE;
+					}
+					item{
+						label = "Price";
+						variable = Price;
+						format = "<>!text: -1=\"-\";0=\"<Price|\\PricePrecision>\"";
+						input = FALSE;
+					}
+					item{
+						label = "Assets bought/sold in this period";
+						variable = 1;
+						format = "<>!text: 0=\"<NumBought|1> / <NumSold|1>\"";
+						input = FALSE;
+					}
+					item{
+						label = "Asset balance";
+						variable = Amount;
+						format = "1";
+						input = FALSE;
+					}
+					item{
+						label = "Dividend per asset";
+						variable = Dividend;
+						format = "\\PricePrecision";
+						input = FALSE;
+					}
+					item{
+						label = "Total dividend";
+						variable = Dividend*Amount;
+						format = "\\PricePrecision";
 						input = FALSE;
 					}
 				}
