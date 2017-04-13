@@ -1,4 +1,4 @@
-treatment "GIMS_v7.3.0_2016-08-01.ztt"{
+treatment "GIMS_v7.3.0_2016-08-01_PEAD.ztt"{
 	background{
 		table globals{
 		}
@@ -92,6 +92,10 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
+		table PEADsignals{
+			lifetime = PERIOD;
+			execute = WITHEACH;
+		}
 		numsubjects = 4;
 		numgroups = 1;
 		numpracticeperiods = 0;
@@ -156,7 +160,7 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 			do{
 				//### P1: General parameters ###
 				
-				Testmode1=0;   //Turns on Experimenter buttons on all screens
+				Testmode1=1;   //Turns on Experimenter buttons on all screens
 				
 				PracticePeriod=0;
 				NumExperimenterSubjects=1;
@@ -184,14 +188,14 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 				//Switching on and off program modules
 				ContinuousDoubleAuction=1;
 				CallAuction=1-ContinuousDoubleAuction;
-				CRTBefore=if(PracticePeriod==1,0,0);
-				CRTAfter=0;//if(PracticePeriod==1,0,0);
-				FinLit=0;//if(PracticePeriod==1,0,0);
+				CRTBefore=0;   //if(PracticePeriod==1,0,1);
+				CRTAfter=0;   //if(PracticePeriod==1,0,1);
+				FinLit=0;   //if(PracticePeriod==1,0,0);
 				HLBefore=0;    //Currently only before or after supported. Reset HLChoice=\I in between if you want to record both.
 				HLAfter=0;
 				
 				//Stage durations
-				TimeContinuousDoubleAuction=180;
+				TimeContinuousDoubleAuction=600;
 				TimeContinuousDoubleAuctionResults=30;
 				TimeCallAuction=-1;
 				TimeCallAuctionResults=30;
@@ -205,27 +209,27 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 			do{
 				//### P3: General market parameters ###
 				
-				NumMarkets=5;
+				NumMarkets=3;
 				array MultiUnitTrading[NumMarkets];
 				PresetDividends=0;
 				PresetSignals=0;
 				TickSize=0.01;
 				SignalSuperSet=1;
-				SignalPrecision=0.1;
-				CarryOverWealth=1;
+				SignalPrecision=0.01;
+				CarryOverWealth=0;
 				PricePrecision=0.01;
 				VolumePrecision=1;
 				CashPrecision=PricePrecision;
 				AssetPrecision=VolumePrecision;
 				ConnectedMarketMechanisms=0;
-				IndependentPeriods=0;
-				RandomPeriodPayoff=0;
+				IndependentPeriods=1;
+				RandomPeriodPayoff=1;
 				array BBV[NumMarkets];
 				array AssetName[NumMarkets];
 				
 				iterator(Market, \NumMarkets).do{
 				    \BBV[Market]=0;
-				    \MultiUnitTrading[Market]=1;
+				    \MultiUnitTrading[Market]=0;
 				    }
 				
 				//Dividends
@@ -269,16 +273,16 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 				SpamControl=0;
 				ContinuousDoubleAuctionSignals=1;
 				array OrderBookDepth[\NumMarkets];
-				EarlyEndingVote=1;
+				EarlyEndingVote=0;
 				PriceHighlightScheme=if(\NumMarkets>1,1,0);
-				PriceHighlightDuration=2;
+				PriceHighlightDuration=3;
 				CDATimer=TimerInterval;
 				
 				iterator(Market, \NumMarkets).do{
 				    \OfferImprovementRule[Market]=1;
 				    \EmptyBookAfterTrade[Market]=0;
 				    \PartialInvalidation[Market]=0;
-				    \OrderBookDepth[Market]=3;
+				    \OrderBookDepth[Market]=-1;
 				    }
 			}
 		}
@@ -581,25 +585,13 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 			do{
 				//### P8: Endowment assignment ###
 				
-				endowments.new {
-				    Type=1;
-				    Cash=225*\NumMarkets;
-				    iterator(Market,\NumMarkets).do{
-				        :Assets[Market]=3;
-				        }
-				    }
-				endowments.new {
-				    Type=2;
-				    Cash=585*\NumMarkets;
-				    iterator(Market,\NumMarkets).do{
-				        :Assets[Market]=2;
-				        }
-				    }
-				endowments.new {
-				    Type=3;
-				    Cash=945*\NumMarkets;
-				    iterator(Market,\NumMarkets).do{
-				        :Assets[Market]=1;
+				iterator(i,3).do{
+				    endowments.new {
+				        Type=:i;
+				        Cash=800;
+				        iterator(Market,\NumMarkets).do{
+				            :Assets[Market]=(if(Market==:Type,5,0));
+				            }
 				        }
 				    }
 				
@@ -608,7 +600,7 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 		}
 		program{
 			table = globals;
-			condition = Testmode1==1;
+			condition = Testmode1==1&FALSE;
 			do{
 				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Testmode parameters
 				
@@ -727,29 +719,6 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 			do{
 				//### P7: Signal assignment manual ###
 				
-				signals.new{
-				    Period=1;
-				    Set=1;
-				    Type=1;
-				    Signal=99.4;
-				    Market=1;
-				    }
-				
-				signals.new{
-				    Period=1;
-				    Set=1;
-				    Type=1;
-				    Signal=96.4;
-				    Market=1;
-				    }
-				
-				signals.new{
-				    Period=1;
-				    Set=1;
-				    Type=1;
-				    Signal=103.1;
-				    Market=1;
-				    }
 				
 			}
 		}
@@ -1024,7 +993,7 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 				
 				TimeAuction=1;
 				TimeProfit=3;
-				TimeContinuousDoubleAuction=3;
+				//TimeContinuousDoubleAuction=3;
 				
 				AskFinLit[1]=1;
 				AskFinLit[2]=0;
@@ -1085,6 +1054,38 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 				
 				//Checks that IndicativePriceInterval is not too short. Otherwise prices are constantly calculated and z-Tree runs out of memory.
 				IndicativePriceInterval=if(IndicativePriceInterval<0.5,-1,IndicativePriceInterval);
+			}
+		}
+		program{
+			table = globals;
+			do{
+				//======================================= PEAD Settings
+				
+				PEADSignalInterval=120;
+				PEADSignalTime=\I;
+				PEADSignalsShown=0;
+				PEADSignalSize=\I;
+				PEADNumSignals=4;
+				PEADStartValue=5;
+				PEADsignals.do{
+				    array PEADSignal[3];
+				    array PEADValue[3];
+				    PEADValue=\I;
+				    }
+				
+				//Sets DisplayMarket to the market the subject owns shares in
+				subjects.do{
+				    DisplayMarket[1]=if(Assets[1]>0,1,if(Assets[2]>0,2,3));
+				    }
+			}
+		}
+		program{
+			table = globals;
+			do{
+				//======================================= PEAD Testmode
+				
+				PEADSignalInterval=3;
+				//TimeContinuousDoubleAuction=600;
 			}
 		}
 		screen action{
@@ -12577,6 +12578,10 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 			condition = \PriceHighlightScheme>0;
 			do{
 				//CDA Timer task
+				
+				//Sets first time a PEAD signal should be shown
+				PEADSignalTime=StartTimeCDA+PEADSignalInterval;
+				
 				later (CDATimer) repeat{
 				    //Price highlighting
 				    iterator(Market,NumMarkets).do{
@@ -12585,6 +12590,28 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 				                \PriceHighlightColor[Market]=22;
 				                }
 				            }
+				        }
+				
+				//Generates PEAD signals
+				    if(\PEADSignalsShown<\PEADNumSignals&\PEADSignalTime<gettime()){
+				        //Increases number of PEAD signals shown
+				        PEADSignalsShown=PEADSignalsShown+1;
+				        PEADSignalSize=if(random()<2/3,0.25,0.75);
+				        PEADsignals.new{
+				            Set=\PEADSignalsShown;
+				            PEADSignal[1]=if(random()<1/3,-\PEADSignalSize,if(random()<0.5,0,\PEADSignalSize));
+				            PEADSignal[2]=if(PEADSignal[1]==0,if(random()<0.5,-\PEADSignalSize,\PEADSignalSize),if(random()<0.5,0,-PEADSignal[1]));
+				            PEADSignal[3]=0-(PEADSignal[1]+PEADSignal[2]);
+				            PEADValue[1]=if(\PEADSignalsShown==1,\PEADStartValue,PEADsignals.find(Set==:Set-1,PEADValue[1]))+PEADSignal[1];
+				            PEADValue[2]=if(\PEADSignalsShown==1,\PEADStartValue,PEADsignals.find(Set==:Set-1,PEADValue[2]))+PEADSignal[2];
+				            PEADValue[3]=if(\PEADSignalsShown==1,\PEADStartValue,PEADsignals.find(Set==:Set-1,PEADValue[3]))+PEADSignal[3];
+				            PEADValueA=PEADValue[1];
+				            PEADValueB=PEADValue[2];
+				            PEADValueC=PEADValue[3];
+				            }
+				
+				        //Sets next time a PEAD signal should be shown
+				        PEADSignalTime=StartTimeCDA+PEADSignalInterval*(1+PEADSignalsShown);
 				        }
 				    }
 			}
@@ -17963,7 +17990,7 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 												item{
 													label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Market:\";2=\"Markt:\";>}";
 													variable = DisplayMarket[1];
-													format = "<>!text: 1=\"{\\rtf \\fs18 \\qc \\b <|1>}\";";
+													format = "<>!text: 1=\"{\\rtf \\fs18 \\qc \\b <|!text:1=\"A\";2=\"B\";3=\"C\">}\";";
 													input = FALSE;
 												}
 												item{
@@ -17990,6 +18017,90 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 								}
 								containerbox "TopContainer"{
 									hasframe = FALSE;
+									containerbox "SignalsContainer"{
+										hasframe = TRUE;
+										height = 98p;
+										bottom = 0p;
+										cutbottom = TRUE;
+										plotbox "Background"{
+											hasframe = TRUE;
+											bgcolor = rgb(layout.find(ID=="CDA_Signals_BG",R),layout.find(ID=="CDA_Signals_BG",G),layout.find(ID=="CDA_Signals_BG",B));
+											maintainaspectratio = FALSE;
+											xaxistype = LINEAR;
+											yaxistype = LINEAR;
+											xleft = -100;
+											xright = 100;
+											ybottom = -100;
+											ytop = 100;
+										}
+										selectcontractbox "SignalsEN"{
+											hasframe = FALSE;
+											left = 5p;
+											right = 5p;
+											top = 5p;
+											bottom = 5p;
+											displaycondition = \ContinuousDoubleAuctionSignals==1&\Language==1;
+											table = signals;
+											buttonposition = BOTTOMRIGHT;
+											buttonsequence = HORIZONTAL;
+											emptyallowed = FALSE;
+											allemptyallowed = FALSE;
+											condition = same(Period)&Set==:Subject&Market==:DisplayMarket[1];
+											sortfields = "Type";
+											tablelayout = LIST;
+											scrollatstart = FALSE;
+											scrollatEnd = TRUE;
+											selectbest = TRUE;
+											item{
+												label = "Signals";
+												variable = Signal;
+												format = "\\SignalPrecision";
+												input = FALSE;
+											}
+										}
+										selectcontractbox "SignalsDE"{
+											hasframe = FALSE;
+											left = 5p;
+											right = 5p;
+											top = 5p;
+											bottom = 0p;
+											displaycondition = \ContinuousDoubleAuctionSignals==1&Language==2;
+											table = PEADsignals;
+											buttonposition = BOTTOMRIGHT;
+											buttonsequence = HORIZONTAL;
+											emptyallowed = FALSE;
+											allemptyallowed = FALSE;
+											condition = TRUE;
+											tablelayout = LIST;
+											scrollatstart = FALSE;
+											scrollatEnd = TRUE;
+											selectbest = TRUE;
+											item{
+												label = "Ankündigung";
+												variable = Set;
+												format = "1";
+												input = FALSE;
+											}
+											item{
+												label = "Aktie A";
+												variable = PEADValueA;
+												format = "0.01";
+												input = FALSE;
+											}
+											item{
+												label = "Aktie B";
+												variable = PEADValueB;
+												format = "0.01";
+												input = FALSE;
+											}
+											item{
+												label = "Aktie C";
+												variable = PEADValueC;
+												format = "0.01";
+												input = FALSE;
+											}
+										}
+									}
 									containerbox "PriceListContainer"{
 										hasframe = TRUE;
 										width = 50%;
@@ -18057,70 +18168,6 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 											}
 										}
 									}
-									containerbox "SignalsContainer"{
-										hasframe = TRUE;
-										plotbox "Background"{
-											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_Signals_BG",R),layout.find(ID=="CDA_Signals_BG",G),layout.find(ID=="CDA_Signals_BG",B));
-											maintainaspectratio = FALSE;
-											xaxistype = LINEAR;
-											yaxistype = LINEAR;
-											xleft = -100;
-											xright = 100;
-											ybottom = -100;
-											ytop = 100;
-										}
-										selectcontractbox "SignalsEN"{
-											hasframe = FALSE;
-											left = 5p;
-											right = 5p;
-											top = 5p;
-											bottom = 5p;
-											displaycondition = \ContinuousDoubleAuctionSignals==1&\Language==1;
-											table = signals;
-											buttonposition = BOTTOMRIGHT;
-											buttonsequence = HORIZONTAL;
-											emptyallowed = FALSE;
-											allemptyallowed = FALSE;
-											condition = same(Period)&Set==:Subject&Market==:DisplayMarket[1];
-											sortfields = "Type";
-											tablelayout = LIST;
-											scrollatstart = FALSE;
-											scrollatEnd = TRUE;
-											selectbest = TRUE;
-											item{
-												label = "Signals";
-												variable = Signal;
-												format = "\\SignalPrecision";
-												input = FALSE;
-											}
-										}
-										selectcontractbox "SignalsDE"{
-											hasframe = FALSE;
-											left = 5p;
-											right = 5p;
-											top = 5p;
-											bottom = 5p;
-											displaycondition = \ContinuousDoubleAuctionSignals==1&Language==2;
-											table = signals;
-											buttonposition = BOTTOMRIGHT;
-											buttonsequence = HORIZONTAL;
-											emptyallowed = FALSE;
-											allemptyallowed = FALSE;
-											condition = same(Period)&Set==:Subject&Market==:DisplayMarket[1];
-											sortfields = "Type";
-											tablelayout = LIST;
-											scrollatstart = FALSE;
-											scrollatEnd = TRUE;
-											selectbest = TRUE;
-											item{
-												label = "Signale";
-												variable = Signal;
-												format = "\\SignalPrecision";
-												input = FALSE;
-											}
-										}
-									}
 									containerbox "MarketOverview"{
 										hasframe = TRUE;
 										displaycondition = \NumMarkets>1;
@@ -18152,7 +18199,7 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 													cuttop = TRUE;
 													buttonposition = BOTTOMRIGHT;
 													buttonsequence = HORIZONTAL;
-													button "Markt 1"{
+													button "Markt A"{
 														clearinputafterok = FALSE;
 														norecordmadeorselected = FALSE;
 														terminatestage = FALSE;
@@ -18174,7 +18221,7 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 													cuttop = TRUE;
 													buttonposition = BOTTOMRIGHT;
 													buttonsequence = HORIZONTAL;
-													button "Markt 2"{
+													button "Markt B"{
 														clearinputafterok = FALSE;
 														norecordmadeorselected = FALSE;
 														terminatestage = FALSE;
@@ -18197,7 +18244,7 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 													displaycondition = \NumMarkets>2;
 													buttonposition = BOTTOMRIGHT;
 													buttonsequence = HORIZONTAL;
-													button "Markt 3"{
+													button "Markt C"{
 														clearinputafterok = FALSE;
 														norecordmadeorselected = FALSE;
 														terminatestage = FALSE;
@@ -18483,7 +18530,7 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 											item{
 												label = "Markt";
 												variable = Market;
-												format = "1";
+												format = "!text:1=\"A\";2=\"B\";3=\"C\"";
 												input = FALSE;
 											}
 											item{
@@ -20383,7 +20430,7 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 													cuttop = TRUE;
 													buttonposition = BOTTOMRIGHT;
 													buttonsequence = HORIZONTAL;
-													button "Markt 1"{
+													button "Markt A"{
 														clearinputafterok = FALSE;
 														norecordmadeorselected = FALSE;
 														terminatestage = FALSE;
@@ -20405,7 +20452,7 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 													cuttop = TRUE;
 													buttonposition = BOTTOMRIGHT;
 													buttonsequence = HORIZONTAL;
-													button "Markt 2"{
+													button "Markt B"{
 														clearinputafterok = FALSE;
 														norecordmadeorselected = FALSE;
 														terminatestage = FALSE;
@@ -20428,7 +20475,7 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 													displaycondition = \NumMarkets>2;
 													buttonposition = BOTTOMRIGHT;
 													buttonsequence = HORIZONTAL;
-													button "Markt 3"{
+													button "Markt C"{
 														clearinputafterok = FALSE;
 														norecordmadeorselected = FALSE;
 														terminatestage = FALSE;
@@ -20714,7 +20761,7 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 											item{
 												label = "Markt";
 												variable = Market;
-												format = "1";
+												format = "!text:1=\"A\";2=\"B\";3=\"C\"";
 												input = FALSE;
 											}
 											item{
@@ -20760,20 +20807,6 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 							buttonsequence = HORIZONTAL;
 							item{
 								label = "<>{\\rtf \\qc <\\Language|!text: 1=\"No transactions to display.\";2=\"Bisher keine Transaktionen\">}";
-							}
-						}
-						standardbox "Heading"{
-							hasframe = FALSE;
-							height = 70p;
-							top = 0p;
-							cuttop = TRUE;
-							displaycondition = \NumMarkets>1&\ShowChart==1&\ChartYMax[DisplayMarket[1]]!=\I;
-							buttonposition = BOTTOMRIGHT;
-							buttonsequence = HORIZONTAL;
-							item{
-								variable = DisplayMarket[1];
-								format = "<>!text: 1=\"{\\rtf \\fs26 \\qc \\b <\\Language|!text:1=\"Market\";2=\"Markt\"> <|!text:1=\"A\";2=\"B\";3=\"C\">}\";";
-								input = FALSE;
 							}
 						}
 						plotbox "ChartEN"{
@@ -21037,6 +21070,28 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 				//Ends CDA Timer and resets ResultsDone
 				CDATimer=-1;
 				ResultsDone=0;
+			}
+		}
+		program{
+			table = globals;
+			do{
+				//Performs another signal draw ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PEAD
+				
+				//Increases number of PEAD signals shown
+				PEADSignalsShown=PEADSignalsShown+1;
+				PEADSignalSize=if(random()<2/3,0.25,0.75);
+				PEADsignals.new{
+				    Set=\PEADSignalsShown;
+				    PEADSignal[1]=if(random()<1/3,-\PEADSignalSize,if(random()<0.5,0,\PEADSignalSize));
+				    PEADSignal[2]=if(PEADSignal[1]==0,if(random()<0.5,-\PEADSignalSize,\PEADSignalSize),if(random()<0.5,0,-PEADSignal[1]));
+				    PEADSignal[3]=0-(PEADSignal[1]+PEADSignal[2]);
+				    PEADValue[1]=if(\PEADSignalsShown==1,\PEADStartValue,PEADsignals.find(Set==:Set-1,PEADValue[1]))+PEADSignal[1];
+				    PEADValue[2]=if(\PEADSignalsShown==1,\PEADStartValue,PEADsignals.find(Set==:Set-1,PEADValue[2]))+PEADSignal[2];
+				    PEADValue[3]=if(\PEADSignalsShown==1,\PEADStartValue,PEADsignals.find(Set==:Set-1,PEADValue[3]))+PEADSignal[3];
+				    PEADValueA=PEADValue[1];
+				    PEADValueB=PEADValue[2];
+				    PEADValueC=PEADValue[3];
+				    }
 			}
 		}
 		program{
@@ -28211,6 +28266,9 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 				            }
 				        }
 				    }
+				
+				
+				Profit=10000;    //PEAD TEsting######################
 			}
 		}
 		program{
