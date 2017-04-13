@@ -1,4 +1,4 @@
-treatment "GIMS_v7.3.0_2016-08-01.ztt"{
+treatment "GIMS_v7.3.1_2016-08-08.ztt"{
 	background{
 		table globals{
 		}
@@ -111,10 +111,10 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.3.0 #####
+				//##### GIMS Version 7.3.1 #####
 				
-				GIMSVersion="7.3.0";
-				GIMSDate="01.08.2016";
+				GIMSVersion="7.3.1";
+				GIMSDate="08.08.2016";
 			}
 		}
 		program{
@@ -414,7 +414,7 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 				    ChartYLabelDistance[Market]=\I;
 				    ChartXMax[Market]=\TimeContinuousDoubleAuction;
 				    ChartXTickDistance[Market]=10;
-				    ChartXLabelDistance[Market]=30;
+				    ChartXLabelDistance[Market]=if(\TimeContinuousDoubleAuction<=270,30,60);
 				    PriceHighlightColor[Market]=9;
 				    PriceHighlightTime[Market]=\I;
 				    }
@@ -21121,8 +21121,8 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 				        Dividend=\Dividend[Market];
 				        Phase=2;
 				        Amount=::Assets[Market];
-				        NumBought=contracts.sum(Market==:Market&Offerer==:Subject&Type==1&Phase==2,Transacted);
-				        NumSold=contracts.sum(Market==:Market&Offerer==:Subject&Type==-1&Phase==2,Transacted);
+				        NumBought=contracts.sum(Market==:Market&((Offerer==:Subject&Type==1)|(Accepter==:Subject&Type==-1))&Phase==2,Transacted);
+				        NumSold=contracts.sum(Market==:Market&((Offerer==:Subject&Type==-1)|(Accepter==:Subject&Type==1))&Phase==2,Transacted);
 				        }
 				    }
 			}
@@ -21348,23 +21348,23 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 					}
 					selectcontractbox "AssetDataDE"{
 						hasframe = FALSE;
-						height = 100p;
+						height = 110p;
 						top = 0p;
-						displaycondition = \Language==1;
+						displaycondition = \Language==2;
 						table = results;
 						buttonposition = BOTTOMRIGHT;
 						buttonsequence = HORIZONTAL;
 						emptyallowed = FALSE;
 						allemptyallowed = FALSE;
 						condition = same(Subject)&Phase==2;
-						sortfields = "DisplayMarket";
+						sortfields = "Market";
 						tablelayout = LIST;
 						scrollatstart = FALSE;
 						scrollatEnd = TRUE;
 						selectbest = TRUE;
 						item{
 							label = "Aktie";
-							variable = DisplayMarket;
+							variable = Market;
 							format = "1";
 							input = FALSE;
 						}
@@ -21401,7 +21401,7 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 					}
 					selectcontractbox "AssetDataEN"{
 						hasframe = FALSE;
-						height = 100p;
+						height = 110p;
 						top = 0p;
 						displaycondition = \Language==1;
 						table = results;
@@ -21410,14 +21410,14 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 						emptyallowed = FALSE;
 						allemptyallowed = FALSE;
 						condition = same(Subject)&Phase==2;
-						sortfields = "DisplayMarket";
+						sortfields = "Market";
 						tablelayout = LIST;
 						scrollatstart = FALSE;
 						scrollatEnd = TRUE;
 						selectbest = TRUE;
 						item{
 							label = "Asset";
-							variable = DisplayMarket;
+							variable = Market;
 							format = "1";
 							input = FALSE;
 						}
@@ -21632,23 +21632,23 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 				}
 				selectcontractbox "AssetDataDE"{
 					hasframe = FALSE;
-					height = 100p;
+					height = 110p;
 					top = 0p;
-					displaycondition = \Language==1;
+					displaycondition = \Language==2;
 					table = results;
 					buttonposition = BOTTOMRIGHT;
 					buttonsequence = HORIZONTAL;
 					emptyallowed = FALSE;
 					allemptyallowed = FALSE;
 					condition = same(Subject)&Phase==2;
-					sortfields = "DisplayMarket";
+					sortfields = "Market";
 					tablelayout = LIST;
 					scrollatstart = FALSE;
 					scrollatEnd = TRUE;
 					selectbest = TRUE;
 					item{
 						label = "Aktie";
-						variable = DisplayMarket;
+						variable = Market;
 						format = "1";
 						input = FALSE;
 					}
@@ -21685,7 +21685,7 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 				}
 				selectcontractbox "AssetDataEN"{
 					hasframe = FALSE;
-					height = 100p;
+					height = 110p;
 					top = 0p;
 					displaycondition = \Language==1;
 					table = results;
@@ -21694,14 +21694,14 @@ treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 					emptyallowed = FALSE;
 					allemptyallowed = FALSE;
 					condition = same(Subject)&Phase==2;
-					sortfields = "DisplayMarket";
+					sortfields = "Market";
 					tablelayout = LIST;
 					scrollatstart = FALSE;
 					scrollatEnd = TRUE;
 					selectbest = TRUE;
 					item{
 						label = "Asset";
-						variable = DisplayMarket;
+						variable = Market;
 						format = "1";
 						input = FALSE;
 					}
