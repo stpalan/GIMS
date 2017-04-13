@@ -1,4 +1,4 @@
-treatment "GIMS_v7.3.3_2016-08-24.ztt"{
+treatment "GIMS_v7.3.4_2016-09-06.ztt"{
 	background{
 		table globals{
 		}
@@ -111,10 +111,10 @@ treatment "GIMS_v7.3.3_2016-08-24.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.3.3 #####
+				//##### GIMS Version 7.3.4 #####
 				
-				GIMSVersion="7.3.3";
-				GIMSDate="24.08.2016";
+				GIMSVersion="7.3.4";
+				GIMSDate="06.09.2016";
 			}
 		}
 		program{
@@ -17297,7 +17297,7 @@ treatment "GIMS_v7.3.3_2016-08-24.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = 0 <= :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
+															condition = 0 < :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -17454,7 +17454,7 @@ treatment "GIMS_v7.3.3_2016-08-24.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = 0 <= :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
+															condition = 0 < :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
