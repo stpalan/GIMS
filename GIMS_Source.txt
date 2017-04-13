@@ -1,4 +1,4 @@
-treatment "GIMS_v7.3.6_2016-10-05.ztt"{
+treatment "GIMS_v7.4.0_2016-10-06.ztt"{
 	background{
 		table globals{
 		}
@@ -92,7 +92,7 @@ treatment "GIMS_v7.3.6_2016-10-05.ztt"{
 			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
-		numsubjects = 4;
+		numsubjects = 5;
 		numgroups = 1;
 		numpracticeperiods = 0;
 		numactualperiods = 1;
@@ -111,10 +111,10 @@ treatment "GIMS_v7.3.6_2016-10-05.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.3.6 #####
+				//##### GIMS Version 7.4.0 #####
 				
-				GIMSVersion="7.3.6";
-				GIMSDate="05.10.2016";
+				GIMSVersion="7.4.0";
+				GIMSDate="06.10.2016";
 			}
 		}
 		program{
@@ -160,7 +160,7 @@ treatment "GIMS_v7.3.6_2016-10-05.ztt"{
 				
 				PracticePeriod=0;
 				NumExperimenterSubjects=1;
-				Language=2;    //1=English, 2=German
+				Language=1;    //1=English, 2=German
 				TimerInterval=1;
 				
 				//Questionnaire settings
@@ -191,6 +191,9 @@ treatment "GIMS_v7.3.6_2016-10-05.ztt"{
 				FinLit=0;//if(PracticePeriod==1,0,0);
 				HLBefore=0;    //Currently only before or after supported. Reset HLChoice=\I in between if you want to record both.
 				HLAfter=0;
+				ControlQuestions=1;
+				CQBeforePracticePeriod=0;
+				subjects.do{array CQ[2];}
 				
 				//Stage durations
 				TimeContinuousDoubleAuction=180;
@@ -351,6 +354,7 @@ treatment "GIMS_v7.3.6_2016-10-05.ztt"{
 				
 				CallAuctionDone=0;
 				ResultsDone=0;
+				CQDone=0;
 				StartTimeCDA=\I;
 				
 				ForcedExitExperiment=0;
@@ -393,6 +397,7 @@ treatment "GIMS_v7.3.6_2016-10-05.ztt"{
 				FontSizeStandard=18;
 				FontSizeHeading=22;
 				FontSizeSubHeading=20;
+				FontSizeCQ=18;
 				array PriceHighlightColor[\NumMarkets];
 				array PriceHighlightTime[\NumMarkets];
 				
@@ -480,7 +485,6 @@ treatment "GIMS_v7.3.6_2016-10-05.ztt"{
 				    :Assets[Market]=\I;
 				    }
 				
-				
 				IsExperimenter=if(Subject<=\NumSubjects,0,1);
 				
 				//Status to display in the history box
@@ -502,6 +506,8 @@ treatment "GIMS_v7.3.6_2016-10-05.ztt"{
 				HLRandomRow=\I;
 				HLDieRoll=\I;
 				HLPayoff=\I;
+				
+				CQAnswered=\I;
 				
 				//Temporary variables
 				r=\I;
@@ -1148,6 +1154,410 @@ treatment "GIMS_v7.3.6_2016-10-05.ztt"{
 					label = "Bitte warten Sie, bis das Experiment weitergeht.";
 				}
 			}
+		}
+	}
+	stage "ControlQuestions"{
+		startwaitforall = TRUE;
+		singleentry = FALSE;
+		singleentrycontinuation = FALSE;
+		timeouttype = never;
+		timeout = -1;
+		program{
+			table = subjects;
+			do{
+				Participate=if(\ForcedExitExperiment+\ForcedExitPeriod>0,0,1)*\ControlQuestions*if(Period==1&\CQBeforePracticePeriod==\PracticePeriod,1,0);
+			}
+		}
+		screen action{
+			usesbg = TRUE;
+			withalertscreen = FALSE;
+			noalertscreen = FALSE;
+			containerbox "Subjects"{
+				hasframe = FALSE;
+				displaycondition = IsExperimenter==0;
+				standardbox "WrongAnswer"{
+					hasframe = TRUE;
+					displaycondition = CQAnswered!=\I&CQAnswered<0;
+					buttonposition = BOTTOMRIGHT;
+					buttonsequence = HORIZONTAL;
+					item{
+						variable = \Language;
+						format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Wrong answer}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Falsche Antwort}\"";
+						input = FALSE;
+					}
+					item{
+					}
+					item{
+						label = "<><\\Language|!text:1=\"Your answer on this question is not correct.\";2=\"Ihre Antwort auf diese Frage ist leider nicht korrekt.\">";
+					}
+					item{
+						label = "<><\\Language|!text:1=\"If you are uncertain of the correct answer, please consult the instructions. If you need further help, please raise your hand and the experimenter will come to assist you.\";2=\"Bei Unklarheiten lesen Sie bitte in der Anleitung nach. Sollten Sie weitere Hilfe benötigen, heben Sie bitte Ihre Hand und der Experimentator wird zu Ihnen kommen, um Ihnen behilflich zu sein.\">";
+					}
+					button "OK"{
+						clearinputafterok = TRUE;
+						norecordmadeorselected = FALSE;
+						terminatestage = FALSE;
+						donotterminatestage = TRUE;
+						specialbuttoncolor = TRUE;
+						buttoncolor = 13158600;
+						program{
+							table = subjects;
+							do{
+								//Timelog
+								
+								timelog.new
+								    {
+								    ID=timelog.maximum(ID)+1;
+								    Time=gettime()-\StartTime;
+								    Period=\Period;
+								    Subject=:Subject;
+								    Event=112;
+								    Data[1]=CQ[-:CQAnswered];
+								    }
+							}
+						}
+						program{
+							table = subjects;
+							do{
+								//Sets CQAnswered
+								CQAnswered=-CQAnswered-1;
+							}
+						}
+					}
+				}
+				standardbox "Welcome"{
+					hasframe = TRUE;
+					displaycondition = CQAnswered==\I;
+					buttonposition = BOTTOMRIGHT;
+					buttonsequence = HORIZONTAL;
+					item{
+						variable = \Language;
+						format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Control questions}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Kontrollfragen}\"";
+						input = FALSE;
+					}
+					item{
+					}
+					item{
+						label = "<><\\Language|!text:1=\"Please answer the questions on the subsequent screens. If you are uncertain of the correct answer, please consult the instructions. If you need further help, please raise your hand and the experimenter will come to assist you.\";2=\"Bitte beantworten Sie die Fragen auf den folgenden Seiten. Bei Unklarheiten lesen Sie bitte in der Anleitung nach. Sollten Sie Hilfe benötigen, heben Sie bitte Ihre Hand und der Experimentator wird zu Ihnen kommen, um Ihnen behilflich zu sein.\">";
+					}
+					button "OK"{
+						clearinputafterok = FALSE;
+						norecordmadeorselected = FALSE;
+						terminatestage = FALSE;
+						donotterminatestage = TRUE;
+						specialbuttoncolor = TRUE;
+						buttoncolor = 13158600;
+						program{
+							table = subjects;
+							do{
+								//Timelog
+								
+								timelog.new
+								    {
+								    ID=timelog.maximum(ID)+1;
+								    Time=gettime()-\StartTime;
+								    Period=\Period;
+								    Subject=:Subject;
+								    Event=113;
+								    }
+							}
+						}
+						program{
+							table = subjects;
+							do{
+								//Sets CQAnswered
+								CQAnswered=0;
+							}
+						}
+					}
+				}
+				standardbox "Question1"{
+					hasframe = TRUE;
+					displaycondition = CQAnswered==0;
+					buttonposition = BOTTOMRIGHT;
+					buttonsequence = HORIZONTAL;
+					item{
+						variable = \Language;
+						format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Control question <CQAnswered+1|1>}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Kontrollfrage <CQAnswered+1|1>}\"";
+						input = FALSE;
+					}
+					item{
+					}
+					item{
+						label = "<><\\Language|!text:1=\"Question 1 text\";2=\"Fragetext 1\">";
+					}
+					item{
+						variable = CQ[1];
+						format = "<>!radio: 1=\"<\\Language|!text: 1=\"Answer 1\"; 2=\"Antwort 1\">;2=\"<\\Language|!text: 1=\"Answer 2\";  2=\"Antwort 2\">;";
+						input = TRUE;
+						showdefault = FALSE;
+						emptyallowed = FALSE;
+						min = 1;
+						max = 2;
+					}
+					button "OK"{
+						clearinputafterok = TRUE;
+						norecordmadeorselected = FALSE;
+						terminatestage = FALSE;
+						donotterminatestage = TRUE;
+						specialbuttoncolor = TRUE;
+						buttoncolor = 13158600;
+						program{
+							table = subjects;
+							do{
+								//Timelog
+								
+								timelog.new
+								    {
+								    ID=timelog.maximum(ID)+1;
+								    Time=gettime()-\StartTime;
+								    Period=\Period;
+								    Subject=:Subject;
+								    Event=201;
+								    }
+							}
+						}
+						program{
+							table = subjects;
+							do{
+								//Sets CQAnswered
+								CQAnswered=if(CQ[1]==2,CQAnswered+1,-(CQAnswered+1));
+							}
+						}
+					}
+				}
+				standardbox "Question2"{
+					hasframe = TRUE;
+					displaycondition = CQAnswered==1;
+					buttonposition = BOTTOMRIGHT;
+					buttonsequence = HORIZONTAL;
+					item{
+						variable = \Language;
+						format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Control question <CQAnswered+1|1>}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Kontrollfrage <CQAnswered+1|1>}\"";
+						input = FALSE;
+					}
+					item{
+					}
+					item{
+						label = "<><\\Language|!text:1=\"Question 2 text\";2=\"Fragetext 2\">";
+					}
+					item{
+						variable = CQ[2];
+						format = "<>!radio: 1=\"<\\Language|!text: 1=\"Answer 1\"; 2=\"Antwort 1\">;2=\"<\\Language|!text: 1=\"Answer 2\";  2=\"Antwort 2\">;3=\"<\\Language|!text: 1=\"Answer 3\";  2=\"Antwort 3\">;";
+						input = TRUE;
+						showdefault = FALSE;
+						emptyallowed = FALSE;
+						min = 1;
+						max = 3;
+					}
+					button "OK"{
+						clearinputafterok = TRUE;
+						norecordmadeorselected = FALSE;
+						terminatestage = FALSE;
+						donotterminatestage = TRUE;
+						specialbuttoncolor = TRUE;
+						buttoncolor = 13158600;
+						program{
+							table = subjects;
+							do{
+								//Timelog
+								
+								timelog.new
+								    {
+								    ID=timelog.maximum(ID)+1;
+								    Time=gettime()-\StartTime;
+								    Period=\Period;
+								    Subject=:Subject;
+								    Event=202;
+								    }
+							}
+						}
+						program{
+							table = subjects;
+							do{
+								//Sets CQAnswered
+								CQAnswered=if(CQ[2]==3,CQAnswered+1,-(CQAnswered+1));
+							}
+						}
+						program{
+							table = subjects;
+							do{
+								//Final question
+								
+								//Moves subject to waiting screen upon correct answer
+								LeaveStage=if(CQAnswered>0,1,0);
+								\CQDone=\CQDone+if(CQAnswered>0,1,0);
+								
+								//Moves experimenter subject in case all subjects have answered all questions
+								if(\CQDone==\NumSubjects){
+								    subjects.do{
+								        LeaveStage=1;
+								        }
+								    }
+							}
+						}
+					}
+				}
+				containerbox "Calculator"{
+					hasframe = FALSE;
+					height = 70p;
+					left = 25p;
+					bottom = 20%;
+					displaycondition = CQAnswered==0;
+					calulatorbox "Calculator"{
+						hasframe = FALSE;
+						width = 35p;
+						height = 31p;
+					}
+					standardbox "Label"{
+						hasframe = FALSE;
+						height = 15p;
+						bottom = 0p;
+						cutbottom = TRUE;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						item{
+							label = "<><\\Language|!text:1=\"(Open calculator)\";2=\"(Taschenrechner öffnen)\">";
+						}
+					}
+				}
+			}
+			standardbox "Experimenter"{
+				hasframe = TRUE;
+				displaycondition = IsExperimenter==1;
+				buttonposition = BOTTOMRIGHT;
+				buttonsequence = HORIZONTAL;
+				item{
+					variable = 1;
+					format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Control questions}\"";
+					input = FALSE;
+				}
+				item{
+				}
+				item{
+					label = "Subjects finished:";
+					variable = \CQDone;
+					format = "<>!text:1=\"<|1> of <\\NumSubjects|1>\"";
+					input = FALSE;
+				}
+			}
+			standardbox "ButtonBox Testmode"{
+				hasframe = FALSE;
+				height = 30p;
+				bottom = 0p;
+				displaycondition = \Testmode1==1|IsExperimenter==1;
+				buttonposition = BOTTOMRIGHT;
+				buttonsequence = HORIZONTAL;
+				button "LeaveExperiment"{
+					clearinputafterok = FALSE;
+					norecordmadeorselected = FALSE;
+					terminatestage = FALSE;
+					donotterminatestage = TRUE;
+					specialbuttoncolor = TRUE;
+					buttoncolor = 65280;
+					program{
+						table = globals;
+						do{
+							subjects.do{LeaveStage=1;}
+							\ForcedExitExperiment=1;
+						}
+					}
+					program{
+						table = subjects;
+						ownervariable = Subject;
+						do{
+							//Timelog
+							
+							timelog.new
+							    {
+							    ID=timelog.maximum(ID)+1;
+							    Time=gettime()-\StartTime;
+							    Period=\Period;
+							    Event=114;
+							    }
+						}
+					}
+				}
+				button "LeavePeriod"{
+					clearinputafterok = FALSE;
+					norecordmadeorselected = FALSE;
+					terminatestage = FALSE;
+					donotterminatestage = TRUE;
+					specialbuttoncolor = TRUE;
+					buttoncolor = 65280;
+					program{
+						table = globals;
+						do{
+							subjects.do{LeaveStage=1;}
+							\ForcedExitPeriod=1;
+						}
+					}
+					program{
+						table = subjects;
+						ownervariable = Subject;
+						do{
+							//Timelog
+							
+							timelog.new
+							    {
+							    ID=timelog.maximum(ID)+1;
+							    Time=gettime()-\StartTime;
+							    Period=\Period;
+							    Event=115;
+							    }
+						}
+					}
+				}
+				button "LeaveStage"{
+					clearinputafterok = FALSE;
+					norecordmadeorselected = FALSE;
+					terminatestage = FALSE;
+					donotterminatestage = TRUE;
+					specialbuttoncolor = TRUE;
+					buttoncolor = 65280;
+					program{
+						table = globals;
+						do{
+							subjects.do{LeaveStage=1;}
+						}
+					}
+					program{
+						table = subjects;
+						ownervariable = Subject;
+						do{
+							//Timelog
+							
+							timelog.new
+							    {
+							    ID=timelog.maximum(ID)+1;
+							    Time=gettime()-\StartTime;
+							    Period=\Period;
+							    Event=118;
+							    }
+						}
+					}
+				}
+				button "Toggle language"{
+					clearinputafterok = FALSE;
+					norecordmadeorselected = FALSE;
+					terminatestage = FALSE;
+					donotterminatestage = TRUE;
+					specialbuttoncolor = TRUE;
+					buttoncolor = 65280;
+					program{
+						table = globals;
+						do{
+							Language=if(Language==1,2,1);
+							
+						}
+					}
+				}
+			}
+		}
+		screen wait{
+			usesbg = TRUE;
+			withalertscreen = FALSE;
+			noalertscreen = FALSE;
 		}
 	}
 	stage "HoltLauryBefore"{
@@ -28592,6 +29002,8 @@ treatment "GIMS_v7.3.6_2016-10-05.ztt"{
 		}
 		role "S 4"{
 		}
+		role "S 5"{
+		}
 	}
 	period "1"{
 		subject 1{
@@ -28604,6 +29016,9 @@ treatment "GIMS_v7.3.6_2016-10-05.ztt"{
 			group = 1;
 		}
 		subject 4{
+			group = 1;
+		}
+		subject 5{
 			group = 1;
 		}
 	}
