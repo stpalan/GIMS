@@ -1,4 +1,4 @@
-treatment "GIMS_v7.4.11_2017-01-09.ztt"{
+treatment "GIMS_v7.4.12_2017-02-03.ztt"{
 	background{
 		table globals{
 		}
@@ -92,7 +92,7 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
-		numsubjects = 4;
+		numsubjects = 3;
 		numgroups = 1;
 		numpracticeperiods = 0;
 		numactualperiods = 1;
@@ -111,10 +111,10 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.4.11 #####
+				//##### GIMS Version 7.4.12 #####
 				
-				GIMSVersion="7.4.11";
-				GIMSDate="09.01.2017";
+				GIMSVersion="7.4.12";
+				GIMSDate="03.02.2017";
 			}
 		}
 		program{
@@ -5456,7 +5456,7 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 														specialbuttoncolor = TRUE;
 														buttoncolor = 13158600;
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
+															condition = 0 < (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -5577,7 +5577,7 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
+															condition = 0 < (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -5723,7 +5723,7 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 														specialbuttoncolor = TRUE;
 														buttoncolor = 13158600;
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
+															condition = 0 < (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -5844,7 +5844,7 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
+															condition = 0 < (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -6571,7 +6571,7 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
+															condition = 0 < (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -6720,7 +6720,7 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
+															condition = 0 < (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -8217,7 +8217,7 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 															specialbuttoncolor = TRUE;
 															buttoncolor = 13158600;
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
+																condition = 0 < (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "You do not have enough assets to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -8338,7 +8338,7 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
+																condition = 0 < (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "You do not have enough assets to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -8484,7 +8484,7 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 															specialbuttoncolor = TRUE;
 															buttoncolor = 13158600;
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
+																condition = 0 < (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -8605,7 +8605,7 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
+																condition = 0 < (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -9332,7 +9332,7 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
+																condition = 0 < (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "You do not have enough assets to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -9481,7 +9481,7 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
+																condition = 0 < (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -29317,8 +29317,6 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 		}
 		role "S 3"{
 		}
-		role "S 4"{
-		}
 	}
 	period "1"{
 		subject 1{
@@ -29328,9 +29326,6 @@ treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 			group = 1;
 		}
 		subject 3{
-			group = 1;
-		}
-		subject 4{
 			group = 1;
 		}
 	}
