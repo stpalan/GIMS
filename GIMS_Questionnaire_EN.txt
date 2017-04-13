@@ -1,4 +1,4 @@
-questionnaires "GIMS_Questionnaire_EN_v2.0.ztq"{
+questionnaires "GIMS_Questionnaire_EN_v2.1.ztq"{
 	adress "Adresse"{
 		title = "Please enter your Name.  All your entries will be kept confidential and will be saved separately from your entries on the following pages.";
 		firstnametext = "First Name";
@@ -174,8 +174,8 @@ questionnaires "GIMS_Questionnaire_EN_v2.0.ztq"{
 			}
 		}
 		item{
-			label = "How do you see yourself: are you generally a person who is fully prepared to take risks or do you try to avoid taking risks?";
-			variable = RiskGeneral;
+			label = "Are you generally an impatient person, or someone who always shows great patience?";
+			variable = Patience;
 			type = radioline;
 			input = TRUE;
 			longformat = FALSE;
@@ -200,8 +200,8 @@ questionnaires "GIMS_Questionnaire_EN_v2.0.ztq"{
 			}
 		}
 		item{
-			label = "Are you generally an impatient person, or someone who always shows great patience?";
-			variable = Patience;
+			label = "How do you see yourself: are you generally a person who is fully prepared to take risks or do you try to avoid taking risks?";
+			variable = RiskGeneral;
 			type = radioline;
 			input = TRUE;
 			longformat = FALSE;
@@ -408,7 +408,7 @@ questionnaires "GIMS_Questionnaire_EN_v2.0.ztq"{
 			labelsize = 61%;
 		}
 		item{
-			label = "Did you ever make a mistake in entering a price, or clicked a wrong button? If so, please tell us exactly what went wrong and in what period:";
+			label = "During this experiment, did you ever make a mistake in entering a price, or clicked a wrong button? If so, please tell us exactly what went wrong and in what period:";
 			variable = Typo;
 			type = text;
 			input = TRUE;

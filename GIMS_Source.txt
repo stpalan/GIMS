@@ -1,4 +1,4 @@
-treatment "GIMS_v7.4.2_2016-10-24.ztt"{
+treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 	background{
 		table globals{
 		}
@@ -111,10 +111,10 @@ treatment "GIMS_v7.4.2_2016-10-24.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.4.2 #####
+				//##### GIMS Version 7.4.3 #####
 				
-				GIMSVersion="7.4.2";
-				GIMSDate="24.10.2016";
+				GIMSVersion="7.4.3";
+				GIMSDate="25.11.2016";
 			}
 		}
 		program{
@@ -533,6 +533,7 @@ treatment "GIMS_v7.4.2_2016-10-24.ztt"{
 				//Writes data for questionnaire use
 				
 				IsExperimenter=subjects.find(same(Subject),IsExperimenter);
+				ExchangeRate=\ExchangeRate;
 			}
 		}
 		program{
@@ -3728,7 +3729,7 @@ treatment "GIMS_v7.4.2_2016-10-24.ztt"{
 			table = subjects;
 			condition = IsExperimenter==0&\HLBefore==1;
 			do{
-				//Payment determination
+				//HL Payment determination
 				
 				//Determines which row is to be paid
 				HLRandomRow=roundup(random()*10,1);
@@ -24562,7 +24563,7 @@ treatment "GIMS_v7.4.2_2016-10-24.ztt"{
 			table = subjects;
 			condition = IsExperimenter==0&\HLAfter==1;
 			do{
-				//Payment determination
+				//HL Payment determination
 				
 				//Determines which row is to be paid
 				HLRandomRow=roundup(random()*10,1);
@@ -28595,14 +28596,6 @@ treatment "GIMS_v7.4.2_2016-10-24.ztt"{
 				    Event=68;
 				    }
 				
-				
-			}
-		}
-		program{
-			table = session;
-			do{
-				//Copies data to session table for use in questionnaire
-				IsExperimenter=subjects.find(same(Subject),IsExperimenter);
 				
 			}
 		}

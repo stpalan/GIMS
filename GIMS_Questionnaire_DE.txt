@@ -1,4 +1,4 @@
-questionnaires "GIMS_Questionnaire_DE_v2.0.ztq"{
+questionnaires "GIMS_Questionnaire_DE_v2.1.ztq"{
 	adress "Adresse"{
 		title = "Bitte geben Sie Ihren Namen ein. Ihre gesamten Eingaben werden vertraulich behandelt und getrennt von Ihren Eingaben auf den folgenden Seiten gespeichert.";
 		firstnametext = "Vorname";
@@ -174,8 +174,8 @@ questionnaires "GIMS_Questionnaire_DE_v2.0.ztq"{
 			}
 		}
 		item{
-			label = "Wie schätzen Sie sich persönlich ein: Sind Sie im allgemeinen ein risikobereiter Mensch oder versuchen Sie, Risiken zu vermeiden?";
-			variable = RiskGeneral;
+			label = "Wie schätzen Sie sich persönlich ein: Sind Sie im allgemeinen ein Mensch, der ungeduldig ist, oder der immer sehr viel Geduld aufbringt?";
+			variable = Patience;
 			type = radioline;
 			input = TRUE;
 			longformat = FALSE;
@@ -200,8 +200,8 @@ questionnaires "GIMS_Questionnaire_DE_v2.0.ztq"{
 			}
 		}
 		item{
-			label = "Wie schätzen Sie sich persönlich ein: Sind Sie im allgemeinen ein Mensch, der ungeduldig ist, oder der immer sehr viel Geduld aufbringt?";
-			variable = Patience;
+			label = "Wie schätzen Sie sich persönlich ein: Sind Sie im allgemeinen ein risikobereiter Mensch oder versuchen Sie, Risiken zu vermeiden?";
+			variable = RiskGeneral;
 			type = radioline;
 			input = TRUE;
 			longformat = FALSE;
@@ -408,7 +408,7 @@ questionnaires "GIMS_Questionnaire_DE_v2.0.ztq"{
 			labelsize = 61%;
 		}
 		item{
-			label = "Haben Sie jemals einen Fehler bei der Eingabe eines Preises gemacht, oder einen falschen Knopf geklickt? Falls ja, bitte teilen Sie uns genau mit, worin der Fehler bestand und in welcher Periode er sich ereignet hat:";
+			label = "Haben Sie im aktuellen Experiment jemals einen Fehler bei der Eingabe eines Preises gemacht, oder einen falschen Knopf geklickt? Falls ja, bitte teilen Sie uns genau mit, worin der Fehler bestand und in welcher Periode er sich ereignet hat:";
 			variable = Typo;
 			type = text;
 			input = TRUE;
