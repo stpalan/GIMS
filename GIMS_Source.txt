@@ -1,4 +1,4 @@
-treatment "GIMS_v7.6.0_2017-04-10.ztt"{
+treatment "GIMS_v7.6.1_2017-04-12.ztt"{
 	background{
 		table globals{
 		}
@@ -119,10 +119,10 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.6.0 #####
+				//##### GIMS Version 7.6.1 #####
 				
-				GIMSVersion="7.6.0";
-				GIMSDate="10.04.2017";
+				GIMSVersion="7.6.1";
+				GIMSDate="12.04.2017";
 				
 				
 			}
@@ -194,7 +194,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 				
 				//Payoff settings
 				ExchangeRate=1;
-				MinPayoffCurrency=5;
+				MinPayoffCurrency=0;
 				MinPayoffECU=0;
 				Currency=1;    //1=Euro 2=US Dollars 3=Danish Kroner 4=Australian Dollars
 				PayoffPrecision=0.1;    //Multiple to round payoffs to, in EUR or equivalent
@@ -220,7 +220,6 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 				HLBefore=0;    //Currently only before or after supported. Reset HLChoice=\I in between if you want to record both.
 				HLAfter=0;
 				SettingsStage=1;
-				SettingsScreen=1;
 				ControlQuestions=if(PracticePeriod==0&Period==1,1,0);
 				NumCQ=2;
 				subjects.do{array CQ[\NumCQ];}
@@ -233,8 +232,6 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 				TimeFinLitResult=1;
 				TimeHoltLaury=-1;
 				TimeHoltLauryResult=30;
-				
-				
 			}
 		}
 		program{
@@ -439,8 +436,6 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 				    }
 				
 				RandomPayoffPeriod=roundup(random()*NumPeriods,1);
-				
-				
 			}
 		}
 		program{
@@ -595,6 +590,24 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 				    }
 				
 				
+			}
+		}
+		program{
+			table = globals;
+			do{
+				//Variable initialization Settings stage
+				
+				SettingsScreen=1;
+				SettingsEntryShow=0;
+				SettingsEntryTitle="#################################################################################";
+				SettingsEntryValue=\I;
+				SettingsEntryPrecision=\I;
+				SettingsEntryMin=\I;
+				SettingsEntryMax=\I;
+				
+				subjects.do{
+				    SettingsEntryValue=\I;
+				    }
 			}
 		}
 		program{
@@ -1338,10 +1351,21 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 			table = globals;
 			condition = \SettingsStage==1&Period==1;
 			do{
-				//Copies current globals table settings to settings_globals table
+				//Copies current globals table settings to settings_globals table and to experimenter subject subjects table record in case of numeric entries
 				
 				settings_globals.new{
+				
+				    //General settings
 				    GIMSVersion=\GIMSVersion;
+				    ExchangeRate=\ExchangeRate;
+				    PracticePeriod=\PracticePeriod;
+				    Language=\Language;
+				    CurrentYear=\CurrentYear;
+				    MinPayoffCurrency=\MinPayoffCurrency;
+				    MinPayoffECU=\MinPayoffECU;
+				    Currency=\Currency;
+				
+				    //Stage settings
 				    CallAuction=\CallAuction;
 				    ContinuousDoubleAuction=\ContinuousDoubleAuction;
 				    CRTBefore=\CRTBefore;
@@ -1350,10 +1374,35 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 				    HLBefore=\HLBefore;
 				    HLAfter=\HLAfter;
 				    ControlQuestions=\ControlQuestions;
-				    ExchangeRate=\ExchangeRate;
+				    Currency=\Currency;
+				    TimeContinuousDoubleAuction=\TimeContinuousDoubleAuction;
+				    TimeContinuousDoubleAuctionResults=\TimeContinuousDoubleAuctionResults;
+				    TimeCallAuction=\TimeCallAuction;
+				    TimeCallAuctionResults=\TimeCallAuctionResults;
+				    TimeFinLitResult=\TimeFinLitResult;
+				    TimeHoltLaury=\TimeHoltLaury;
+				    TimeHoltLauryResult=\TimeHoltLauryResult;
 				    }
 				
+				subjects.do{
+				    if(IsExperimenter==1){
 				
+				        //General settings
+				        CurrentYear=\CurrentYear;
+				        ExchangeRate=\ExchangeRate;
+				        MinPayoffCurrency=\MinPayoffCurrency;
+				        MinPayoffECU=\MinPayoffECU;
+				
+				         //Stage settings
+				        TimeContinuousDoubleAuction=\TimeContinuousDoubleAuction;
+				        TimeContinuousDoubleAuctionResults=\TimeContinuousDoubleAuctionResults;
+				        TimeCallAuction=\TimeCallAuction;
+				        TimeCallAuctionResults=\TimeCallAuctionResults;
+				        TimeFinLitResult=\TimeFinLitResult;
+				        TimeHoltLaury=\TimeHoltLaury;
+				        TimeHoltLauryResult=\TimeHoltLauryResult;
+				        }
+				    }
 			}
 		}
 		tableloader{
@@ -1400,6 +1449,11 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						donotterminatestage = FALSE;
 						specialbuttoncolor = TRUE;
 						buttoncolor = 5921535;
+						checker{
+							condition = \SettingsEntryShow==0;
+							message = "<><\\Language|!text:1=\"Please enter a new value before continuing!\";2=\"Bitte geben Sie einen neuen Wert ein, bevor Sie fortfahren!\">";
+							noButtonStr = "OK";
+						}
 						program{
 							table = globals;
 							do{
@@ -1419,15 +1473,39 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						program{
 							table = globals;
 							do{
+								//Copies variables which must be entered numerically from experimenter subject's entry in subjects table to globals table
+								
 								ExchangeRate=subjects.find(IsExperimenter==1,ExchangeRate);
+								CurrentYear=subjects.find(IsExperimenter==1,CurrentYear);
+								ExchangeRate=subjects.find(IsExperimenter==1,ExchangeRate);
+								MinPayoffCurrency=subjects.find(IsExperimenter==1,MinPayoffCurrency);
+								MinPayoffECU=subjects.find(IsExperimenter==1,MinPayoffECU);
+								TimeContinuousDoubleAuction=subjects.find(IsExperimenter==1,TimeContinuousDoubleAuction);
+								TimeContinuousDoubleAuctionResults=subjects.find(IsExperimenter==1,TimeContinuousDoubleAuctionResults);
+								TimeCallAuction=subjects.find(IsExperimenter==1,TimeCallAuction);
+								TimeCallAuctionResults=subjects.find(IsExperimenter==1,TimeCallAuctionResults);
+								TimeFinLitResult=subjects.find(IsExperimenter==1,TimeFinLitResult);
+								TimeHoltLaury=subjects.find(IsExperimenter==1,TimeHoltLaury);
+								TimeHoltLauryResult=subjects.find(IsExperimenter==1,TimeHoltLauryResult);
 							}
 						}
 						program{
 							table = settings_globals;
 							do{
-								//Copies current globals table settings to settings_globals table
+								//Copies current globals table settings to settings_globals table and to experimenter subject subjects table record in case of numeric entries
 								
+								
+								//General settings
 								GIMSVersion=\GIMSVersion;
+								ExchangeRate=\ExchangeRate;
+								PracticePeriod=\PracticePeriod;
+								Language=\Language;
+								CurrentYear=\CurrentYear;
+								MinPayoffCurrency=\MinPayoffCurrency;
+								MinPayoffECU=\MinPayoffECU;
+								Currency=\Currency;
+								
+								//Stage settings
 								CallAuction=\CallAuction;
 								ContinuousDoubleAuction=\ContinuousDoubleAuction;
 								CRTBefore=\CRTBefore;
@@ -1436,7 +1514,14 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 								HLBefore=\HLBefore;
 								HLAfter=\HLAfter;
 								ControlQuestions=\ControlQuestions;
-								ExchangeRate=\ExchangeRate;
+								Currency=\Currency;
+								TimeContinuousDoubleAuction=\TimeContinuousDoubleAuction;
+								TimeContinuousDoubleAuctionResults=\TimeContinuousDoubleAuctionResults;
+								TimeCallAuction=\TimeCallAuction;
+								TimeCallAuctionResults=\TimeCallAuctionResults;
+								TimeFinLitResult=\TimeFinLitResult;
+								TimeHoltLaury=\TimeHoltLaury;
+								TimeHoltLauryResult=\TimeHoltLauryResult;
 							}
 						}
 						tabledumper{
@@ -1456,10 +1541,19 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						program{
 							table = globals;
-							condition = FALSE;
 							do{
-								//Copies current settings_globals table settings to globals table
+								//Copies current settings_globals table settings to globals table and to experimenter subject subjects table record in case of numeric entries
 								
+								//General settings
+								ExchangeRate=settings_globals.find(same(GIMSVersion),ExchangeRate);
+								PracticePeriod=settings_globals.find(same(GIMSVersion),PracticePeriod);
+								Language=settings_globals.find(same(GIMSVersion),Language);
+								CurrentYear=settings_globals.find(same(GIMSVersion),CurrentYear);
+								MinPayoffCurrency=settings_globals.find(same(GIMSVersion),MinPayoffCurrency);
+								MinPayoffECU=settings_globals.find(same(GIMSVersion),MinPayoffECU);
+								Currency=settings_globals.find(same(GIMSVersion),Currency);
+								
+								//Stage settings
 								CallAuction=settings_globals.find(same(GIMSVersion),CallAuction);
 								ContinuousDoubleAuction=settings_globals.find(same(GIMSVersion),ContinuousDoubleAuction);
 								CRTBefore=settings_globals.find(same(GIMSVersion),CRTBefore);
@@ -1468,7 +1562,32 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 								HLBefore=settings_globals.find(same(GIMSVersion),HLBefore);
 								HLAfter=settings_globals.find(same(GIMSVersion),HLAfter);
 								ControlQuestions=settings_globals.find(same(GIMSVersion),ControlQuestions);
-								ExchangeRate=settings_globals.find(same(GIMSVersion),ExchangeRate);
+								TimeContinuousDoubleAuction=settings_globals.find(same(GIMSVersion),TimeContinuousDoubleAuction);
+								TimeContinuousDoubleAuctionResults=settings_globals.find(same(GIMSVersion),TimeContinuousDoubleAuctionResults);
+								TimeCallAuction=settings_globals.find(same(GIMSVersion),TimeCallAuction);
+								TimeCallAuctionResults=settings_globals.find(same(GIMSVersion),TimeCallAuctionResults);
+								TimeFinLitResult=settings_globals.find(same(GIMSVersion),TimeFinLitResult);
+								TimeHoltLaury=settings_globals.find(same(GIMSVersion),TimeHoltLaury);
+								TimeHoltLauryResult=settings_globals.find(same(GIMSVersion),TimeHoltLauryResult);
+								
+								subjects.do{
+								    if(IsExperimenter==1){
+								        //General settings
+								        CurrentYear=\CurrentYear;
+								        ExchangeRate=\ExchangeRate;
+								        MinPayoffCurrency=\MinPayoffCurrency;
+								        MinPayoffECU=\MinPayoffECU;
+								
+								         //Stage settings
+								        TimeContinuousDoubleAuction=\TimeContinuousDoubleAuction;
+								        TimeContinuousDoubleAuctionResults=\TimeContinuousDoubleAuctionResults;
+								        TimeCallAuction=\TimeCallAuction;
+								        TimeCallAuctionResults=\TimeCallAuctionResults;
+								        TimeFinLitResult=\TimeFinLitResult;
+								        TimeHoltLaury=\TimeHoltLaury;
+								        TimeHoltLauryResult=\TimeHoltLauryResult;
+								        }
+								    }
 							}
 						}
 					}
@@ -1482,8 +1601,18 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						program{
 							table = globals;
 							do{
-								//Copies current settings_globals table settings to globals table
+								//Copies current settings_globals table settings to globals table and to experimenter subject subjects table record in case of numeric entries
 								
+								//General settings
+								ExchangeRate=settings_globals.find(same(GIMSVersion),ExchangeRate);
+								PracticePeriod=settings_globals.find(same(GIMSVersion),PracticePeriod);
+								Language=settings_globals.find(same(GIMSVersion),Language);
+								CurrentYear=settings_globals.find(same(GIMSVersion),CurrentYear);
+								MinPayoffCurrency=settings_globals.find(same(GIMSVersion),MinPayoffCurrency);
+								MinPayoffECU=settings_globals.find(same(GIMSVersion),MinPayoffECU);
+								Currency=settings_globals.find(same(GIMSVersion),Currency);
+								
+								//Stage settings
 								CallAuction=settings_globals.find(same(GIMSVersion),CallAuction);
 								ContinuousDoubleAuction=settings_globals.find(same(GIMSVersion),ContinuousDoubleAuction);
 								CRTBefore=settings_globals.find(same(GIMSVersion),CRTBefore);
@@ -1492,7 +1621,32 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 								HLBefore=settings_globals.find(same(GIMSVersion),HLBefore);
 								HLAfter=settings_globals.find(same(GIMSVersion),HLAfter);
 								ControlQuestions=settings_globals.find(same(GIMSVersion),ControlQuestions);
-								ExchangeRate=settings_globals.find(same(GIMSVersion),ExchangeRate);
+								TimeContinuousDoubleAuction=settings_globals.find(same(GIMSVersion),TimeContinuousDoubleAuction);
+								TimeContinuousDoubleAuctionResults=settings_globals.find(same(GIMSVersion),TimeContinuousDoubleAuctionResults);
+								TimeCallAuction=settings_globals.find(same(GIMSVersion),TimeCallAuction);
+								TimeCallAuctionResults=settings_globals.find(same(GIMSVersion),TimeCallAuctionResults);
+								TimeFinLitResult=settings_globals.find(same(GIMSVersion),TimeFinLitResult);
+								TimeHoltLaury=settings_globals.find(same(GIMSVersion),TimeHoltLaury);
+								TimeHoltLauryResult=settings_globals.find(same(GIMSVersion),TimeHoltLauryResult);
+								
+								subjects.do{
+								    if(IsExperimenter==1){
+								        //General settings
+								        CurrentYear=\CurrentYear;
+								        ExchangeRate=\ExchangeRate;
+								        MinPayoffCurrency=\MinPayoffCurrency;
+								        MinPayoffECU=\MinPayoffECU;
+								
+								         //Stage settings
+								        TimeContinuousDoubleAuction=\TimeContinuousDoubleAuction;
+								        TimeContinuousDoubleAuctionResults=\TimeContinuousDoubleAuctionResults;
+								        TimeCallAuction=\TimeCallAuction;
+								        TimeCallAuctionResults=\TimeCallAuctionResults;
+								        TimeFinLitResult=\TimeFinLitResult;
+								        TimeHoltLaury=\TimeHoltLaury;
+								        TimeHoltLauryResult=\TimeHoltLauryResult;
+								        }
+								    }
 							}
 						}
 					}
@@ -1615,7 +1769,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						cuttop = TRUE;
 						standardbox "Text"{
 							hasframe = FALSE;
-							width = 250p;
+							width = 290p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1626,13 +1780,13 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Value"{
 							hasframe = FALSE;
-							width = 120p;
+							width = 150p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
 							buttonsequence = HORIZONTAL;
 							item{
-								label = "{\\rtf \\fs20 \\qr \\b Value}";
+								label = "{\\rtf \\fs20 \\qc \\b Value}";
 							}
 						}
 						standardbox "Action"{
@@ -1655,6 +1809,254 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 							}
 						}
 					}
+					containerbox "Language"{
+						hasframe = FALSE;
+						height = 35p;
+						top = 0p;
+						cuttop = TRUE;
+						standardbox "Text"{
+							hasframe = FALSE;
+							width = 290p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Which language should the client screens use?}";
+							}
+						}
+						standardbox "Value"{
+							hasframe = FALSE;
+							width = 150p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								variable = \Language;
+								format = "!text:1=\"{\\rtf \\qc English}\";2=\"{\\rtf \\qc German}\"";
+								input = FALSE;
+							}
+						}
+						standardbox "Action"{
+							hasframe = FALSE;
+							width = 120p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							button "Switch"{
+								clearinputafterok = FALSE;
+								norecordmadeorselected = FALSE;
+								terminatestage = FALSE;
+								donotterminatestage = TRUE;
+								specialbuttoncolor = TRUE;
+								buttoncolor = 13158600;
+								program{
+									table = globals;
+									do{
+										Language=if(Language==1,2,1);
+									}
+								}
+							}
+						}
+						standardbox "Description"{
+							hasframe = FALSE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Switch to determine which language GIMS should use on subjects' screens. Note that you also need to set the language you start the z-Leafs in (using z-Leaf command line options) so the system messages are displayed in the correct language.}";
+							}
+						}
+					}
+					containerbox "PracticePeriod"{
+						hasframe = FALSE;
+						height = 35p;
+						top = 0p;
+						cuttop = TRUE;
+						standardbox "Text"{
+							hasframe = FALSE;
+							width = 290p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Run this treatment as a practice period?}";
+							}
+						}
+						standardbox "Value"{
+							hasframe = FALSE;
+							width = 150p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								variable = \PracticePeriod;
+								format = "!text:0=\"{\\rtf \\qc No}\";1=\"{\\rtf \\qc Yes}\"";
+								input = FALSE;
+							}
+						}
+						standardbox "Action"{
+							hasframe = FALSE;
+							width = 120p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							button "Switch"{
+								clearinputafterok = FALSE;
+								norecordmadeorselected = FALSE;
+								terminatestage = FALSE;
+								donotterminatestage = TRUE;
+								specialbuttoncolor = TRUE;
+								buttoncolor = 13158600;
+								program{
+									table = globals;
+									do{
+										PracticePeriod=1-PracticePeriod;
+									}
+								}
+							}
+						}
+						standardbox "Description"{
+							hasframe = FALSE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Switch to determine whether this treatment is a practice treatment or not.}";
+							}
+						}
+					}
+					containerbox "Currency"{
+						hasframe = FALSE;
+						height = 35p;
+						top = 0p;
+						cuttop = TRUE;
+						standardbox "Text"{
+							hasframe = FALSE;
+							width = 290p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql What is the local currency?}";
+							}
+						}
+						standardbox "Value"{
+							hasframe = FALSE;
+							width = 150p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								variable = \Currency;
+								format = "!text:1=\"{\\rtf \\qc Euros              }\";2=\"{\\rtf \\qc US Dollars}\";3=\"{\\rtf \\qc Danish Kroner}\";4=\"{\\rtf \\qc Australian Dollars}\"";
+								input = FALSE;
+							}
+						}
+						standardbox "Action"{
+							hasframe = FALSE;
+							width = 120p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							button "Switch"{
+								clearinputafterok = FALSE;
+								norecordmadeorselected = FALSE;
+								terminatestage = FALSE;
+								donotterminatestage = TRUE;
+								specialbuttoncolor = TRUE;
+								buttoncolor = 13158600;
+								program{
+									table = globals;
+									do{
+										Currency=if(Currency<4,Currency+1,1);
+									}
+								}
+							}
+						}
+						standardbox "Description"{
+							hasframe = FALSE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Switch to determine which currency GIMS should name when referring to the local currency in text messages.}";
+							}
+						}
+					}
+					containerbox "CurrentYear"{
+						hasframe = FALSE;
+						height = 35p;
+						top = 0p;
+						cuttop = TRUE;
+						standardbox "Text"{
+							hasframe = FALSE;
+							width = 290p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql What is the current year?}";
+							}
+						}
+						standardbox "Value"{
+							hasframe = FALSE;
+							width = 150p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								variable = \CurrentYear;
+								format = "1";
+								input = FALSE;
+							}
+						}
+						standardbox "Action"{
+							hasframe = FALSE;
+							width = 120p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							button "Modify"{
+								clearinputafterok = FALSE;
+								norecordmadeorselected = FALSE;
+								terminatestage = FALSE;
+								donotterminatestage = TRUE;
+								specialbuttoncolor = TRUE;
+								buttoncolor = 13158600;
+								program{
+									table = globals;
+									do{
+										//Opens entry screen
+										
+										//Sets necessary variables
+										SettingsEntryShow=1;
+										SettingsEntryTitle="Current year";
+										SettingsEntryValue=\CurrentYear;
+										SettingsEntryPrecision=1;
+										SettingsEntryMin=2017;
+										SettingsEntryMax=2099;
+									}
+								}
+							}
+						}
+						standardbox "Description"{
+							hasframe = FALSE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Set the current year.}";
+							}
+						}
+					}
 					containerbox "ExchangeRate"{
 						hasframe = FALSE;
 						height = 35p;
@@ -1662,7 +2064,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						cuttop = TRUE;
 						standardbox "Text"{
 							hasframe = FALSE;
-							width = 250p;
+							width = 290p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1673,7 +2075,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Value"{
 							hasframe = FALSE;
-							width = 120p;
+							width = 150p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1691,14 +2093,27 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
 							buttonsequence = HORIZONTAL;
-							item{
-								variable = ExchangeRate;
-								format = "0.000001";
-								input = TRUE;
-								showdefault = TRUE;
-								emptyallowed = FALSE;
-								min = 0.000001;
-								max = 9999999;
+							button "Modify"{
+								clearinputafterok = FALSE;
+								norecordmadeorselected = FALSE;
+								terminatestage = FALSE;
+								donotterminatestage = TRUE;
+								specialbuttoncolor = TRUE;
+								buttoncolor = 13158600;
+								program{
+									table = globals;
+									do{
+										//Opens entry screen
+										
+										//Sets necessary variables
+										SettingsEntryShow=1;
+										SettingsEntryTitle="Exchange rate";
+										SettingsEntryValue=\ExchangeRate;
+										SettingsEntryPrecision=0.000001;
+										SettingsEntryMin=0.000001;
+										SettingsEntryMax=9999999;
+									}
+								}
 							}
 						}
 						standardbox "Description"{
@@ -1707,6 +2122,142 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 							buttonsequence = HORIZONTAL;
 							item{
 								label = "{\\rtf \\ql Value of one unit of the experimental currency in terms of real currency (e.g., value of 1 Taler in Euros).}";
+							}
+						}
+					}
+					containerbox "MinPayoffCurrency"{
+						hasframe = FALSE;
+						height = 35p;
+						top = 0p;
+						cuttop = TRUE;
+						standardbox "Text"{
+							hasframe = FALSE;
+							width = 290p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Minimum payoff (in real currency):}";
+							}
+						}
+						standardbox "Value"{
+							hasframe = FALSE;
+							width = 150p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								variable = \MinPayoffCurrency;
+								format = "0.01";
+								input = FALSE;
+							}
+						}
+						standardbox "Action"{
+							hasframe = FALSE;
+							width = 120p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							button "Modify"{
+								clearinputafterok = FALSE;
+								norecordmadeorselected = FALSE;
+								terminatestage = FALSE;
+								donotterminatestage = TRUE;
+								specialbuttoncolor = TRUE;
+								buttoncolor = 13158600;
+								program{
+									table = globals;
+									do{
+										//Opens entry screen
+										
+										//Sets necessary variables
+										SettingsEntryShow=1;
+										SettingsEntryTitle="Minimum payoff (real currency)";
+										SettingsEntryValue=\MinPayoffCurrency;
+										SettingsEntryPrecision=0.01;
+										SettingsEntryMin=0;
+										SettingsEntryMax=9999999;
+									}
+								}
+							}
+						}
+						standardbox "Description"{
+							hasframe = FALSE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Minimum payoff per subject in the local currency. If a subject would earn less, his/her earnings are set to this minimum amount.}";
+							}
+						}
+					}
+					containerbox "MinPayoffECU"{
+						hasframe = FALSE;
+						height = 35p;
+						top = 0p;
+						cuttop = TRUE;
+						standardbox "Text"{
+							hasframe = FALSE;
+							width = 290p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Minimum payoff (in experimental currency):}";
+							}
+						}
+						standardbox "Value"{
+							hasframe = FALSE;
+							width = 150p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								variable = \MinPayoffECU;
+								format = "0.01";
+								input = FALSE;
+							}
+						}
+						standardbox "Action"{
+							hasframe = FALSE;
+							width = 120p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							button "Modify"{
+								clearinputafterok = FALSE;
+								norecordmadeorselected = FALSE;
+								terminatestage = FALSE;
+								donotterminatestage = TRUE;
+								specialbuttoncolor = TRUE;
+								buttoncolor = 13158600;
+								program{
+									table = globals;
+									do{
+										//Opens entry screen
+										
+										//Sets necessary variables
+										SettingsEntryShow=1;
+										SettingsEntryTitle="Minimum payoff (experimental currency)";
+										SettingsEntryValue=\MinPayoffECU;
+										SettingsEntryPrecision=0.01;
+										SettingsEntryMin=0;
+										SettingsEntryMax=9999999;
+									}
+								}
+							}
+						}
+						standardbox "Description"{
+							hasframe = FALSE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Minimum payoff per subject in experimental currency. If a subject would earn less, his/her earnings are set to this minimum amount.}";
 							}
 						}
 					}
@@ -1721,7 +2272,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						cuttop = TRUE;
 						standardbox "Text"{
 							hasframe = FALSE;
-							width = 300p;
+							width = 370p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1732,7 +2283,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Value"{
 							hasframe = FALSE;
-							width = 80p;
+							width = 70p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1743,7 +2294,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Action"{
 							hasframe = FALSE;
-							width = 100p;
+							width = 110p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1768,7 +2319,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						cuttop = TRUE;
 						standardbox "Text"{
 							hasframe = FALSE;
-							width = 300p;
+							width = 370p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1779,7 +2330,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Value"{
 							hasframe = FALSE;
-							width = 80p;
+							width = 70p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1792,7 +2343,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Action"{
 							hasframe = FALSE;
-							width = 100p;
+							width = 110p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1828,7 +2379,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						cuttop = TRUE;
 						standardbox "Text"{
 							hasframe = FALSE;
-							width = 300p;
+							width = 370p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1839,7 +2390,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Value"{
 							hasframe = FALSE;
-							width = 80p;
+							width = 70p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1852,7 +2403,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Action"{
 							hasframe = FALSE;
-							width = 100p;
+							width = 110p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1888,7 +2439,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						cuttop = TRUE;
 						standardbox "Text"{
 							hasframe = FALSE;
-							width = 300p;
+							width = 370p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1899,7 +2450,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Value"{
 							hasframe = FALSE;
-							width = 80p;
+							width = 70p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1912,7 +2463,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Action"{
 							hasframe = FALSE;
-							width = 100p;
+							width = 110p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1948,7 +2499,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						cuttop = TRUE;
 						standardbox "Text"{
 							hasframe = FALSE;
-							width = 300p;
+							width = 370p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1959,7 +2510,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Value"{
 							hasframe = FALSE;
-							width = 80p;
+							width = 70p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -1972,7 +2523,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Action"{
 							hasframe = FALSE;
-							width = 100p;
+							width = 110p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -2008,7 +2559,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						cuttop = TRUE;
 						standardbox "Text"{
 							hasframe = FALSE;
-							width = 300p;
+							width = 370p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -2019,7 +2570,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Value"{
 							hasframe = FALSE;
-							width = 80p;
+							width = 70p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -2032,7 +2583,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Action"{
 							hasframe = FALSE;
-							width = 100p;
+							width = 110p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -2068,7 +2619,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						cuttop = TRUE;
 						standardbox "Text"{
 							hasframe = FALSE;
-							width = 300p;
+							width = 370p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -2079,7 +2630,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Value"{
 							hasframe = FALSE;
-							width = 80p;
+							width = 70p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -2092,7 +2643,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Action"{
 							hasframe = FALSE;
-							width = 100p;
+							width = 110p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -2128,7 +2679,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						cuttop = TRUE;
 						standardbox "Text"{
 							hasframe = FALSE;
-							width = 300p;
+							width = 370p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -2139,7 +2690,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Value"{
 							hasframe = FALSE;
-							width = 80p;
+							width = 70p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -2152,7 +2703,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Action"{
 							hasframe = FALSE;
-							width = 100p;
+							width = 110p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -2188,7 +2739,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						cuttop = TRUE;
 						standardbox "Text"{
 							hasframe = FALSE;
-							width = 300p;
+							width = 370p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -2199,7 +2750,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Value"{
 							hasframe = FALSE;
-							width = 80p;
+							width = 70p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -2212,7 +2763,7 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 						}
 						standardbox "Action"{
 							hasframe = FALSE;
-							width = 100p;
+							width = 110p;
 							left = 0p;
 							cutleft = TRUE;
 							buttonposition = BOTTOMRIGHT;
@@ -2238,6 +2789,572 @@ treatment "GIMS_v7.6.0_2017-04-10.ztt"{
 							buttonsequence = HORIZONTAL;
 							item{
 								label = "{\\rtf \\ql Switch to determine whether the ControlQuestions stage should be run or not.}";
+							}
+						}
+					}
+					containerbox "TimeContinuousDoubleAuction"{
+						hasframe = FALSE;
+						height = 35p;
+						top = 0p;
+						cuttop = TRUE;
+						standardbox "Text"{
+							hasframe = FALSE;
+							width = 370p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Duration of the continuous double auction (sec):}";
+							}
+						}
+						standardbox "Value"{
+							hasframe = FALSE;
+							width = 70p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								variable = \TimeContinuousDoubleAuction;
+								format = "1";
+								input = FALSE;
+							}
+						}
+						standardbox "Action"{
+							hasframe = FALSE;
+							width = 110p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							button "Modify"{
+								clearinputafterok = FALSE;
+								norecordmadeorselected = FALSE;
+								terminatestage = FALSE;
+								donotterminatestage = TRUE;
+								specialbuttoncolor = TRUE;
+								buttoncolor = 13158600;
+								program{
+									table = globals;
+									do{
+										//Opens entry screen
+										
+										//Sets necessary variables
+										SettingsEntryShow=1;
+										SettingsEntryTitle="Duration of continuous double auction";
+										SettingsEntryValue=\TimeContinuousDoubleAuction;
+										SettingsEntryPrecision=1;
+										SettingsEntryMin=-1;
+										SettingsEntryMax=86400;
+									}
+								}
+							}
+						}
+						standardbox "Description"{
+							hasframe = FALSE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql The length in seconds subjects spend in the ContinuousDoubleAuction stage (if it is enabled). Use '-1' for infinite duration.}";
+							}
+						}
+					}
+					containerbox "TimeContinuousDoubleAuctionResults"{
+						hasframe = FALSE;
+						height = 35p;
+						top = 0p;
+						cuttop = TRUE;
+						standardbox "Text"{
+							hasframe = FALSE;
+							width = 370p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Duration of the continuous double auction results screen (sec):}";
+							}
+						}
+						standardbox "Value"{
+							hasframe = FALSE;
+							width = 70p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								variable = \TimeContinuousDoubleAuctionResults;
+								format = "1";
+								input = FALSE;
+							}
+						}
+						standardbox "Action"{
+							hasframe = FALSE;
+							width = 110p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							button "Modify"{
+								clearinputafterok = FALSE;
+								norecordmadeorselected = FALSE;
+								terminatestage = FALSE;
+								donotterminatestage = TRUE;
+								specialbuttoncolor = TRUE;
+								buttoncolor = 13158600;
+								program{
+									table = globals;
+									do{
+										//Opens entry screen
+										
+										//Sets necessary variables
+										SettingsEntryShow=1;
+										SettingsEntryTitle="Duration of continuous double auction results screen";
+										SettingsEntryValue=\TimeContinuousDoubleAuctionResults;
+										SettingsEntryPrecision=1;
+										SettingsEntryMin=-1;
+										SettingsEntryMax=86400;
+									}
+								}
+							}
+						}
+						standardbox "Description"{
+							hasframe = FALSE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql The length in seconds subjects spend in the ContinuousDoubleAuctionResults stage (if it is enabled). Use '-1' for infinite duration.}";
+							}
+						}
+					}
+					containerbox "TimeCallAuction"{
+						hasframe = FALSE;
+						height = 35p;
+						top = 0p;
+						cuttop = TRUE;
+						standardbox "Text"{
+							hasframe = FALSE;
+							width = 370p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Duration of the call auction (sec):}";
+							}
+						}
+						standardbox "Value"{
+							hasframe = FALSE;
+							width = 70p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								variable = \TimeCallAuction;
+								format = "1";
+								input = FALSE;
+							}
+						}
+						standardbox "Action"{
+							hasframe = FALSE;
+							width = 110p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							button "Modify"{
+								clearinputafterok = FALSE;
+								norecordmadeorselected = FALSE;
+								terminatestage = FALSE;
+								donotterminatestage = TRUE;
+								specialbuttoncolor = TRUE;
+								buttoncolor = 13158600;
+								program{
+									table = globals;
+									do{
+										//Opens entry screen
+										
+										//Sets necessary variables
+										SettingsEntryShow=1;
+										SettingsEntryTitle="Duration of call auction";
+										SettingsEntryValue=\TimeCallAuction;
+										SettingsEntryPrecision=1;
+										SettingsEntryMin=-1;
+										SettingsEntryMax=86400;
+									}
+								}
+							}
+						}
+						standardbox "Description"{
+							hasframe = FALSE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql The length in seconds subjects spend in the CallAuction stage (if it is enabled). Use '-1' for infinite duration.}";
+							}
+						}
+					}
+					containerbox "TimeCallAuctionResults"{
+						hasframe = FALSE;
+						height = 35p;
+						top = 0p;
+						cuttop = TRUE;
+						standardbox "Text"{
+							hasframe = FALSE;
+							width = 370p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Duration of the call auction results screen (sec):}";
+							}
+						}
+						standardbox "Value"{
+							hasframe = FALSE;
+							width = 70p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								variable = \TimeCallAuctionResults;
+								format = "1";
+								input = FALSE;
+							}
+						}
+						standardbox "Action"{
+							hasframe = FALSE;
+							width = 110p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							button "Modify"{
+								clearinputafterok = FALSE;
+								norecordmadeorselected = FALSE;
+								terminatestage = FALSE;
+								donotterminatestage = TRUE;
+								specialbuttoncolor = TRUE;
+								buttoncolor = 13158600;
+								program{
+									table = globals;
+									do{
+										//Opens entry screen
+										
+										//Sets necessary variables
+										SettingsEntryShow=1;
+										SettingsEntryTitle="Duration of call auction results screen";
+										SettingsEntryValue=\TimeCallAuctionResults;
+										SettingsEntryPrecision=1;
+										SettingsEntryMin=-1;
+										SettingsEntryMax=86400;
+									}
+								}
+							}
+						}
+						standardbox "Description"{
+							hasframe = FALSE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql The length in seconds subjects spend in the CallAuctionResults stage (if it is enabled). Use '-1' for infinite duration.}";
+							}
+						}
+					}
+					containerbox "TimeFinLitResult"{
+						hasframe = FALSE;
+						height = 35p;
+						top = 0p;
+						cuttop = TRUE;
+						standardbox "Text"{
+							hasframe = FALSE;
+							width = 370p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Duration of the financial literacy results screen (sec):}";
+							}
+						}
+						standardbox "Value"{
+							hasframe = FALSE;
+							width = 70p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								variable = \TimeFinLitResult;
+								format = "1";
+								input = FALSE;
+							}
+						}
+						standardbox "Action"{
+							hasframe = FALSE;
+							width = 110p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							button "Modify"{
+								clearinputafterok = FALSE;
+								norecordmadeorselected = FALSE;
+								terminatestage = FALSE;
+								donotterminatestage = TRUE;
+								specialbuttoncolor = TRUE;
+								buttoncolor = 13158600;
+								program{
+									table = globals;
+									do{
+										//Opens entry screen
+										
+										//Sets necessary variables
+										SettingsEntryShow=1;
+										SettingsEntryTitle="Duration of financial literacy results screen";
+										SettingsEntryValue=\TimeFinLitResult;
+										SettingsEntryPrecision=1;
+										SettingsEntryMin=-1;
+										SettingsEntryMax=86400;
+									}
+								}
+							}
+						}
+						standardbox "Description"{
+							hasframe = FALSE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql The length in seconds subjects spend in the FinLitResult stage (if it is enabled). Use '-1' for infinite duration.}";
+							}
+						}
+					}
+					containerbox "TimeHoltLaury"{
+						hasframe = FALSE;
+						height = 35p;
+						top = 0p;
+						cuttop = TRUE;
+						standardbox "Text"{
+							hasframe = FALSE;
+							width = 370p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Duration of the Holt and Laury risk task (sec):}";
+							}
+						}
+						standardbox "Value"{
+							hasframe = FALSE;
+							width = 70p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								variable = \TimeHoltLaury;
+								format = "1";
+								input = FALSE;
+							}
+						}
+						standardbox "Action"{
+							hasframe = FALSE;
+							width = 110p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							button "Modify"{
+								clearinputafterok = FALSE;
+								norecordmadeorselected = FALSE;
+								terminatestage = FALSE;
+								donotterminatestage = TRUE;
+								specialbuttoncolor = TRUE;
+								buttoncolor = 13158600;
+								program{
+									table = globals;
+									do{
+										//Opens entry screen
+										
+										//Sets necessary variables
+										SettingsEntryShow=1;
+										SettingsEntryTitle="Duration of Holt and Laury risk task";
+										SettingsEntryValue=\TimeHoltLaury;
+										SettingsEntryPrecision=1;
+										SettingsEntryMin=-1;
+										SettingsEntryMax=86400;
+									}
+								}
+							}
+						}
+						standardbox "Description"{
+							hasframe = FALSE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql The length in seconds subjects spend in the HoltLaury[Before/After] stage (if it is enabled). Use '-1' for infinite duration.}";
+							}
+						}
+					}
+					containerbox "TimeHoltLauryResult"{
+						hasframe = FALSE;
+						height = 35p;
+						top = 0p;
+						cuttop = TRUE;
+						standardbox "Text"{
+							hasframe = FALSE;
+							width = 370p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql Duration of the Holt and Laury risk task results screen (sec):}";
+							}
+						}
+						standardbox "Value"{
+							hasframe = FALSE;
+							width = 70p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								variable = \TimeHoltLauryResult;
+								format = "1";
+								input = FALSE;
+							}
+						}
+						standardbox "Action"{
+							hasframe = FALSE;
+							width = 110p;
+							left = 0p;
+							cutleft = TRUE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							button "Modify"{
+								clearinputafterok = FALSE;
+								norecordmadeorselected = FALSE;
+								terminatestage = FALSE;
+								donotterminatestage = TRUE;
+								specialbuttoncolor = TRUE;
+								buttoncolor = 13158600;
+								program{
+									table = globals;
+									do{
+										//Opens entry screen
+										
+										//Sets necessary variables
+										SettingsEntryShow=1;
+										SettingsEntryTitle="Duration of Holt and Laury risk task results screen";
+										SettingsEntryValue=\TimeHoltLauryResult;
+										SettingsEntryPrecision=1;
+										SettingsEntryMin=-1;
+										SettingsEntryMax=86400;
+									}
+								}
+							}
+						}
+						standardbox "Description"{
+							hasframe = FALSE;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								label = "{\\rtf \\ql The length in seconds subjects spend in the HoltLaury[Before/After]Result stage (if it is enabled). Use '-1' for infinite duration.}";
+							}
+						}
+					}
+				}
+				containerbox "NumericEntry"{
+					hasframe = TRUE;
+					left = 5%;
+					right = 5%;
+					top = 5%;
+					bottom = 5%;
+					displaycondition = SettingsEntryShow==1;
+					plotbox "Background"{
+						hasframe = TRUE;
+						bgcolor = rgb(0.94,0.94,0.94);
+						maintainaspectratio = FALSE;
+						xaxistype = LINEAR;
+						yaxistype = LINEAR;
+						xleft = -100;
+						xright = 100;
+						ybottom = -100;
+						ytop = 100;
+					}
+					standardbox "Title"{
+						hasframe = FALSE;
+						top = 30%;
+						bottom = 60%;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						item{
+							variable = 1;
+							format = "<>!text:1=\"{\\rtf \\fs22 \\b \\qc <\\SettingsEntryTitle|-1>}\"";
+							input = FALSE;
+						}
+						item{
+						}
+					}
+					standardbox "Entry"{
+						hasframe = FALSE;
+						height = 100p;
+						top = 50%;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						item{
+							label = "The current value is:";
+							variable = \SettingsEntryValue;
+							format = "\\SettingsEntryPrecision";
+							input = FALSE;
+						}
+						item{
+							label = "Enter new value:";
+							variable = SettingsEntryValue;
+							format = "\\SettingsEntryPrecision";
+							input = TRUE;
+							showdefault = FALSE;
+							emptyallowed = FALSE;
+							min = \SettingsEntryMin;
+							max = \SettingsEntryMax;
+						}
+					}
+					standardbox "Button"{
+						hasframe = FALSE;
+						height = 45p;
+						bottom = 0p;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						button "OK"{
+							clearinputafterok = TRUE;
+							norecordmadeorselected = FALSE;
+							terminatestage = FALSE;
+							donotterminatestage = TRUE;
+							specialbuttoncolor = TRUE;
+							buttoncolor = 13158600;
+							program{
+								table = subjects;
+								do{
+									//Copies entry to globals table
+									
+									if(\SettingsEntryTitle=="Current year"){\CurrentYear=SettingsEntryValue;}
+									if(\SettingsEntryTitle=="Exchange rate"){\ExchangeRate=SettingsEntryValue;}
+									if(\SettingsEntryTitle=="Minimum payoff (real currency)"){\MinPayoffCurrency=SettingsEntryValue;}
+									if(\SettingsEntryTitle=="Minimum payoff (experimental currency)"){\MinPayoffECU=SettingsEntryValue;}
+									if(\SettingsEntryTitle=="Duration of continuous double auction"){\TimeContinuousDoubleAuction=SettingsEntryValue;}
+									if(\SettingsEntryTitle=="Duration of continuous double auction results screen"){\TimeContinuousDoubleAuctionResults=SettingsEntryValue;}
+									if(\SettingsEntryTitle=="Duration of call auction"){\TimeCallAuction=SettingsEntryValue;}
+									if(\SettingsEntryTitle=="Duration of call auction results screen"){\TimeCallAuctionResults=SettingsEntryValue;}
+									if(\SettingsEntryTitle=="Duration of financial literacy results screen"){\TimeFinLitResult=SettingsEntryValue;}
+									if(\SettingsEntryTitle=="Duration of Holt and Laury risk task"){\TimeHoltLaury=SettingsEntryValue;}
+									if(\SettingsEntryTitle=="Duration of Holt and Laury risk task results screen"){\TimeHoltLauryResult=SettingsEntryValue;}
+									\SettingsEntryShow=0;
+								}
 							}
 						}
 					}
