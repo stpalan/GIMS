@@ -1,4 +1,4 @@
-questionnaires "GIMS_Questionnaire_EN_v1.0.ztq"{
+questionnaires "GIMS_Questionnaire_EN_v2.0.ztq"{
 	adress "Adresse"{
 		title = "Please enter your Name.  All your entries will be kept confidential and will be saved separately from your entries on the following pages.";
 		firstnametext = "First Name";
@@ -176,6 +176,32 @@ questionnaires "GIMS_Questionnaire_EN_v1.0.ztq"{
 		item{
 			label = "How do you see yourself: are you generally a person who is fully prepared to take risks or do you try to avoid taking risks?";
 			variable = RiskGeneral;
+			type = radioline;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 10;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Never";"A few times";"Occasionally";"Often";"Every chance I get";
+			}
+		}
+		item{
+			type = radiolineheader;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Very impatient";"Very patient";
+			}
+		}
+		item{
+			label = "Are you generally an impatient person, or someone who always shows great patience?";
+			variable = Patience;
 			type = radioline;
 			input = TRUE;
 			longformat = FALSE;

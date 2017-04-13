@@ -1,4 +1,4 @@
-treatment "GIMS_v7.2.3_2015-09-09.ztt"{
+treatment "GIMS_v7.3.0_2016-08-01.ztt"{
 	background{
 		table globals{
 		}
@@ -92,7 +92,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
-		numsubjects = 3;
+		numsubjects = 4;
 		numgroups = 1;
 		numpracticeperiods = 0;
 		numactualperiods = 1;
@@ -108,6 +108,15 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 		moneyawayyestext = "Ja";
 		moneyawaynotext = "Nein";
 		bancruptwaittext = "Bitte warten Sie, bis Ihr Computer wieder freigegeben wird.";
+		program{
+			table = globals;
+			do{
+				//##### GIMS Version 7.3.0 #####
+				
+				GIMSVersion="7.3.0";
+				GIMSDate="01.08.2016";
+			}
+		}
 		program{
 			table = timelog;
 			condition = \Period==1;
@@ -151,11 +160,11 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 				
 				PracticePeriod=0;
 				NumExperimenterSubjects=1;
-				Language=1;    //1=English, 2=German
+				Language=2;    //1=English, 2=German
 				TimerInterval=1;
 				
 				//Questionnaire settings
-				CurrentYear=2015;
+				CurrentYear=2016;
 				
 				//Payoff settings
 				ExchangeRate=1;
@@ -203,7 +212,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 				TickSize=0.01;
 				SignalSuperSet=1;
 				SignalPrecision=0.1;
-				CarryOverWealth=0;
+				CarryOverWealth=1;
 				PricePrecision=0.01;
 				VolumePrecision=1;
 				CashPrecision=PricePrecision;
@@ -217,7 +226,6 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 				iterator(Market, \NumMarkets).do{
 				    \BBV[Market]=0;
 				    \MultiUnitTrading[Market]=1;
-				    //\AssetName[Market]="Asset<Market|1>";
 				    }
 				
 				//Dividends
@@ -262,12 +270,12 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 				ContinuousDoubleAuctionSignals=1;
 				array OrderBookDepth[\NumMarkets];
 				EarlyEndingVote=1;
-				PriceHighlightScheme=1;
+				PriceHighlightScheme=if(\NumMarkets>1,1,0);
 				PriceHighlightDuration=2;
 				CDATimer=TimerInterval;
 				
 				iterator(Market, \NumMarkets).do{
-				    \OfferImprovementRule[Market]=0;
+				    \OfferImprovementRule[Market]=1;
 				    \EmptyBookAfterTrade[Market]=0;
 				    \PartialInvalidation[Market]=0;
 				    \OrderBookDepth[Market]=3;
@@ -407,7 +415,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 				    ChartXMax[Market]=\TimeContinuousDoubleAuction;
 				    ChartXTickDistance[Market]=10;
 				    ChartXLabelDistance[Market]=30;
-				    PriceHighlightColor[Market]=20;
+				    PriceHighlightColor[Market]=9;
 				    PriceHighlightTime[Market]=\I;
 				    }
 				
@@ -419,7 +427,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 				layout.new{IDNumeric=5;ID="CA_OrderSubmission_BG";R=1;G=1;B=0.8;}
 				layout.new{IDNumeric=6;ID="CA_History_BG";R=0.82;G=0.85;B=1;}
 				layout.new{IDNumeric=7;ID="CA_BG";R=1;G=1;B=1;}
-				layout.new{IDNumeric=8;ID="CDA_Signals_BG";R=0.88;G=1;B=0.85;}
+				layout.new{IDNumeric=8;ID="CDA_Signals_BG";R=0.96;G=0.79;B=0.95;}
 				layout.new{IDNumeric=9;ID="CDA_PriceList_BG";R=1;G=0.83;B=0.83;}
 				layout.new{IDNumeric=10;ID="CDA_BuyOffers_BG";R=1;G=0.9;B=0.8;}
 				layout.new{IDNumeric=11;ID="CDA_SellOffers_BG";R=1;G=0.9;B=0.8;}
@@ -433,6 +441,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 				layout.new{IDNumeric=19;ID="Highlighting_Scheme1_Down";R=1;G=0;B=0;}
 				layout.new{IDNumeric=20;ID="Highlighting_Scheme2_Up";R=1;G=0.5;B=0;}
 				layout.new{IDNumeric=21;ID="Highlighting_Scheme2_Down";R=0;G=0;B=1;}
+				layout.new{IDNumeric=22;ID="CDA_MarketOverview_BG";R=0.88;G=1;B=0.85;}
 			}
 		}
 		program{
@@ -464,6 +473,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 				//Sets standard values
 				iterator(Market,\NumMarkets).do{
 				    :DisplayMarket[Market]=if(Market==1,2,if(Market==2,1,Market));
+				    :DisplayMarket[Market]=if(\NumMarkets==1,1,:DisplayMarket[Market]);
 				    :InitialAssets[Market]=\I;
 				    :Assets[Market]=\I;
 				    }
@@ -1041,10 +1051,14 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 				
 				array Dividend[\NumMarkets];
 				array SSWValue[\NumMarkets];
-				array avgPrice[\NumMarkets];
-				array LastPrice[\NumMarkets];
-				array NumTrades[\NumMarkets];
-				array Volume[\NumMarkets];;
+				array AvgPriceCA[\NumMarkets];
+				array AvgPriceCDA[\NumMarkets];
+				array MedianPriceCDA[\NumMarkets];
+				array LastPriceCDA[\NumMarkets];
+				array NumTradesCA[\NumMarkets];
+				array NumTradesCDA[\NumMarkets];
+				array VolumeCA[\NumMarkets];
+				array VolumeCDA[\NumMarkets];
 				
 			}
 		}
@@ -1071,133 +1085,6 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 				
 				//Checks that IndicativePriceInterval is not too short. Otherwise prices are constantly calculated and z-Tree runs out of memory.
 				IndicativePriceInterval=if(IndicativePriceInterval<0.5,-1,IndicativePriceInterval);
-			}
-		}
-		program{
-			table = globals;
-			do{
-				//======================================= GreenInvesting Settings
-				
-				BBVSet=1;
-				
-				//Sets values (Taken from FundamentalValues.xlsx
-				BBV[1]=if(BBVSet==1&Period==1,50,BBV[1]);
-				BBV[1]=if(BBVSet==1&Period==2,45,BBV[1]);
-				BBV[1]=if(BBVSet==1&Period==3,31.5,BBV[1]);
-				BBV[1]=if(BBVSet==1&Period==4,42.53,BBV[1]);
-				BBV[1]=if(BBVSet==1&Period==5,38.27,BBV[1]);
-				BBV[1]=if(BBVSet==1&Period==6,51.67,BBV[1]);
-				BBV[1]=if(BBVSet==1&Period==7,46.5,BBV[1]);
-				BBV[1]=if(BBVSet==1&Period==8,62.78,BBV[1]);
-				BBV[1]=if(BBVSet==1&Period==9,56.5,BBV[1]);
-				BBV[1]=if(BBVSet==1&Period==10,50.85,BBV[1]);
-				FinalBBV=35.59;
-				BBV[1]=if(BBVSet==2&Period==1,50,BBV[1]);
-				BBV[1]=if(BBVSet==2&Period==2,45,BBV[1]);
-				BBV[1]=if(BBVSet==2&Period==3,31.5,BBV[1]);
-				BBV[1]=if(BBVSet==2&Period==4,22.05,BBV[1]);
-				BBV[1]=if(BBVSet==2&Period==5,23.15,BBV[1]);
-				BBV[1]=if(BBVSet==2&Period==6,24.31,BBV[1]);
-				BBV[1]=if(BBVSet==2&Period==7,32.82,BBV[1]);
-				BBV[1]=if(BBVSet==2&Period==8,29.54,BBV[1]);
-				BBV[1]=if(BBVSet==2&Period==9,39.87,BBV[1]);
-				BBV[1]=if(BBVSet==2&Period==10,41.87,BBV[1]);
-				FinalBBV=29.31;
-				BBV[1]=if(BBVSet==3&Period==1,50,BBV[1]);
-				BBV[1]=if(BBVSet==3&Period==2,52.5,BBV[1]);
-				BBV[1]=if(BBVSet==3&Period==3,55.13,BBV[1]);
-				BBV[1]=if(BBVSet==3&Period==4,57.88,BBV[1]);
-				BBV[1]=if(BBVSet==3&Period==5,52.09,BBV[1]);
-				BBV[1]=if(BBVSet==3&Period==6,70.33,BBV[1]);
-				BBV[1]=if(BBVSet==3&Period==7,63.29,BBV[1]);
-				BBV[1]=if(BBVSet==3&Period==8,56.96,BBV[1]);
-				BBV[1]=if(BBVSet==3&Period==9,51.27,BBV[1]);
-				BBV[1]=if(BBVSet==3&Period==10,46.14,BBV[1]);
-				FinalBBV=48.45;
-				BBV[1]=if(BBVSet==4&Period==1,50,BBV[1]);
-				BBV[1]=if(BBVSet==4&Period==2,67.5,BBV[1]);
-				BBV[1]=if(BBVSet==4&Period==3,60.75,BBV[1]);
-				BBV[1]=if(BBVSet==4&Period==4,42.53,BBV[1]);
-				BBV[1]=if(BBVSet==4&Period==5,29.77,BBV[1]);
-				BBV[1]=if(BBVSet==4&Period==6,31.26,BBV[1]);
-				BBV[1]=if(BBVSet==4&Period==7,21.88,BBV[1]);
-				BBV[1]=if(BBVSet==4&Period==8,19.69,BBV[1]);
-				BBV[1]=if(BBVSet==4&Period==9,17.72,BBV[1]);
-				BBV[1]=if(BBVSet==4&Period==10,15.95,BBV[1]);
-				FinalBBV=21.53;
-				BBV[1]=if(BBVSet==5&Period==1,50,BBV[1]);
-				BBV[1]=if(BBVSet==5&Period==2,35,BBV[1]);
-				BBV[1]=if(BBVSet==5&Period==3,47.25,BBV[1]);
-				BBV[1]=if(BBVSet==5&Period==4,42.53,BBV[1]);
-				BBV[1]=if(BBVSet==5&Period==5,57.41,BBV[1]);
-				BBV[1]=if(BBVSet==5&Period==6,60.28,BBV[1]);
-				BBV[1]=if(BBVSet==5&Period==7,42.2,BBV[1]);
-				BBV[1]=if(BBVSet==5&Period==8,44.31,BBV[1]);
-				BBV[1]=if(BBVSet==5&Period==9,39.87,BBV[1]);
-				BBV[1]=if(BBVSet==5&Period==10,53.83,BBV[1]);
-				FinalBBV=72.67;
-				BBV[1]=if(BBVSet==6&Period==1,50,BBV[1]);
-				BBV[1]=if(BBVSet==6&Period==2,55,BBV[1]);
-				BBV[1]=if(BBVSet==6&Period==3,71.5,BBV[1]);
-				BBV[1]=if(BBVSet==6&Period==4,46.48,BBV[1]);
-				BBV[1]=if(BBVSet==6&Period==5,51.12,BBV[1]);
-				BBV[1]=if(BBVSet==6&Period==6,33.23,BBV[1]);
-				BBV[1]=if(BBVSet==6&Period==7,36.55,BBV[1]);
-				BBV[1]=if(BBVSet==6&Period==8,23.76,BBV[1]);
-				BBV[1]=if(BBVSet==6&Period==9,26.14,BBV[1]);
-				BBV[1]=if(BBVSet==6&Period==10,28.75,BBV[1]);
-				FinalBBV=37.37;
-				BBV[1]=if(BBVSet==7&Period==1,50,BBV[1]);
-				BBV[1]=if(BBVSet==7&Period==2,55,BBV[1]);
-				BBV[1]=if(BBVSet==7&Period==3,71.5,BBV[1]);
-				BBV[1]=if(BBVSet==7&Period==4,92.95,BBV[1]);
-				BBV[1]=if(BBVSet==7&Period==5,88.3,BBV[1]);
-				BBV[1]=if(BBVSet==7&Period==6,83.89,BBV[1]);
-				BBV[1]=if(BBVSet==7&Period==7,54.53,BBV[1]);
-				BBV[1]=if(BBVSet==7&Period==8,59.98,BBV[1]);
-				BBV[1]=if(BBVSet==7&Period==9,38.99,BBV[1]);
-				BBV[1]=if(BBVSet==7&Period==10,37.04,BBV[1]);
-				FinalBBV=48.15;
-				BBV[1]=if(BBVSet==8&Period==1,50,BBV[1]);
-				BBV[1]=if(BBVSet==8&Period==2,47.5,BBV[1]);
-				BBV[1]=if(BBVSet==8&Period==3,45.13,BBV[1]);
-				BBV[1]=if(BBVSet==8&Period==4,42.87,BBV[1]);
-				BBV[1]=if(BBVSet==8&Period==5,47.16,BBV[1]);
-				BBV[1]=if(BBVSet==8&Period==6,30.65,BBV[1]);
-				BBV[1]=if(BBVSet==8&Period==7,33.72,BBV[1]);
-				BBV[1]=if(BBVSet==8&Period==8,37.09,BBV[1]);
-				BBV[1]=if(BBVSet==8&Period==9,40.8,BBV[1]);
-				BBV[1]=if(BBVSet==8&Period==10,44.88,BBV[1]);
-				FinalBBV=42.63;
-				BBV[1]=if(BBVSet==9&Period==1,50,BBV[1]);
-				BBV[1]=if(BBVSet==9&Period==2,32.5,BBV[1]);
-				BBV[1]=if(BBVSet==9&Period==3,35.75,BBV[1]);
-				BBV[1]=if(BBVSet==9&Period==4,46.48,BBV[1]);
-				BBV[1]=if(BBVSet==9&Period==5,60.42,BBV[1]);
-				BBV[1]=if(BBVSet==9&Period==6,57.4,BBV[1]);
-				BBV[1]=if(BBVSet==9&Period==7,74.62,BBV[1]);
-				BBV[1]=if(BBVSet==9&Period==8,82.08,BBV[1]);
-				BBV[1]=if(BBVSet==9&Period==9,90.28,BBV[1]);
-				BBV[1]=if(BBVSet==9&Period==10,99.31,BBV[1]);
-				FinalBBV=64.55;
-				BBV[1]=if(BBVSet==10&Period==1,50,BBV[1]);
-				BBV[1]=if(BBVSet==10&Period==2,65,BBV[1]);
-				BBV[1]=if(BBVSet==10&Period==3,42.25,BBV[1]);
-				BBV[1]=if(BBVSet==10&Period==4,46.48,BBV[1]);
-				BBV[1]=if(BBVSet==10&Period==5,30.21,BBV[1]);
-				BBV[1]=if(BBVSet==10&Period==6,28.7,BBV[1]);
-				BBV[1]=if(BBVSet==10&Period==7,37.31,BBV[1]);
-				BBV[1]=if(BBVSet==10&Period==8,35.44,BBV[1]);
-				BBV[1]=if(BBVSet==10&Period==9,38.99,BBV[1]);
-				BBV[1]=if(BBVSet==10&Period==10,25.34,BBV[1]);
-				FinalBBV=16.47;
-				
-				//Copies values to all markets
-				iterator(Market,\NumMarkets).do{
-				    if(Market>1){
-				        \BBV[Market]=\BBV[1];
-				        }
-				    }
 			}
 		}
 		screen action{
@@ -3981,7 +3868,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 		}
 		program{
 			table = globals;
-			condition = \ContinuousDoubleAuction==1;
+			condition = \CallAuction==1;
 			do{
 				//Timelog
 				
@@ -11642,12 +11529,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 				//Writes statistics into summary table
 				
 				iterator(Market,\NumMarkets).do{
-				    :Dividend[Market] = \Dividend[Market];
-				    :SSWValue[Market]=(\NumPeriods - Period +1) * \MeanDividend[Market];
-				    :avgPrice[Market]=transactions.average(same(Market),Price);
-				    :LastPrice[Market]=\LastPrice[Market];
-				    :NumTrades[Market] = transactions.count(same(Market));
-				    :Volume[Market]=transactions.sum(same(Market),Volume);
+				    :AvgPriceCA[Market]=transactions.average(same(Market)&Phase==1,Price);
+				    :NumTradesCA[Market] = transactions.count(same(Market));
+				    :VolumeCA[Market]=transactions.sum(same(Market),Volume);
 				    }
 			}
 		}
@@ -12698,7 +12582,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 				    iterator(Market,NumMarkets).do{
 				        if(\PriceHighlightColor[Market]>0){
 				            if(\PriceHighlightTime[Market]<gettime()){
-				                \PriceHighlightColor[Market]=1;
+				                \PriceHighlightColor[Market]=22;
 				                }
 				            }
 				        }
@@ -14180,7 +14064,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 									cutbottom = TRUE;
 									containerbox "BuyOffersContainer"{
 										hasframe = TRUE;
-										width = 180p;
+										width = 175p;
 										left = 0p;
 										cutleft = TRUE;
 										plotbox "Background"{
@@ -14220,7 +14104,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 												emptyallowed = FALSE;
 												allemptyallowed = FALSE;
 												ownervariable = Offerer;
-												condition = Type==1&Status==0&Market==DisplayMarket[1]&(\OrderBookDepth[DisplayMarket[1]]<0|(offers.count(Type==1&Status==0&Market==DisplayMarket[1]&(Price>:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[DisplayMarket[1]])|Offerer==:Subject);
+												condition = Type==1&Status==0&Market==:DisplayMarket[1]&(\OrderBookDepth[:DisplayMarket[1]]<0|(offers.count(Type==1&Status==0&Market==:DisplayMarket[1]&(Price>:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[:DisplayMarket[1]])|Offerer==:Subject);
 												sortfields = "-Price;OfferTime";
 												tablelayout = LIST;
 												scrollatstart = TRUE;
@@ -14261,8 +14145,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -14311,7 +14195,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Volume <= :Assets[DisplayMarket[1]]+:ShortingCapacityAssets[DisplayMarket[1]];
+														condition = Volume <= :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
 														message = "You do not have enough assets for this trade!";
 														noButtonStr = "OK";
 													}
@@ -14321,14 +14205,22 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.maximum(Market==DisplayMarket[1]&Status==0&Type==1,Price);
+														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price);
 														message = "There is an offer to buy at a higher price. Please always select the best offer to trade.";
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.maximum(Market==DisplayMarket[1]&Status==0&Type==1,Price)&OfferTime==offers.minimum(Market==DisplayMarket[1]&Status==0&Type==1&Price==:Price,OfferTime);
+														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==1&Price==:Price,OfferTime);
 														message = "There is an offer to buy at the same price which was submitted sooner. Please always select the best offer to trade.";
 														noButtonStr = "OK";
+													}
+													program{
+														table = offers;
+														do{
+															//Sets volume
+															
+															SellVol=1;
+														}
 													}
 													program{
 														table = offers;
@@ -14345,7 +14237,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Price=:Price;
 															    Volume=\TransactedVol;
 															    OfferID=:ID;
-															    AcceptanceID=maximum(same(Market),AcceptanceID)+1;
+															    AcceptanceID=transactions.count(same(Market));
 															    AccepterID=::Subject;
 															    Time=gettime()-\StartTime;
 															    Phase=2;
@@ -14375,8 +14267,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -14386,11 +14278,13 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Type=:Type;
 															    OfferTime=:OfferTime;
 															    OfferID=\I;
-															    TransactionID=transactions.maximum(same(Market),AcceptanceID);
+															    TransactionID=transactions.count(same(Market));
 															    Time=:StatusTime;
 															    Offerer=:Offerer;
 															    Accepter=::Subject;
 															    Phase=2;
+															    BestBid=Price;
+															    BestAsk=offers.minimum(Status==0&Type==-1,Price);
 															    }
 															
 															//Price highlighting
@@ -14433,9 +14327,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        if ( Type == 1 ) {
 															
 															            //Invalidates buy offers if proposer has insufficient money
-															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash ) ) {
-															                if (PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1)>0) {
-															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1);
+															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash ) ) {
+															                if (PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1)>0) {
+															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -14444,7 +14338,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -14469,9 +14363,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        //Only sell offers
 															        if ( Type == -1 ) {
 															            //Invalidates sell offers if proposer has insufficient shares
-															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market] ) ) {
-															                if (PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market])>0) {
-															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]);
+															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market]+ShortingCapacityAssets[:Market] ) ) {
+															                if (PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market]+ShortingCapacityAssets[:Market])>0) {
+															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]+ShortingCapacityAssets[:Market]);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -14480,7 +14374,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -14497,7 +14391,6 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                            Accepter=\I;
 															                            Phase=2;
 															                            }
-															
 															                        }
 															                }
 															            }
@@ -14507,7 +14400,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 													}
 													program{
 														table = offers;
-														condition = \EmptyBookAfterTrade[DisplayMarket[1]]==1;
+														condition = \EmptyBookAfterTrade[:DisplayMarket[1]]==1;
 														do{
 															//Empties book after trade, if option is set
 															
@@ -14589,7 +14482,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 												emptyallowed = FALSE;
 												allemptyallowed = FALSE;
 												ownervariable = Offerer;
-												condition = Type==1&Status==0&Market==DisplayMarket[1]&(\OrderBookDepth[DisplayMarket[1]]<0|(offers.count(Type==1&Status==0&Market==DisplayMarket[1]&(Price>:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[DisplayMarket[1]])|Offerer==:Subject);
+												condition = Type==1&Status==0&Market==:DisplayMarket[1]&(\OrderBookDepth[:DisplayMarket[1]]<0|(offers.count(Type==1&Status==0&Market==:DisplayMarket[1]&(Price>:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[:DisplayMarket[1]])|Offerer==:Subject);
 												sortfields = "-Price;OfferTime";
 												tablelayout = LIST;
 												scrollatstart = TRUE;
@@ -14630,8 +14523,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -14680,7 +14573,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Volume <= :Assets[DisplayMarket[1]]+:ShortingCapacityAssets[DisplayMarket[1]];
+														condition = Volume <= :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
 														message = "Sie haben nicht genügend Aktien für diese Transaktion!";
 														noButtonStr = "OK";
 													}
@@ -14690,14 +14583,22 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.maximum(Market==DisplayMarket[1]&Status==0&Type==1,Price);
+														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price);
 														message = "Es gibt ein Kaufgebot mit einem höheren Preis. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.maximum(Market==DisplayMarket[1]&Status==0&Type==1,Price)&OfferTime==offers.minimum(Market==DisplayMarket[1]&Status==0&Type==1&Price==:Price,OfferTime);
+														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==1&Price==:Price,OfferTime);
 														message = "Es gibt ein Kaufgebot mit dem gleichen Preis, das früher abgegeben wurde. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
 														noButtonStr = "OK";
+													}
+													program{
+														table = offers;
+														do{
+															//Sets volume
+															
+															SellVol=1;
+														}
 													}
 													program{
 														table = offers;
@@ -14714,7 +14615,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Price=:Price;
 															    Volume=\TransactedVol;
 															    OfferID=:ID;
-															    AcceptanceID=maximum(same(Market),AcceptanceID)+1;
+															    AcceptanceID=transactions.count(same(Market));
 															    AccepterID=::Subject;
 															    Time=gettime()-\StartTime;
 															    Phase=2;
@@ -14744,8 +14645,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -14755,11 +14656,13 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Type=:Type;
 															    OfferTime=:OfferTime;
 															    OfferID=\I;
-															    TransactionID=transactions.maximum(same(Market),AcceptanceID);
+															    TransactionID=transactions.count(same(Market));
 															    Time=:StatusTime;
 															    Offerer=:Offerer;
 															    Accepter=::Subject;
 															    Phase=2;
+															    BestBid=Price;
+															    BestAsk=offers.minimum(Status==0&Type==-1,Price);
 															    }
 															
 															//Price highlighting
@@ -14802,9 +14705,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        if ( Type == 1 ) {
 															
 															            //Invalidates buy offers if proposer has insufficient money
-															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash ) ) {
-															                if (PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1)>0) {
-															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1);
+															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash ) ) {
+															                if (PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1)>0) {
+															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -14813,7 +14716,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -14838,9 +14741,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        //Only sell offers
 															        if ( Type == -1 ) {
 															            //Invalidates sell offers if proposer has insufficient shares
-															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market] ) ) {
-															                if (PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market])>0) {
-															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]);
+															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market]+ShortingCapacityAssets[:Market] ) ) {
+															                if (PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market]+ShortingCapacityAssets[:Market])>0) {
+															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]+ShortingCapacityAssets[:Market]);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -14849,7 +14752,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -14866,7 +14769,6 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                            Accepter=\I;
 															                            Phase=2;
 															                            }
-															
 															                        }
 															                }
 															            }
@@ -14876,7 +14778,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 													}
 													program{
 														table = offers;
-														condition = \EmptyBookAfterTrade[DisplayMarket[1]]==1;
+														condition = \EmptyBookAfterTrade[:DisplayMarket[1]]==1;
 														do{
 															//Empties book after trade, if option is set
 															
@@ -14958,7 +14860,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 												emptyallowed = FALSE;
 												allemptyallowed = FALSE;
 												ownervariable = Offerer;
-												condition = Type==1&Status==0&Market==DisplayMarket[1]&(\OrderBookDepth[DisplayMarket[1]]<0|(offers.count(Type==1&Status==0&Market==DisplayMarket[1]&(Price>:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[DisplayMarket[1]])|Offerer==:Subject);
+												condition = Type==1&Status==0&Market==:DisplayMarket[1]&(\OrderBookDepth[:DisplayMarket[1]]<0|(offers.count(Type==1&Status==0&Market==:DisplayMarket[1]&(Price>:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[:DisplayMarket[1]])|Offerer==:Subject);
 												sortfields = "-Price;OfferTime";
 												tablelayout = LIST;
 												scrollatstart = TRUE;
@@ -15016,8 +14918,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -15071,7 +14973,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = SellVol <= :Assets[DisplayMarket[1]]+:ShortingCapacityAssets[DisplayMarket[1]];
+														condition = SellVol <= :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
 														message = "You do not have enough assets for this trade!";
 														noButtonStr = "OK";
 													}
@@ -15081,12 +14983,12 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.maximum(Market==DisplayMarket[1]&Status==0&Type==1,Price);
+														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price);
 														message = "There is an offer to buy at a higher price. Please always select the best offer to trade.";
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.maximum(Market==DisplayMarket[1]&Status==0&Type==1,Price)&OfferTime==offers.minimum(Market==DisplayMarket[1]&Status==0&Type==1&Price==:Price,OfferTime);
+														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==1&Price==:Price,OfferTime);
 														message = "There is an offer to buy at the same price which was submitted sooner. Please always select the best offer to trade.";
 														noButtonStr = "OK";
 													}
@@ -15105,7 +15007,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Price=:Price;
 															    Volume=\TransactedVol;
 															    OfferID=:ID;
-															    AcceptanceID=maximum(same(Market),AcceptanceID)+1;
+															    AcceptanceID=transactions.count(same(Market));
 															    AccepterID=::Subject;
 															    Time=gettime()-\StartTime;
 															    Phase=2;
@@ -15135,8 +15037,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -15151,6 +15053,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Offerer=:Offerer;
 															    Accepter=::Subject;
 															    Phase=2;
+															    BestBid=Price;
+															    BestAsk=offers.minimum(Status==0&Type==-1,Price);
 															    }
 															
 															//Price highlighting
@@ -15193,9 +15097,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        if ( Type == 1 ) {
 															
 															            //Invalidates buy offers if proposer has insufficient money
-															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash ) ) {
-															                if (PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1)>0) {
-															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1);
+															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash ) ) {
+															                if (PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1)>0) {
+															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -15204,7 +15108,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -15229,9 +15133,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        //Only sell offers
 															        if ( Type == -1 ) {
 															            //Invalidates sell offers if proposer has insufficient shares
-															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market] ) ) {
-															                if (PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market])>0) {
-															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]);
+															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market]+ShortingCapacityAssets[:Market] ) ) {
+															                if (PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market]+ShortingCapacityAssets[:Market])>0) {
+															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]+ShortingCapacityAssets[:Market]);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -15240,7 +15144,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -15257,7 +15161,6 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                            Accepter=\I;
 															                            Phase=2;
 															                            }
-															
 															                        }
 															                }
 															            }
@@ -15267,7 +15170,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 													}
 													program{
 														table = offers;
-														condition = \EmptyBookAfterTrade[DisplayMarket[1]]==1;
+														condition = \EmptyBookAfterTrade[:DisplayMarket[1]]==1;
 														do{
 															//Empties book after trade, if option is set
 															
@@ -15350,7 +15253,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 												emptyallowed = FALSE;
 												allemptyallowed = FALSE;
 												ownervariable = Offerer;
-												condition = Type==1&Status==0&Market==DisplayMarket[1]&(\OrderBookDepth[DisplayMarket[1]]<0|(offers.count(Type==1&Status==0&Market==DisplayMarket[1]&(Price>:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[DisplayMarket[1]])|Offerer==:Subject);
+												condition = Type==1&Status==0&Market==:DisplayMarket[1]&(\OrderBookDepth[:DisplayMarket[1]]<0|(offers.count(Type==1&Status==0&Market==:DisplayMarket[1]&(Price>:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[:DisplayMarket[1]])|Offerer==:Subject);
 												sortfields = "-Price;OfferTime";
 												tablelayout = LIST;
 												scrollatstart = TRUE;
@@ -15408,8 +15311,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -15463,7 +15366,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = SellVol <= :Assets[DisplayMarket[1]]+:ShortingCapacityAssets[DisplayMarket[1]];
+														condition = SellVol <= :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
 														message = "Sie haben nicht genügend Aktien für diese Transaktion!";
 														noButtonStr = "OK";
 													}
@@ -15473,12 +15376,12 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.maximum(Market==DisplayMarket[1]&Status==0&Type==1,Price);
+														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price);
 														message = "Es gibt ein Kaufgebot mit einem höheren Preis. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.maximum(Market==DisplayMarket[1]&Status==0&Type==1,Price)&OfferTime==offers.minimum(Market==DisplayMarket[1]&Status==0&Type==1&Price==:Price,OfferTime);
+														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==1&Price==:Price,OfferTime);
 														message = "Es gibt ein Kaufgebot mit dem gleichen Preis, das früher abgegeben wurde. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
 														noButtonStr = "OK";
 													}
@@ -15497,7 +15400,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Price=:Price;
 															    Volume=\TransactedVol;
 															    OfferID=:ID;
-															    AcceptanceID=maximum(same(Market),AcceptanceID)+1;
+															    AcceptanceID=transactions.count(same(Market));
 															    AccepterID=::Subject;
 															    Time=gettime()-\StartTime;
 															    Phase=2;
@@ -15527,8 +15430,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -15543,6 +15446,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Offerer=:Offerer;
 															    Accepter=::Subject;
 															    Phase=2;
+															    BestBid=Price;
+															    BestAsk=offers.minimum(Status==0&Type==-1,Price);
 															    }
 															
 															//Price highlighting
@@ -15585,9 +15490,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        if ( Type == 1 ) {
 															
 															            //Invalidates buy offers if proposer has insufficient money
-															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash ) ) {
-															                if (PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1)>0) {
-															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1);
+															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash ) ) {
+															                if (PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1)>0) {
+															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -15596,7 +15501,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -15621,9 +15526,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        //Only sell offers
 															        if ( Type == -1 ) {
 															            //Invalidates sell offers if proposer has insufficient shares
-															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market] ) ) {
-															                if (PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market])>0) {
-															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]);
+															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market]+ShortingCapacityAssets[:Market] ) ) {
+															                if (PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market]+ShortingCapacityAssets[:Market])>0) {
+															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]+ShortingCapacityAssets[:Market]);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -15632,7 +15537,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -15658,7 +15563,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 													}
 													program{
 														table = offers;
-														condition = \EmptyBookAfterTrade[DisplayMarket[1]]==1;
+														condition = \EmptyBookAfterTrade[:DisplayMarket[1]]==1;
 														do{
 															//Empties book after trade, if option is set
 															
@@ -15736,7 +15641,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 									}
 									containerbox "SellOffersContainer"{
 										hasframe = TRUE;
-										width = 180p;
+										width = 175p;
 										left = 0p;
 										cutleft = TRUE;
 										plotbox "Background"{
@@ -15776,7 +15681,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 												emptyallowed = FALSE;
 												allemptyallowed = FALSE;
 												ownervariable = Offerer;
-												condition = Type==-1&Status==0&Market==DisplayMarket[1]& (\OrderBookDepth[DisplayMarket[1]]<0|(offers.count(Type==-1&Status==0&Market==DisplayMarket[1]&(Price<:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[DisplayMarket[1]])|Offerer==:Subject);
+												condition = Type==-1&Status==0&Market==:DisplayMarket[1]& (\OrderBookDepth[:DisplayMarket[1]]<0|(offers.count(Type==-1&Status==0&Market==:DisplayMarket[1]&(Price<:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[:DisplayMarket[1]])|Offerer==:Subject);
 												sortfields = "Price;OfferTime";
 												tablelayout = LIST;
 												scrollatstart = TRUE;
@@ -15833,12 +15738,12 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.minimum(Market==:DisplayMarket[1]&Status==0&Type==-1,Price);
+														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price);
 														message = "There is an offer to sell at a lower price. Please always select the best offer to trade.";
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.minimum(Market==:DisplayMarket[1]&Status==0&Type==-1,Price)&OfferTime==offers.minimum(Market==:DisplayMarket[1]&Status==0&Type==-1&Price==:Price,OfferTime);
+														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1&Price==:Price,OfferTime);
 														message = "There is an offer to sell at the same price which was submitted sooner. Please always select the best offer to trade.";
 														noButtonStr = "OK";
 													}
@@ -15857,7 +15762,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Price=:Price;
 															    Volume=\TransactedVol;
 															    OfferID=:ID;
-															    AcceptanceID=maximum(same(Market),AcceptanceID)+1;
+															    AcceptanceID=transactions.count(same(Market));
 															    AccepterID=::Subject;
 															    Time=gettime()-\StartTime;
 															    Phase=2;
@@ -15889,8 +15794,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -15900,11 +15805,13 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Type=:Type;
 															    OfferTime=:OfferTime;
 															    OfferID=\I;
-															    TransactionID=transactions.maximum(same(Market),AcceptanceID);
+															    TransactionID=transactions.count(same(Market));
 															    Time=:StatusTime;
 															    Offerer=:Offerer;
 															    Accepter=::Subject;
 															    Phase=2;
+															    BestAsk=Price;
+															    BestBid=offers.maximum(Status==0&Type==1,Price);
 															    }
 															
 															//Price highlighting
@@ -15947,9 +15854,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        if ( Type == 1 ) {
 															
 															            //Invalidates buy offers if proposer has insufficient money
-															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash ) ) {
-															                if (\PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1)>0) {
-															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1);
+															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash ) ) {
+															                if (PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1)>0) {
+															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -15958,7 +15865,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -15983,9 +15890,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        //Only sell offers
 															        if ( Type == -1 ) {
 															            //Invalidates sell offers if proposer has insufficient shares
-															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market] ) ) {
-															                if (\PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market])>0) {
-															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]);
+															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market]+ShortingCapacityAssets[:Market] ) ) {
+															                if (PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market]+ShortingCapacityAssets[:Market])>0) {
+															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]+ShortingCapacityAssets[:Market]);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -15994,7 +15901,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -16020,7 +15927,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 													}
 													program{
 														table = offers;
-														condition = \EmptyBookAfterTrade[DisplayMarket[1]]==1;
+														condition = \EmptyBookAfterTrade[:DisplayMarket[1]]==1;
 														do{
 															//Empties book after trade, if option is set
 															
@@ -16123,8 +16030,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -16140,7 +16047,6 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Accepter=\I;
 															    Phase=2;
 															    }
-															
 														}
 													}
 													program{
@@ -16171,7 +16077,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 												emptyallowed = FALSE;
 												allemptyallowed = FALSE;
 												ownervariable = Offerer;
-												condition = Type==-1&Status==0&Market==DisplayMarket[1]& (\OrderBookDepth[DisplayMarket[1]]<0|(offers.count(Type==-1&Status==0&Market==DisplayMarket[1]&(Price<:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[DisplayMarket[1]])|Offerer==:Subject);
+												condition = Type==-1&Status==0&Market==:DisplayMarket[1]& (\OrderBookDepth[:DisplayMarket[1]]<0|(offers.count(Type==-1&Status==0&Market==:DisplayMarket[1]&(Price<:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[:DisplayMarket[1]])|Offerer==:Subject);
 												sortfields = "Price;OfferTime";
 												tablelayout = LIST;
 												scrollatstart = TRUE;
@@ -16228,12 +16134,12 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.minimum(Market==:DisplayMarket[1]&Status==0&Type==-1,Price);
+														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price);
 														message = "Es gibt ein Verkaufsgebot mit einem geringeren Preis. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.minimum(Market==:DisplayMarket[1]&Status==0&Type==-1,Price)&OfferTime==offers.minimum(Market==:DisplayMarket[1]&Status==0&Type==-1&Price==:Price,OfferTime);
+														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1&Price==:Price,OfferTime);
 														message = "Es gibt ein Verkaufsgebot mit dem gleichen Preis, das früher abgegeben wurde. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
 														noButtonStr = "OK";
 													}
@@ -16252,7 +16158,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Price=:Price;
 															    Volume=\TransactedVol;
 															    OfferID=:ID;
-															    AcceptanceID=maximum(same(Market),AcceptanceID)+1;
+															    AcceptanceID=transactions.count(same(Market));
 															    AccepterID=::Subject;
 															    Time=gettime()-\StartTime;
 															    Phase=2;
@@ -16284,8 +16190,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -16295,11 +16201,13 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Type=:Type;
 															    OfferTime=:OfferTime;
 															    OfferID=\I;
-															    TransactionID=transactions.maximum(same(Market),AcceptanceID);
+															    TransactionID=transactions.count(same(Market));
 															    Time=:StatusTime;
 															    Offerer=:Offerer;
 															    Accepter=::Subject;
 															    Phase=2;
+															    BestAsk=Price;
+															    BestBid=offers.maximum(Status==0&Type==1,Price);
 															    }
 															
 															//Price highlighting
@@ -16342,9 +16250,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        if ( Type == 1 ) {
 															
 															            //Invalidates buy offers if proposer has insufficient money
-															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash ) ) {
-															                if (\PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1)>0) {
-															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1);
+															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash ) ) {
+															                if (PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1)>0) {
+															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -16353,7 +16261,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -16378,9 +16286,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        //Only sell offers
 															        if ( Type == -1 ) {
 															            //Invalidates sell offers if proposer has insufficient shares
-															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market] ) ) {
-															                if (\PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market])>0) {
-															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]);
+															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market]+ShortingCapacityAssets[:Market] ) ) {
+															                if (PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market]+ShortingCapacityAssets[:Market])>0) {
+															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]+ShortingCapacityAssets[:Market]);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -16389,7 +16297,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -16415,7 +16323,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 													}
 													program{
 														table = offers;
-														condition = \EmptyBookAfterTrade[DisplayMarket[1]]==1;
+														condition = \EmptyBookAfterTrade[:DisplayMarket[1]]==1;
 														do{
 															//Empties book after trade, if option is set
 															
@@ -16516,8 +16424,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -16533,8 +16441,6 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Accepter=\I;
 															    Phase=2;
 															    }
-															
-															
 														}
 													}
 													program{
@@ -16565,7 +16471,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 												emptyallowed = FALSE;
 												allemptyallowed = FALSE;
 												ownervariable = Offerer;
-												condition = Type==-1&Status==0&Market==DisplayMarket[1]& (\OrderBookDepth[DisplayMarket[1]]<0|(offers.count(Type==-1&Status==0&Market==DisplayMarket[1]&(Price<:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[DisplayMarket[1]])|Offerer==:Subject);
+												condition = Type==-1&Status==0&Market==:DisplayMarket[1]& (\OrderBookDepth[:DisplayMarket[1]]<0|(offers.count(Type==-1&Status==0&Market==:DisplayMarket[1]&(Price<:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[:DisplayMarket[1]])|Offerer==:Subject);
 												sortfields = "Price;OfferTime";
 												tablelayout = LIST;
 												scrollatstart = TRUE;
@@ -16600,14 +16506,22 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.minimum(Market==:DisplayMarket[1]&Status==0&Type==-1,Price);
+														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price);
 														message = "There is an offer to sell at a lower price. Please always select the best offer to trade.";
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.minimum(Market==:DisplayMarket[1]&Status==0&Type==-1,Price)&OfferTime==offers.minimum(Market==:DisplayMarket[1]&Status==0&Type==-1&Price==:Price,OfferTime);
+														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1&Price==:Price,OfferTime);
 														message = "There is an offer to sell at the same price which was submitted sooner. Please always select the best offer to trade.";
 														noButtonStr = "OK";
+													}
+													program{
+														table = offers;
+														do{
+															//Sets volume
+															
+															BuyVol=1;
+														}
 													}
 													program{
 														table = offers;
@@ -16624,7 +16538,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Price=:Price;
 															    Volume=\TransactedVol;
 															    OfferID=:ID;
-															    AcceptanceID=maximum(same(Market),AcceptanceID)+1;
+															    AcceptanceID=transactions.count(same(Market));
 															    AccepterID=::Subject;
 															    Time=gettime()-\StartTime;
 															    Phase=2;
@@ -16656,8 +16570,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -16667,11 +16581,13 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Type=:Type;
 															    OfferTime=:OfferTime;
 															    OfferID=\I;
-															    TransactionID=transactions.maximum(same(Market),AcceptanceID);
+															    TransactionID=transactions.count(same(Market));
 															    Time=:StatusTime;
 															    Offerer=:Offerer;
 															    Accepter=::Subject;
 															    Phase=2;
+															    BestAsk=Price;
+															    BestBid=offers.maximum(Status==0&Type==1,Price);
 															    }
 															
 															//Price highlighting
@@ -16714,9 +16630,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        if ( Type == 1 ) {
 															
 															            //Invalidates buy offers if proposer has insufficient money
-															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash ) ) {
-															                if (\PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1)>0) {
-															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1);
+															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash ) ) {
+															                if (PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1)>0) {
+															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -16725,7 +16641,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -16742,7 +16658,6 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                            Accepter=\I;
 															                            Phase=2;
 															                            }
-															
 															                        }
 															                }
 															            }
@@ -16750,9 +16665,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        //Only sell offers
 															        if ( Type == -1 ) {
 															            //Invalidates sell offers if proposer has insufficient shares
-															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market] ) ) {
-															                if (\PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market])>0) {
-															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]);
+															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market]+ShortingCapacityAssets[:Market] ) ) {
+															                if (PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market]+ShortingCapacityAssets[:Market])>0) {
+															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]+ShortingCapacityAssets[:Market]);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -16761,7 +16676,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -16787,7 +16702,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 													}
 													program{
 														table = offers;
-														condition = \EmptyBookAfterTrade[DisplayMarket[1]]==1;
+														condition = \EmptyBookAfterTrade[:DisplayMarket[1]]==1;
 														do{
 															//Empties book after trade, if option is set
 															
@@ -16890,8 +16805,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -16907,7 +16822,6 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Accepter=\I;
 															    Phase=2;
 															    }
-															
 														}
 													}
 													program{
@@ -16938,7 +16852,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 												emptyallowed = FALSE;
 												allemptyallowed = FALSE;
 												ownervariable = Offerer;
-												condition = Type==-1&Status==0&Market==DisplayMarket[1]& (\OrderBookDepth[DisplayMarket[1]]<0|(offers.count(Type==-1&Status==0&Market==DisplayMarket[1]&(Price<:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[DisplayMarket[1]])|Offerer==:Subject);
+												condition = Type==-1&Status==0&Market==:DisplayMarket[1]& (\OrderBookDepth[:DisplayMarket[1]]<0|(offers.count(Type==-1&Status==0&Market==:DisplayMarket[1]&(Price<:Price|(Price==:Price&OfferTime<:OfferTime)))<\OrderBookDepth[:DisplayMarket[1]])|Offerer==:Subject);
 												sortfields = "Price;OfferTime";
 												tablelayout = LIST;
 												scrollatstart = TRUE;
@@ -16973,14 +16887,22 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.minimum(Market==:DisplayMarket[1]&Status==0&Type==-1,Price);
+														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price);
 														message = "Es gibt ein Verkaufsgebot mit einem geringeren Preis. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
 														noButtonStr = "OK";
 													}
 													checker{
-														condition = Price==offers.minimum(Market==:DisplayMarket[1]&Status==0&Type==-1,Price)&OfferTime==offers.minimum(Market==:DisplayMarket[1]&Status==0&Type==-1&Price==:Price,OfferTime);
+														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1&Price==:Price,OfferTime);
 														message = "Es gibt ein Verkaufsgebot mit dem gleichen Preis, das früher abgegeben wurde. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
 														noButtonStr = "OK";
+													}
+													program{
+														table = offers;
+														do{
+															//Sets volume
+															
+															BuyVol=1;
+														}
 													}
 													program{
 														table = offers;
@@ -16997,7 +16919,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Price=:Price;
 															    Volume=\TransactedVol;
 															    OfferID=:ID;
-															    AcceptanceID=maximum(same(Market),AcceptanceID)+1;
+															    AcceptanceID=transactions.count(same(Market));
 															    AccepterID=::Subject;
 															    Time=gettime()-\StartTime;
 															    Phase=2;
@@ -17029,8 +16951,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -17040,11 +16962,13 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Type=:Type;
 															    OfferTime=:OfferTime;
 															    OfferID=\I;
-															    TransactionID=transactions.maximum(same(Market),AcceptanceID);
+															    TransactionID=transactions.count(same(Market));
 															    Time=:StatusTime;
 															    Offerer=:Offerer;
 															    Accepter=::Subject;
 															    Phase=2;
+															    BestAsk=Price;
+															    BestBid=offers.maximum(Status==0&Type==1,Price);
 															    }
 															
 															//Price highlighting
@@ -17087,9 +17011,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        if ( Type == 1 ) {
 															
 															            //Invalidates buy offers if proposer has insufficient money
-															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash ) ) {
-															                if (\PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1)>0) {
-															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash)/Price,1);
+															            if ( Price * (Volume-Transacted-Invalidated) > subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash ) ) {
+															                if (PartialInvalidation[Market]==1&rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1)>0) {
+															                    Invalidated=Volume-Transacted-rounddown(subjects.find ( Subject == :Offerer , Cash+ShortingCapacityCash)/Price,1);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -17098,7 +17022,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -17115,7 +17039,6 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                            Accepter=\I;
 															                            Phase=2;
 															                            }
-															
 															                        }
 															                }
 															            }
@@ -17123,9 +17046,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															        //Only sell offers
 															        if ( Type == -1 ) {
 															            //Invalidates sell offers if proposer has insufficient shares
-															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market] ) ) {
-															                if (\PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market])>0) {
-															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]);
+															            if ( Volume-Transacted-Invalidated > subjects.find ( Subject == :Offerer , Assets[:Market]+ShortingCapacityAssets[:Market] ) ) {
+															                if (PartialInvalidation[Market]==1&subjects.find ( Subject == :Offerer, Assets[:Market]+ShortingCapacityAssets[:Market])>0) {
+															                    Invalidated=Volume-Transacted-subjects.find ( Subject == :Offerer,Assets[:Market]+ShortingCapacityAssets[:Market]);
 															                    }
 															                    else {
 															                        Status = 3;
@@ -17134,7 +17057,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															                        //Generates contracts table record
 															                        contracts.new{
 															                            Period=\Period;
-															                            ID=maximum(same(Market),ID)+1;
+															                            ID=contracts.count(same(Market));
 															                            Market=:Market;
 															                            Price=:Price;
 															                            Volume=:Volume;
@@ -17160,7 +17083,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 													}
 													program{
 														table = offers;
-														condition = \EmptyBookAfterTrade[DisplayMarket[1]]==1;
+														condition = \EmptyBookAfterTrade[:DisplayMarket[1]]==1;
 														do{
 															//Empties book after trade, if option is set
 															
@@ -17263,8 +17186,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															//Generates contracts table record
 															contracts.new{
 															    Period=\Period;
-															    ID=maximum(same(Market),ID)+1;
 															    Market=:Market;
+															    ID=contracts.count(same(Market));
 															    Price=:Price;
 															    Volume=:Volume;
 															    Transacted=:Transacted;
@@ -17280,7 +17203,6 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															    Accepter=\I;
 															    Phase=2;
 															    }
-															
 														}
 													}
 													program{
@@ -17379,17 +17301,17 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price > offers.maximum (same(Market)&Type == 1 & Status == 0, Price);
+															condition = Price > offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price);
 															message = "The price of a new sell offer must be higher than the highest outstanding buy offer price. If you really want to sell for this price, click \"Sell\" instead!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price <= offers.minimum (same(Market)&Type == -1 & Status == 0, Price) | OfferImprovementRule[DisplayMarket[1]]==0;
+															condition = Price <= offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "A new sell offer price must be smaller than or equal to the lowest existing sell offer price!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = (\SpamControl>0&offers.count(same(Market)&Type==-1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
+															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==-1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>You cannot have more than <\\SpamControl|1> ask(s) outstanding at any time. Please cancel an existing ask before submitting a new one.";
 															noButtonStr = "OK";
 														}
@@ -17447,17 +17369,17 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price < offers.minimum (same(Market)&Type == -1 & Status == 0, Price);
+															condition = Price < offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price);
 															message = "The price of a new buy offer must be lower than the price of the cheapest outstanding sell offer. If you really want to buy for this price, click \"Buy\" instead!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price >= offers.maximum (same(Market)&Type == 1 & Status == 0, Price) | OfferImprovementRule[DisplayMarket[1]]==0;
+															condition = Price >= offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "A new buy offer price must be greater than or equal to the highest existing buy offer price!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = (\SpamControl>0&offers.count(same(Market)&Type==1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
+															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>You cannot have more than <\\SpamControl|1> bid(s) outstanding at any time. Please cancel an existing bid before submitting a new one.";
 															noButtonStr = "OK";
 														}
@@ -17518,7 +17440,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 														min = \MinPrice;
 														max = \MaxPrice;
 													}
-													button "  Verkaufsgebot  "{
+													button "Verkaufsgebot"{
 														clearinputafterok = FALSE;
 														norecordmadeorselected = FALSE;
 														terminatestage = FALSE;
@@ -17536,17 +17458,17 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price > offers.maximum (same(Market)&Type == 1 & Status == 0, Price);
+															condition = Price > offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price);
 															message = "Der Preis eines neuen Verkaufsgebots muss höher als jener des höchsten ausstehenden Kaufgebots sein. Wenn Sie wirklich zu diesem Preis verkaufen wollen, klicken Sie stattdessen \"Verkauf\"!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price <= offers.minimum (same(Market)&Type == -1 & Status == 0, Price) | OfferImprovementRule[DisplayMarket[1]]==0;
+															condition = Price <= offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "Der Preis eines neuen Verkaufsgebots darf nicht höher als jener des günstigsten bereits bestehenden Verkaufsgebots sein!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = (\SpamControl>0&offers.count(same(Market)&Type==-1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
+															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==-1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>Sie können zu keinem Zeitpunkt mehr als <\\SpamControl|1> Verkaufsgebot(e) gleichzeitig ausstehend haben. Bitte stornieren Sie eines Ihrer bestehenden Verkaufsgebote, bevor Sie ein neues abgeben.";
 															noButtonStr = "OK";
 														}
@@ -17586,7 +17508,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															}
 														}
 													}
-													button "  Kaufgebot  "{
+													button "Kaufgebot"{
 														clearinputafterok = FALSE;
 														norecordmadeorselected = FALSE;
 														terminatestage = FALSE;
@@ -17604,17 +17526,17 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price < offers.minimum (same(Market)&Type == -1 & Status == 0, Price);
+															condition = Price < offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price);
 															message = "Der Preis eines neuen Kaufgebots muss geringer als der Preis des günstigsten ausstehenden Verkaufsgebots sein. Wenn Sie wirklich zu diesem Preis kaufen wollen, klicken Sie stattdessen \"Kauf\"!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price >= offers.maximum (same(Market)&Type == 1 & Status == 0, Price) | OfferImprovementRule[DisplayMarket[1]]==0;
+															condition = Price >= offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "Der Preis eines neuen Kaufgebots darf nicht geringer als jener des höchsten bereits bestehenden Kaufsgebots sein!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = (\SpamControl>0&offers.count(same(Market)&Type==1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
+															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>Sie können zu keinem Zeitpunkt mehr als <\\SpamControl|1> Kaufgebot(e) gleichzeitig ausstehend haben. Bitte stornieren Sie eines Ihrer bestehenden Kaufgebote, bevor Sie ein neues abgeben.";
 															noButtonStr = "OK";
 														}
@@ -17625,7 +17547,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 																
 																Market=:DisplayMarket[1];
 																Period=\Period;
-																ID = offers.maximum (same(Market),ID) + 1;
+																ID = offers.maximum(same(Market),ID) + 1;
 																Volume=1;
 																Transacted=0;
 																Invalidated=0;
@@ -17708,17 +17630,17 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price > offers.maximum (same(Market)&Type == 1 & Status == 0, Price);
+															condition = Price > offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price);
 															message = "The price of a new sell offer must be higher than the highest outstanding buy offer price. If you really want to sell for this price, click \"Sell\" instead!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price <= offers.minimum (same(Market)&Type == -1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
+															condition = Price <= offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "A new sell offer price must be smaller than or equal to the lowest existing sell offer price!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = (\SpamControl>0&offers.count(same(Market)&Type==-1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
+															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==-1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>You cannot have more than <\\SpamControl|1> ask(s) outstanding at any time. Please cancel an existing ask before submitting a new one.";
 															noButtonStr = "OK";
 														}
@@ -17737,6 +17659,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 																Invalidated=0;
 																OfferTime = gettime() - \StartTime;
 																StatusTime = \I;
+																Test= offers.maximum (same(Market)&Type == 1 & Status == 0, Price);
 															}
 														}
 														program{
@@ -17780,17 +17703,17 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price < offers.minimum (same(Market)&Type == -1 & Status == 0, Price);
+															condition = Price < offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price);
 															message = "The price of a new buy offer must be lower than the price of the cheapest outstanding sell offer. If you really want to buy for this price, click \"Buy\" instead!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price >= offers.maximum (same(Market)&Type == 1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
+															condition = Price >= offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "A new buy offer price must be greater than or equal to the highest existing buy offer price!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = (\SpamControl>0&offers.count(same(Market)&Type==1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
+															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>You cannot have more than <\\SpamControl|1> bid(s) outstanding at any time. Please cancel an existing bid before submitting a new one.";
 															noButtonStr = "OK";
 														}
@@ -17860,7 +17783,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 														min = \MinVol;
 														max = \MaxVol;
 													}
-													button "  Verkaufsgebot  "{
+													button "Verkaufsgebot"{
 														clearinputafterok = FALSE;
 														norecordmadeorselected = FALSE;
 														terminatestage = FALSE;
@@ -17883,17 +17806,17 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price > offers.maximum (same(Market)&Type == 1 & Status == 0, Price);
+															condition = Price > offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price);
 															message = "Der Preis eines neuen Verkaufsgebots muss höher als jener des höchsten ausstehenden Kaufgebots sein. Wenn Sie wirklich zu diesem Preis verkaufen wollen, klicken Sie stattdessen \"Verkauf\"!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price <= offers.minimum (same(Market)&Type == -1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
+															condition = Price <= offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "Der Preis eines neuen Verkaufsgebots darf nicht höher als jener des günstigsten bereits bestehenden Verkaufsgebots sein!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = (\SpamControl>0&offers.count(same(Market)&Type==-1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
+															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==-1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>Sie können zu keinem Zeitpunkt mehr als <\\SpamControl|1> Verkaufsgebot(e) gleichzeitig ausstehend haben. Bitte stornieren Sie eines Ihrer bestehenden Verkaufsgebote, bevor Sie ein neues abgeben.";
 															noButtonStr = "OK";
 														}
@@ -17912,6 +17835,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 																Invalidated=0;
 																OfferTime = gettime() - \StartTime;
 																StatusTime = \I;
+																Test= offers.maximum (same(Market)&Type == 1 & Status == 0, Price);
 															}
 														}
 														program{
@@ -17932,7 +17856,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															}
 														}
 													}
-													button "  Kaufgebot  "{
+													button "Kaufgebot"{
 														clearinputafterok = FALSE;
 														norecordmadeorselected = FALSE;
 														terminatestage = FALSE;
@@ -17955,17 +17879,17 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price < offers.minimum (same(Market)&Type == -1 & Status == 0, Price);
+															condition = Price < offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price);
 															message = "Der Preis eines neuen Kaufgebots muss geringer als der Preis des günstigsten ausstehenden Verkaufsgebots sein. Wenn Sie wirklich zu diesem Preis kaufen wollen, klicken Sie stattdessen \"Kauf\"!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price >= offers.maximum (same(Market)&Type == 1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
+															condition = Price >= offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "Der Preis eines neuen Kaufgebots darf nicht geringer als jener des höchsten bereits bestehenden Kaufsgebots sein!";
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = (\SpamControl>0&offers.count(same(Market)&Type==1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
+															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>Sie können zu keinem Zeitpunkt mehr als <\\SpamControl|1> Kaufgebot(e) gleichzeitig ausstehend haben. Bitte stornieren Sie eines Ihrer bestehenden Kaufgebote, bevor Sie ein neues abgeben.";
 															noButtonStr = "OK";
 														}
@@ -17976,7 +17900,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 																
 																Market=:DisplayMarket[1];
 																Period=\Period;
-																ID = offers.maximum (same(Market),ID) + 1;
+																ID = offers.maximum (same(Market),ID ) + 1;
 																Offerer = :Subject;
 																Type = 1;
 																Status = 0;
@@ -18001,12 +17925,6 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 																    Data[1]=:ID;
 																    Data[2]=:Market;
 																    }
-															}
-														}
-														program{
-															table = subjects;
-															do{
-																//####################################### STAND ############################
 															}
 														}
 													}
@@ -18152,7 +18070,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 											ybottom = -100;
 											ytop = 100;
 										}
-										selectcontractbox "Signals"{
+										selectcontractbox "SignalsEN"{
 											hasframe = FALSE;
 											left = 5p;
 											right = 5p;
@@ -18177,7 +18095,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 												input = FALSE;
 											}
 										}
-										selectcontractbox "Signals"{
+										selectcontractbox "SignalsDE"{
 											hasframe = FALSE;
 											left = 5p;
 											right = 5p;
@@ -18208,7 +18126,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 										displaycondition = \NumMarkets>1;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_Signals_BG",R),layout.find(ID=="CDA_Signals_BG",G),layout.find(ID=="CDA_Signals_BG",B));
+											bgcolor = rgb(layout.find(ID=="CDA_MarketOverview_BG",R),layout.find(ID=="CDA_MarketOverview_BG",G),layout.find(ID=="CDA_MarketOverview_BG",B));
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -18462,11 +18380,11 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 										plotbox "Highlighting"{
 											hasframe = FALSE;
 											width = 13p;
+											height = 77p;
 											left = 5p;
-											top = 5p;
-											bottom = 5p;
+											top = 27p;
 											cutleft = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_Signals_BG",R),layout.find(ID=="CDA_Signals_BG",G),layout.find(ID=="CDA_Signals_BG",B));
+											bgcolor = rgb(layout.find(ID=="CDA_MarketOverview_BG",R),layout.find(ID=="CDA_MarketOverview_BG",G),layout.find(ID=="CDA_MarketOverview_BG",B));
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -18476,40 +18394,40 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 											ytop = 100;
 											plotrect "Market1"{
 												x = 50;
-												y = 84;
+												y = 93;
 												width = 100;
-												height = 7;
+												height = 15;
 												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[1],R),layout.find(IDNumeric==\PriceHighlightColor[1],G),layout.find(IDNumeric==\PriceHighlightColor[1],B));
 											}
 											plotrect "Market2"{
 												x = 50;
-												y = 74.625;
+												y = 72;
 												width = 100;
-												height = 7;
+												height = 15;
 												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[2],R),layout.find(IDNumeric==\PriceHighlightColor[2],G),layout.find(IDNumeric==\PriceHighlightColor[2],B));
 											}
 											plotrect "Market3"{
 												displaycondition = \NumMarkets>=3;
 												x = 50;
-												y = 65.25;
+												y = 51;
 												width = 100;
-												height = 7;
+												height = 15;
 												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[3],R),layout.find(IDNumeric==\PriceHighlightColor[3],G),layout.find(IDNumeric==\PriceHighlightColor[3],B));
 											}
 											plotrect "Market4"{
 												displaycondition = \NumMarkets>=4;
 												x = 50;
-												y = 55.875;
+												y = 30;
 												width = 100;
-												height = 7;
+												height = 15;
 												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[4],R),layout.find(IDNumeric==\PriceHighlightColor[4],G),layout.find(IDNumeric==\PriceHighlightColor[4],B));
 											}
 											plotrect "Market5"{
 												displaycondition = \NumMarkets>=5;
 												x = 50;
-												y = 46.5;
+												y = 9;
 												width = 100;
-												height = 7;
+												height = 15;
 												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[5],R),layout.find(IDNumeric==\PriceHighlightColor[5],G),layout.find(IDNumeric==\PriceHighlightColor[5],B));
 											}
 										}
@@ -18611,6 +18529,20 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 							buttonsequence = HORIZONTAL;
 							item{
 								label = "<>{\\rtf \\qc <\\Language|!text: 1=\"No transactions to display.\";2=\"Bisher keine Transaktionen\">}";
+							}
+						}
+						standardbox "Heading"{
+							hasframe = FALSE;
+							height = 70p;
+							top = 0p;
+							cuttop = TRUE;
+							displaycondition = \NumMarkets>1&\ShowChart==1&\ChartYMax[DisplayMarket[1]]!=\I;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								variable = DisplayMarket[1];
+								format = "<>!text: 1=\"{\\rtf \\fs26 \\qc \\b <\\Language|!text:1=\"Market\";2=\"Markt\"> <|!text:1=\"A\";2=\"B\";3=\"C\">}\";";
+								input = FALSE;
 							}
 						}
 						plotbox "ChartEN"{
@@ -20425,7 +20357,7 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 										displaycondition = \NumMarkets>1;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_Signals_BG",R),layout.find(ID=="CDA_Signals_BG",G),layout.find(ID=="CDA_Signals_BG",B));
+											bgcolor = rgb(layout.find(ID=="CDA_MarketOverview_BG",R),layout.find(ID=="CDA_MarketOverview_BG",G),layout.find(ID=="CDA_MarketOverview_BG",B));
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -20679,11 +20611,11 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 										plotbox "Highlighting"{
 											hasframe = FALSE;
 											width = 13p;
+											height = 77p;
 											left = 5p;
-											top = 5p;
-											bottom = 5p;
+											top = 27p;
 											cutleft = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_Signals_BG",R),layout.find(ID=="CDA_Signals_BG",G),layout.find(ID=="CDA_Signals_BG",B));
+											bgcolor = rgb(layout.find(ID=="CDA_MarketOverview_BG",R),layout.find(ID=="CDA_MarketOverview_BG",G),layout.find(ID=="CDA_MarketOverview_BG",B));
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -20693,40 +20625,40 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 											ytop = 100;
 											plotrect "Market1"{
 												x = 50;
-												y = 84;
+												y = 93;
 												width = 100;
-												height = 7;
+												height = 15;
 												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[1],R),layout.find(IDNumeric==\PriceHighlightColor[1],G),layout.find(IDNumeric==\PriceHighlightColor[1],B));
 											}
 											plotrect "Market2"{
 												x = 50;
-												y = 74.625;
+												y = 72;
 												width = 100;
-												height = 7;
+												height = 15;
 												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[2],R),layout.find(IDNumeric==\PriceHighlightColor[2],G),layout.find(IDNumeric==\PriceHighlightColor[2],B));
 											}
 											plotrect "Market3"{
 												displaycondition = \NumMarkets>=3;
 												x = 50;
-												y = 65.25;
+												y = 51;
 												width = 100;
-												height = 7;
+												height = 15;
 												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[3],R),layout.find(IDNumeric==\PriceHighlightColor[3],G),layout.find(IDNumeric==\PriceHighlightColor[3],B));
 											}
 											plotrect "Market4"{
 												displaycondition = \NumMarkets>=4;
 												x = 50;
-												y = 55.875;
+												y = 30;
 												width = 100;
-												height = 7;
+												height = 15;
 												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[4],R),layout.find(IDNumeric==\PriceHighlightColor[4],G),layout.find(IDNumeric==\PriceHighlightColor[4],B));
 											}
 											plotrect "Market5"{
 												displaycondition = \NumMarkets>=5;
 												x = 50;
-												y = 46.5;
+												y = 9;
 												width = 100;
-												height = 7;
+												height = 15;
 												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[5],R),layout.find(IDNumeric==\PriceHighlightColor[5],G),layout.find(IDNumeric==\PriceHighlightColor[5],B));
 											}
 										}
@@ -20828,6 +20760,20 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 							buttonsequence = HORIZONTAL;
 							item{
 								label = "<>{\\rtf \\qc <\\Language|!text: 1=\"No transactions to display.\";2=\"Bisher keine Transaktionen\">}";
+							}
+						}
+						standardbox "Heading"{
+							hasframe = FALSE;
+							height = 70p;
+							top = 0p;
+							cuttop = TRUE;
+							displaycondition = \NumMarkets>1&\ShowChart==1&\ChartYMax[DisplayMarket[1]]!=\I;
+							buttonposition = BOTTOMRIGHT;
+							buttonsequence = HORIZONTAL;
+							item{
+								variable = DisplayMarket[1];
+								format = "<>!text: 1=\"{\\rtf \\fs26 \\qc \\b <\\Language|!text:1=\"Market\";2=\"Markt\"> <|!text:1=\"A\";2=\"B\";3=\"C\">}\";";
+								input = FALSE;
 							}
 						}
 						plotbox "ChartEN"{
@@ -21138,10 +21084,11 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 				iterator(Market,\NumMarkets).do{
 				    :Dividend[Market]=\Dividend[Market];
 				    :SSWValue[Market]=(\NumPeriods - Period +1) * \MeanDividend[Market];
-				    :avgPrice=transactions.average(same(Market),Price);
-				    :LastPrice[Market]=\LastPrice[Market];
-				    :NumTrades[Market] = transactions.count(same(Market));
-				    :Volume[Market]=transactions.sum(same(Market),Volume);
+				    :AvgPriceCDA=transactions.average(same(Market)&Phase==2,Price);
+				    :MedianPriceCDA=transactions.median(same(Market)&Phase==2,Price);
+				    :LastPriceCDA[Market]=\LastPrice[Market];
+				    :NumTradesCDA[Market] = transactions.count(same(Market)&Phase==2);
+				    :VolumeCDA[Market]=transactions.sum(same(Market)&Phase==2,Volume);
 				    }
 			}
 		}
@@ -28625,6 +28572,8 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 		}
 		role "S 3"{
 		}
+		role "S 4"{
+		}
 	}
 	period "1"{
 		subject 1{
@@ -28634,6 +28583,9 @@ treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 			group = 1;
 		}
 		subject 3{
+			group = 1;
+		}
+		subject 4{
 			group = 1;
 		}
 	}
