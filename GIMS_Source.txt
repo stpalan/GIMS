@@ -1,4 +1,4 @@
-treatment "GIMS_v7.2.1_2015-07-27.ztt"{
+treatment "GIMS_v7.2.3_2015-09-09.ztt"{
 	background{
 		table globals{
 		}
@@ -463,7 +463,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 				
 				//Sets standard values
 				iterator(Market,\NumMarkets).do{
-				    :DisplayMarket[Market]=Market;
+				    :DisplayMarket[Market]=if(Market==1,2,if(Market==2,1,Market));
 				    :InitialAssets[Market]=\I;
 				    :Assets[Market]=\I;
 				    }
@@ -5138,7 +5138,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 														specialbuttoncolor = TRUE;
 														buttoncolor = 13158600;
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
+															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -5259,7 +5259,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
+															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -5323,7 +5323,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+															condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "You do not have enough cash to submit this order!";
 															noButtonStr = "OK";
 														}
@@ -5405,7 +5405,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 														specialbuttoncolor = TRUE;
 														buttoncolor = 13158600;
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
+															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -5526,7 +5526,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
+															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -5590,7 +5590,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+															condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -5685,7 +5685,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
+															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -5814,7 +5814,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
+															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -5882,7 +5882,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+															condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "You do not have enough cash to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -5975,7 +5975,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
+															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -6102,7 +6102,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
+															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -6170,7 +6170,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+															condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -6253,7 +6253,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
+															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -6316,7 +6316,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+															condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "You do not have enough cash to submit this order!";
 															noButtonStr = "OK";
 														}
@@ -6402,7 +6402,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
+															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -6465,7 +6465,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+															condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -6565,7 +6565,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
+															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -6632,7 +6632,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+															condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "You do not have enough cash to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -6731,7 +6731,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
+															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -6799,7 +6799,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+															condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -6918,7 +6918,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 														buttonsequence = HORIZONTAL;
 														item{
 															variable = \Language;
-															format = "<>!text: 1=\"{\\rtf \\fs18 \\qc \\b Market<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <if(DisplayMarket[1]==1,2,if(DisplayMarket[1]==2,1,DisplayMarket[1]))|1>\">}\" 2=\"{\\rtf \\fs18 \\qc \\b Markt<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <if(DisplayMarket[1]==1,2,if(DisplayMarket[1]==2,1,DisplayMarket[1]))|1>\">}\"";
+															format = "<>!text: 1=\"{\\rtf \\fs18 \\qc \\b Market<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <DisplayMarket[1]|1>\">}\" 2=\"{\\rtf \\fs18 \\qc \\b Markt<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <DisplayMarket[1]|1>\">}\"";
 															input = FALSE;
 														}
 														item{
@@ -6939,7 +6939,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 														buttonsequence = HORIZONTAL;
 														item{
 															variable = \Language;
-															format = "<>!text: 1=\"{\\rtf \\fs18 \\qc \\b Market<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <if(DisplayMarket[1]==1,2,if(DisplayMarket[1]==2,1,DisplayMarket[1]))|1>\">}\" 2=\"{\\rtf \\fs18 \\qc \\b Markt<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <if(DisplayMarket[1]==1,2,if(DisplayMarket[1]==2,1,DisplayMarket[1]))|1>\">}\"";
+															format = "<>!text: 1=\"{\\rtf \\fs18 \\qc \\b Market<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <DisplayMarket[1]|1>\">}\" 2=\"{\\rtf \\fs18 \\qc \\b Markt<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <DisplayMarket[1]|1>\">}\"";
 															input = FALSE;
 														}
 														item{
@@ -7899,7 +7899,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															specialbuttoncolor = TRUE;
 															buttoncolor = 13158600;
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
+																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "You do not have enough assets to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -8020,7 +8020,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
+																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "You do not have enough assets to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -8084,7 +8084,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+																condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "You do not have enough cash to submit this order!";
 																noButtonStr = "OK";
 															}
@@ -8166,7 +8166,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															specialbuttoncolor = TRUE;
 															buttoncolor = 13158600;
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
+																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -8287,7 +8287,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
+																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -8351,7 +8351,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+																condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -8446,7 +8446,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
+																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "You do not have enough assets to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -8575,7 +8575,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
+																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "You do not have enough assets to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -8643,7 +8643,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+																condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "You do not have enough cash to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -8736,7 +8736,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
+																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -8863,7 +8863,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
+																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -8931,7 +8931,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+																condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -9014,7 +9014,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
+																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "You do not have enough assets to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -9077,7 +9077,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+																condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "You do not have enough cash to submit this order!";
 																noButtonStr = "OK";
 															}
@@ -9163,7 +9163,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
+																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -9226,7 +9226,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+																condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -9326,7 +9326,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
+																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "You do not have enough assets to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -9393,7 +9393,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+																condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "You do not have enough cash to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -9492,7 +9492,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
+																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -9560,7 +9560,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
+																condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -9679,7 +9679,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															buttonsequence = HORIZONTAL;
 															item{
 																variable = \Language;
-																format = "<>!text: 1=\"{\\rtf \\fs18 \\qc \\b Market<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <if(DisplayMarket[2]==1,2,if(DisplayMarket[2]==2,1,DisplayMarket[2]))|1>\">}\" 2=\"{\\rtf \\fs18 \\qc \\b Markt<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <if(DisplayMarket[2]==1,2,if(DisplayMarket[2]==2,1,DisplayMarket[2]))|1>\">}\"";
+																format = "<>!text: 1=\"{\\rtf \\fs18 \\qc \\b Market<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <DisplayMarket[1]|1>\">}\" 2=\"{\\rtf \\fs18 \\qc \\b Markt<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <DisplayMarket[1]|1>\">}\"";
 																input = FALSE;
 															}
 															item{
@@ -9700,7 +9700,7 @@ treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 															buttonsequence = HORIZONTAL;
 															item{
 																variable = \Language;
-																format = "<>!text: 1=\"{\\rtf \\fs18 \\qc \\b Market<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <if(DisplayMarket[2]==1,2,if(DisplayMarket[2]==2,1,DisplayMarket[2]))|1>\">}\" 2=\"{\\rtf \\fs18 \\qc \\b Markt<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <if(DisplayMarket[2]==1,2,if(DisplayMarket[2]==2,1,DisplayMarket[2]))|1>\">}\"";
+																format = "<>!text: 1=\"{\\rtf \\fs18 \\qc \\b Market<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <DisplayMarket[1]|1>\">}\" 2=\"{\\rtf \\fs18 \\qc \\b Markt<if(\\NumMarkets>1,1,0)|!text: 0=\"\";1=\" <DisplayMarket[1]|1>\">}\"";
 																input = FALSE;
 															}
 															item{
