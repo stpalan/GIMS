@@ -1,4 +1,4 @@
-treatment "GIMS_v7.4.3_2016-11-25.ztt"{
+treatment "GIMS_v7.4.7_2016-12-20.ztt"{
 	background{
 		table globals{
 		}
@@ -111,10 +111,10 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.4.3 #####
+				//##### GIMS Version 7.4.7 #####
 				
-				GIMSVersion="7.4.3";
-				GIMSDate="25.11.2016";
+				GIMSVersion="7.4.7";
+				GIMSDate="20.12.2016";
 			}
 		}
 		program{
@@ -268,6 +268,7 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 				array OfferImprovementRule[\NumMarkets];
 				array EmptyBookAfterTrade[\NumMarkets];
 				array PartialInvalidation[\NumMarkets];
+				array PriceListDepth[\NumMarkets];
 				ShowPricelist=1;
 				ShowChart=1;
 				SpamControl=0;
@@ -283,6 +284,7 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 				    \EmptyBookAfterTrade[Market]=0;
 				    \PartialInvalidation[Market]=0;
 				    \OrderBookDepth[Market]=3;
+				    \PriceListDepth[Market]=4;
 				    }
 			}
 		}
@@ -356,8 +358,13 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 				CQDone=0;
 				StartTimeCDA=\I;
 				
-				ForcedExitExperiment=0;
-				ForcedExitExperiment=if(Period==1,ForcedExitExperiment,OLDglobals.find(ForcedExitExperiment));
+				//Do not change to simple if statement because this can cause a crash
+				if(Period==1){
+				    ForcedExitExperiment=0;
+				    }
+				else {
+				    ForcedExitExperiment=OLDglobals.find(ForcedExitExperiment);
+				    }
 				ForcedExitPeriod=0;
 				
 				//Call auction
@@ -1013,6 +1020,14 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 			condition = \PracticePeriod==1;
 			do{
 				//### P10: Practice period settings ###
+				
+				
+				/*
+				Attention! If you change the timeout for the ContinuousDoubleAuction stage here,
+				the chart x-axis will not reflect this change in the length of the stage. You will also
+				need to change \ChartXMax[ ] to account for the changed timeout.
+				*/
+				
 				
 				//Sets practice period endowments
 				subjects.do {
@@ -14697,7 +14712,7 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestBid=Price;
-															    BestAsk=offers.minimum(Status==0&Type==-1,Price);
+															    BestAsk=if(offers.count(Status==0&Type==-1)>0,offers.minimum(Status==0&Type==-1,Price),\I);
 															    }
 															
 															//Price highlighting
@@ -15075,7 +15090,7 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestBid=Price;
-															    BestAsk=offers.minimum(Status==0&Type==-1,Price);
+															    BestAsk=if(offers.count(Status==0&Type==-1)>0,offers.minimum(Status==0&Type==-1,Price),\I);
 															    }
 															
 															//Price highlighting
@@ -15467,7 +15482,7 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestBid=Price;
-															    BestAsk=offers.minimum(Status==0&Type==-1,Price);
+															    BestAsk=if(offers.count(Status==0&Type==-1)>0,offers.minimum(Status==0&Type==-1,Price),\I);
 															    }
 															
 															//Price highlighting
@@ -15860,7 +15875,7 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestBid=Price;
-															    BestAsk=offers.minimum(Status==0&Type==-1,Price);
+															    BestAsk=if(offers.count(Status==0&Type==-1)>0,offers.minimum(Status==0&Type==-1,Price),\I);
 															    }
 															
 															//Price highlighting
@@ -16224,7 +16239,8 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestAsk=Price;
-															    BestBid=offers.maximum(Status==0&Type==1,Price);
+															    BestBid=if(offers.count(Status==0&Type==1)>0,offers.maximum(Status==0&Type==1,Price),\I);
+															
 															    }
 															
 															//Price highlighting
@@ -16620,7 +16636,8 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestAsk=Price;
-															    BestBid=offers.maximum(Status==0&Type==1,Price);
+															    BestBid=if(offers.count(Status==0&Type==1)>0,offers.maximum(Status==0&Type==1,Price),\I);
+															
 															    }
 															
 															//Price highlighting
@@ -17000,7 +17017,8 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestAsk=Price;
-															    BestBid=offers.maximum(Status==0&Type==1,Price);
+															    BestBid=if(offers.count(Status==0&Type==1)>0,offers.maximum(Status==0&Type==1,Price),\I);
+															
 															    }
 															
 															//Price highlighting
@@ -17381,7 +17399,8 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestAsk=Price;
-															    BestBid=offers.maximum(Status==0&Type==1,Price);
+															    BestBid=if(offers.count(Status==0&Type==1)>0,offers.maximum(Status==0&Type==1,Price),\I);
+															
 															    }
 															
 															//Price highlighting
@@ -17945,7 +17964,7 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 														}
 														checker{
 															condition = Price >= offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
-															message = "Der Preis eines neuen Kaufgebots darf nicht geringer als jener des höchsten bereits bestehenden Kaufsgebots sein!";
+															message = "Der Preis eines neuen Kaufgebots darf nicht geringer als jener des höchsten bereits bestehenden Kaufgebots sein!";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -18298,7 +18317,7 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 														}
 														checker{
 															condition = Price >= offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
-															message = "Der Preis eines neuen Kaufgebots darf nicht geringer als jener des höchsten bereits bestehenden Kaufsgebots sein!";
+															message = "Der Preis eines neuen Kaufgebots darf nicht geringer als jener des höchsten bereits bestehenden Kaufgebots sein!";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -18434,7 +18453,7 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 												buttonsequence = HORIZONTAL;
 												emptyallowed = FALSE;
 												allemptyallowed = FALSE;
-												condition = Status==1 & Market==:DisplayMarket[1] & (Phase==2 | \ConnectedMarketMechanisms==1);
+												condition = Status==1 & Market==:DisplayMarket[1] & (Phase==2 | \ConnectedMarketMechanisms==1) & (\PriceListDepth[:DisplayMarket[1]]<=0|contracts.maximum(Market==:DisplayMarket[1],ID)<ID+\PriceListDepth[:DisplayMarket[1]]);
 												sortfields = "-ID";
 												tablelayout = LIST;
 												scrollatstart = TRUE;
@@ -18455,7 +18474,7 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 												buttonsequence = HORIZONTAL;
 												emptyallowed = FALSE;
 												allemptyallowed = FALSE;
-												condition = Status==1 & Market==:DisplayMarket[1] & (Phase==2 | \ConnectedMarketMechanisms==1);
+												condition = Status==1 & Market==:DisplayMarket[1] & (Phase==2 | \ConnectedMarketMechanisms==1) & (\PriceListDepth[:DisplayMarket[1]]<=0|contracts.maximum(Market==:DisplayMarket[1],ID)<ID+\PriceListDepth[:DisplayMarket[1]]);
 												sortfields = "-ID";
 												tablelayout = LIST;
 												scrollatstart = TRUE;
@@ -28671,7 +28690,7 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 				}
 				item{
 					variable = AnswerFinLit[FinLitRandomPayQuestion];
-					format = "<> !text: 0=\"<\\Language|!text: 1=\"This means that you will not receive additional payment for your questionnaire answers.\";2=\"Das bedeutet, dass Sie keine zusätzliche Auszahlung für Ihre Antworten auf den Fragebogen erhalten.\";>\" 1=\"<\\Language|!text: 1=\"This means that you will receive an additional payment of <\\PayoffFinLit|0.01> <\\Currency|!text: 1=\"Euro\" 2=\"US Dollars\" 3=\"Danish Kroner\" 4=\"Australian Dollars\">.\";2=\"Das bedeutet, dass Sie eine zusätzliche Auszahlung von <\\PayoffFinLit|0.01> <\\PayoffFinLit|!text: 0.999=\"<\\Currency|!text: 1=\"US Dollar\"; 2=\"Euro\"; 3=\"Dänischen Kronen\"; 4=\"Australischen Dollar\">\"; 1=\"<\\Currency|!text: 1=\"US Dollar\"; 2=\"Euro\"; 3=\"Dänische Krone\"; 4=\"Australischen Dollar\">\";1.001=\"<\\Currency|!text: 1=\"US Dollar\"; 2=\"Euro\"; 3=\"Dänischen Kronen\"; 4=\"Australischen Dollar\">\";>erhalten.\";>\"";
+					format = "<> !text: 0=\"<\\Language|!text: 1=\"This means that you will not receive additional payment for your questionnaire answers.\";2=\"Das bedeutet, dass Sie keine zusätzliche Auszahlung für Ihre Antworten auf den Fragebogen erhalten.\";>\" 1=\"<\\Language|!text: 1=\"This means that you will receive an additional payment of <\\PayoffFinLit|0.01> <\\Currency|!text: 1=\"Euro\" 2=\"US Dollars\" 3=\"Danish Kroner\" 4=\"Australian Dollars\">.\";2=\"Das bedeutet, dass Sie eine zusätzliche Auszahlung von <\\PayoffFinLit|0.01> <\\PayoffFinLit|!text: 0.999=\"<\\Currency|!text: 1=\"Euro\"; 2=\"US Dollar\"; 3=\"Dänischen Kronen\"; 4=\"Australischen Dollar\">\"; 1=\"<\\Currency|!text: 1=\"Euro\"; 2=\"US Dollar\"; 3=\"Dänischen Kronen\"; 4=\"Australischen Dollar\">\";1.001=\"<\\Currency|!text: 1=\"Euro\"; 2=\"US Dollar\"; 3=\"Dänischen Kronen\"; 4=\"Australischen Dollar\">\";> erhalten.\";>\"";
 					input = FALSE;
 				}
 				item{
@@ -28930,7 +28949,7 @@ treatment "GIMS_v7.4.3_2016-11-25.ztt"{
 				}
 				item{
 					variable = AnswerFinLit[FinLitRandomPayQuestion];
-					format = "<> !text: 0=\"<\\Language|!text: 1=\"This means that you will not receive additional payment for your questionnaire answers.\";2=\"Das bedeutet, dass Sie keine zusätzliche Auszahlung für Ihre Antworten auf den Fragebogen erhalten.\";>\" 1=\"<\\Language|!text: 1=\"This means that you will receive an additional payment of <\\PayoffFinLit|0.01> <\\Currency|!text: 1=\"Euro\" 2=\"US Dollars\" 3=\"Danish Kroner\" 4=\"Australian Dollars\">.\";2=\"Das bedeutet, dass Sie eine zusätzliche Auszahlung von <\\PayoffFinLit|0.01> <\\PayoffFinLit|!text: 0.999=\"<\\Currency|!text: 1=\"US Dollar\"; 2=\"Euro\"; 3=\"Dänischen Kronen\"; 4=\"Australischen Dollar\">\"; 1=\"<\\Currency|!text: 1=\"US Dollar\"; 2=\"Euro\"; 3=\"Dänische Krone\"; 4=\"Australischen Dollar\">\";1.001=\"<\\Currency|!text: 1=\"US Dollar\"; 2=\"Euro\"; 3=\"Dänischen Kronen\"; 4=\"Australischen Dollar\">\";>erhalten.\";>\"";
+					format = "<> !text: 0=\"<\\Language|!text: 1=\"This means that you will not receive additional payment for your questionnaire answers.\";2=\"Das bedeutet, dass Sie keine zusätzliche Auszahlung für Ihre Antworten auf den Fragebogen erhalten.\";>\" 1=\"<\\Language|!text: 1=\"This means that you will receive an additional payment of <\\PayoffFinLit|0.01> <\\Currency|!text: 1=\"Euro\" 2=\"US Dollars\" 3=\"Danish Kroner\" 4=\"Australian Dollars\">.\";2=\"Das bedeutet, dass Sie eine zusätzliche Auszahlung von <\\PayoffFinLit|0.01> <\\PayoffFinLit|!text: 0.999=\"<\\Currency|!text: 1=\"Euro\"; 2=\"US Dollar\"; 3=\"Dänischen Kronen\"; 4=\"Australischen Dollar\">\"; 1=\"<\\Currency|!text: 1=\"Euro\"; 2=\"US Dollar\"; 3=\"Dänischen Kronen\"; 4=\"Australischen Dollar\">\";1.001=\"<\\Currency|!text: 1=\"Euro\"; 2=\"US Dollar\"; 3=\"Dänischen Kronen\"; 4=\"Australischen Dollar\">\";> erhalten.\";>\"";
 					input = FALSE;
 				}
 				item{

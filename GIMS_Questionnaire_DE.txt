@@ -1,4 +1,4 @@
-questionnaires "GIMS_Questionnaire_DE_v2.1.ztq"{
+questionnaires "GIMS_Questionnaire_DE_v2.2.ztq"{
 	adress "Adresse"{
 		title = "Bitte geben Sie Ihren Namen ein. Ihre gesamten Eingaben werden vertraulich behandelt und getrennt von Ihren Eingaben auf den folgenden Seiten gespeichert.";
 		firstnametext = "Vorname";
@@ -170,7 +170,7 @@ questionnaires "GIMS_Questionnaire_DE_v2.1.ztq"{
 			max = 1;
 			inc = 1;
 			numtextlines = 1;
-			texts{"gar nicht risikobereit";"sehr risikobereit";
+			texts{"sehr ungeduldig";"sehr geduldig";
 			}
 		}
 		item{
@@ -196,7 +196,7 @@ questionnaires "GIMS_Questionnaire_DE_v2.1.ztq"{
 			max = 1;
 			inc = 1;
 			numtextlines = 1;
-			texts{"sehr ungeduldig";"sehr geduldig";
+			texts{"gar nicht risikobereit";"sehr risikobereit";
 			}
 		}
 		item{

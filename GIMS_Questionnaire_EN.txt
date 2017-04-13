@@ -1,4 +1,4 @@
-questionnaires "GIMS_Questionnaire_EN_v2.1.ztq"{
+questionnaires "GIMS_Questionnaire_EN_v2.2.ztq"{
 	adress "Adresse"{
 		title = "Please enter your Name.  All your entries will be kept confidential and will be saved separately from your entries on the following pages.";
 		firstnametext = "First Name";
@@ -170,7 +170,7 @@ questionnaires "GIMS_Questionnaire_EN_v2.1.ztq"{
 			max = 1;
 			inc = 1;
 			numtextlines = 1;
-			texts{"Not at all willing to take risks";"Very willing to take risks";
+			texts{"Very impatient";"Very patient";
 			}
 		}
 		item{
@@ -196,7 +196,7 @@ questionnaires "GIMS_Questionnaire_EN_v2.1.ztq"{
 			max = 1;
 			inc = 1;
 			numtextlines = 1;
-			texts{"Very impatient";"Very patient";
+			texts{"Not at all willing to take risks";"Very willing to take risks";
 			}
 		}
 		item{
