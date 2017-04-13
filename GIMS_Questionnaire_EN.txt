@@ -1,21 +1,6 @@
-questionnaires "GIMS_Questionnaire_EN_v2.2.ztq"{
+questionnaires "GIMS_Questionnaire_EN_v2.3.ztq"{
 	adress "Adresse"{
-		title = "Please enter your Name.  All your entries will be kept confidential and will be saved separately from your entries on the following pages.";
-		firstnametext = "First Name";
-		lastnametext = "Last Name";
-		streettext = "Adress";
-		zipcodetext = "Postal code";
-		locationtext = "City";
-		teltext = "Telephone";
-		emailtext = "E-Mail";
-		furtherexpquestiontext = "Do you want to participate in further experiments?";
-		furtherexpyestext = "Yes";
-		furtherexpnotext = "No";
 		buttontext = "Continue";
-		helplabel = "Help";
-		helptext = "Thank you for completing the experiment. In order to process your payment we need the details listed in the form.
-		
-		Please fill these in and click continue.";
 	}
 	questionnaire "Preamble"{
 		title = "Questionnaire";
@@ -48,103 +33,6 @@ questionnaires "GIMS_Questionnaire_EN_v2.2.ztq"{
 			max = 1;
 			inc = 1;
 			numtextlines = 1;
-		}
-		button{
-			name = "Continue";
-		}
-	}
-	questionnaire "Socioeconomics"{
-		title = "Background data";
-		do{
-			Participate=1-IsExperimenter;
-		}
-		ruler{
-			leftborder = 9%;
-			rightborder = 9%;
-			space = 7p;
-			labelsize = 61%;
-		}
-		item{
-			label = "What is your gender?";
-			variable = Female;
-			type = radio;
-			input = TRUE;
-			longformat = FALSE;
-			emptyallowed = FALSE;
-			min = 0;
-			max = 1;
-			inc = 1;
-			numtextlines = 1;
-			texts{"Female";"Male";
-			}
-		}
-		item{
-			label = "How old are you in years?";
-			variable = Age;
-			type = number;
-			input = TRUE;
-			longformat = FALSE;
-			emptyallowed = FALSE;
-			min = 0;
-			max = 121;
-			inc = 1;
-			numtextlines = 1;
-		}
-		item{
-			label = "What is your nationality?";
-			variable = Nationality;
-			type = text;
-			input = TRUE;
-			longformat = FALSE;
-			emptyallowed = FALSE;
-			min = 0;
-			max = 1;
-			inc = 1;
-			numtextlines = 1;
-			texts{"Schweiz";"EU";"Andere";
-			}
-		}
-		item{
-			label = "What is your employment status?";
-			variable = Employment;
-			type = radio;
-			input = TRUE;
-			longformat = FALSE;
-			emptyallowed = FALSE;
-			min = 0;
-			max = 1;
-			inc = 1;
-			numtextlines = 1;
-			texts{"Full-time";"Part-time";"None";
-			}
-		}
-		item{
-			label = "If you are a student, what is you major?";
-			variable = Major;
-			type = text;
-			input = TRUE;
-			longformat = FALSE;
-			emptyallowed = TRUE;
-			min = 0;
-			max = 1;
-			inc = 1;
-			numtextlines = 1;
-			texts{"Geisteswissenschaften";"Naturwissenschaften";"Technik";"Medizin";"Volkswirtschaftslehre";"Betriebswirtschaftslehre";"Staatswissenschaften";"Rechtswissenschaften";"übrige Sozialwissenschaften";
-			}
-		}
-		item{
-			label = "What is the level of the highest degree you are currently studying?";
-			variable = LevelDegree;
-			type = radio;
-			input = TRUE;
-			longformat = FALSE;
-			emptyallowed = TRUE;
-			min = 0;
-			max = 1;
-			inc = 1;
-			numtextlines = 1;
-			texts{"Bachelor";"Master";"Doctor/PhD";"Other";
-			}
 		}
 		button{
 			name = "Continue";
@@ -450,6 +338,149 @@ questionnaires "GIMS_Questionnaire_EN_v2.2.ztq"{
 			type = text;
 			input = TRUE;
 			longformat = TRUE;
+			emptyallowed = TRUE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 5;
+			texts{"1";"2";"3";"4";"5+";
+			}
+		}
+		button{
+			name = "Continue";
+		}
+	}
+	questionnaire "Socioeconomics"{
+		title = "Background data";
+		do{
+			Participate=1-IsExperimenter;
+		}
+		ruler{
+			leftborder = 9%;
+			rightborder = 9%;
+			space = 7p;
+			labelsize = 61%;
+		}
+		item{
+			label = "What is your gender?";
+			variable = Female;
+			type = radio;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Female";"Male";
+			}
+		}
+		item{
+			label = "How old are you in years?";
+			variable = Age;
+			type = number;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 121;
+			inc = 1;
+			numtextlines = 1;
+		}
+		item{
+			label = "What is your nationality?";
+			variable = Nationality;
+			type = text;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Schweiz";"EU";"Andere";
+			}
+		}
+		item{
+			label = "What is your employment status?";
+			variable = Employment;
+			type = radio;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Full-time";"Part-time";"None";
+			}
+		}
+		item{
+			label = "If you are a student, what is you major?";
+			variable = Major;
+			type = text;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = TRUE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Geisteswissenschaften";"Naturwissenschaften";"Technik";"Medizin";"Volkswirtschaftslehre";"Betriebswirtschaftslehre";"Staatswissenschaften";"Rechtswissenschaften";"übrige Sozialwissenschaften";
+			}
+		}
+		item{
+			label = "What is the level of the highest degree you are currently studying?";
+			variable = LevelDegree;
+			type = radio;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = TRUE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Bachelor";"Master";"Doctor/PhD";"Other";
+			}
+		}
+		button{
+			name = "Continue";
+		}
+	}
+	questionnaire "Email"{
+		title = "Information about results of the study";
+		do{
+			Participate=1-IsExperimenter;
+		}
+		item{
+			label = "If you wish to be informed about the results of this study, once the study is completed, you now have the option of leaving an email address. This is of course voluntary and we will not use your email address for anything other than sending you one mail informing you of any results.";
+			type = number;
+			input = FALSE;
+			longformat = FALSE;
+			emptyallowed = TRUE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 5;
+			texts{"1";"2";"3";"4";"5+";
+			}
+		}
+		item{
+			type = text;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+		}
+		item{
+			label = "Your email address (voluntary):";
+			variable = Email;
+			type = text;
+			input = TRUE;
+			longformat = FALSE;
 			emptyallowed = TRUE;
 			min = 0;
 			max = 1;
