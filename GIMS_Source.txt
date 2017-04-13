@@ -1,4 +1,4 @@
-treatment "GIMS_v7.4.8_2016-12-21.ztt"{
+treatment "GIMS_v7.4.11_2017-01-09.ztt"{
 	background{
 		table globals{
 		}
@@ -111,10 +111,10 @@ treatment "GIMS_v7.4.8_2016-12-21.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.4.8 #####
+				//##### GIMS Version 7.4.11 #####
 				
-				GIMSVersion="7.4.8";
-				GIMSDate="21.12.2016";
+				GIMSVersion="7.4.11";
+				GIMSDate="09.01.2017";
 			}
 		}
 		program{
@@ -172,7 +172,7 @@ treatment "GIMS_v7.4.8_2016-12-21.ztt"{
 				MinPayoffCurrency=5;
 				MinPayoffECU=0;
 				Currency=1;    //1=Euro 2=US Dollars 3=Danish Kroner 4=Australian Dollars
-				
+				PayoffPrecision=0.1;    //Multiple to round payoffs to, in EUR or equivalent
 				
 				I=-77777;
 				
@@ -360,10 +360,8 @@ treatment "GIMS_v7.4.8_2016-12-21.ztt"{
 				StartTimeCDA=\I;
 				
 				//Do not change to simple if statement because this can cause a crash
-				if(Period==1){
-				    ForcedExitExperiment=0;
-				    }
-				else {
+				ForcedExitExperiment=0;
+				if(Period>1){
 				    ForcedExitExperiment=OLDglobals.find(ForcedExitExperiment);
 				    }
 				ForcedExitPeriod=0;
@@ -19305,14 +19303,14 @@ treatment "GIMS_v7.4.8_2016-12-21.ztt"{
 								condition = Market==:DisplayMarket[1]&Status==1&Phase==2;
 								sorting = Time;
 								connectioncolor = rgb(layout.find(ID=="CDA_Chart_Line",R),layout.find(ID=="CDA_Chart_Line",G),layout.find(ID=="CDA_Chart_Line",B));
-								connectionwidth = 1;
+								connectionwidth = 2;
 								filltoxaxis = FALSE;
 								connecttopreviouspoint = TRUE;
 								plotpoint "Prices"{
 									x = Time-(\StartTimeCDA-\StartTime);
 									y = Price;
 									isstar = FALSE;
-									size = 1;
+									size = 2;
 									numedges = 10;
 									startat = 0;
 									linecolor = rgb(layout.find(ID=="CDA_Chart_Line",R),layout.find(ID=="CDA_Chart_Line",G),layout.find(ID=="CDA_Chart_Line",B));
@@ -19360,14 +19358,14 @@ treatment "GIMS_v7.4.8_2016-12-21.ztt"{
 								condition = Market==:DisplayMarket[1]&Status==1&Phase==2;
 								sorting = Time;
 								connectioncolor = rgb(layout.find(ID=="CDA_Chart_Line",R),layout.find(ID=="CDA_Chart_Line",G),layout.find(ID=="CDA_Chart_Line",B));
-								connectionwidth = 1;
+								connectionwidth = 2;
 								filltoxaxis = FALSE;
 								connecttopreviouspoint = TRUE;
 								plotpoint "Prices"{
 									x = Time-(\StartTimeCDA-\StartTime);
 									y = Price;
 									isstar = FALSE;
-									size = 1;
+									size = 2;
 									numedges = 10;
 									startat = 0;
 									linecolor = rgb(layout.find(ID=="CDA_Chart_Line",R),layout.find(ID=="CDA_Chart_Line",G),layout.find(ID=="CDA_Chart_Line",B));
@@ -21536,14 +21534,14 @@ treatment "GIMS_v7.4.8_2016-12-21.ztt"{
 								condition = Market==:DisplayMarket[1]&Status==1&Phase==2;
 								sorting = Time;
 								connectioncolor = rgb(layout.find(ID=="CDA_Chart_Line",R),layout.find(ID=="CDA_Chart_Line",G),layout.find(ID=="CDA_Chart_Line",B));
-								connectionwidth = 1;
+								connectionwidth = 2;
 								filltoxaxis = FALSE;
 								connecttopreviouspoint = TRUE;
 								plotpoint "Prices"{
 									x = Time-(\StartTimeCDA-\StartTime);
 									y = Price;
 									isstar = FALSE;
-									size = 1;
+									size = 2;
 									numedges = 10;
 									startat = 0;
 									linecolor = rgb(layout.find(ID=="CDA_Chart_Line",R),layout.find(ID=="CDA_Chart_Line",G),layout.find(ID=="CDA_Chart_Line",B));
@@ -21591,14 +21589,14 @@ treatment "GIMS_v7.4.8_2016-12-21.ztt"{
 								condition = Market==:DisplayMarket[1]&Status==1&Phase==2;
 								sorting = Time;
 								connectioncolor = rgb(layout.find(ID=="CDA_Chart_Line",R),layout.find(ID=="CDA_Chart_Line",G),layout.find(ID=="CDA_Chart_Line",B));
-								connectionwidth = 1;
+								connectionwidth = 2;
 								filltoxaxis = FALSE;
 								connecttopreviouspoint = TRUE;
 								plotpoint "Prices"{
 									x = Time-(\StartTimeCDA-\StartTime);
 									y = Price;
 									isstar = FALSE;
-									size = 1;
+									size = 2;
 									numedges = 10;
 									startat = 0;
 									linecolor = rgb(layout.find(ID=="CDA_Chart_Line",R),layout.find(ID=="CDA_Chart_Line",G),layout.find(ID=="CDA_Chart_Line",B));
