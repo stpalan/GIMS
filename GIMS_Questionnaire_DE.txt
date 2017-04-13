@@ -1,0 +1,504 @@
+questionnaires "GIMS_Questionnaire_DE_v1.0.ztq"{
+	adress "Adresse"{
+		title = "Bitte geben Sie Ihren Namen ein. Ihre gesamten Eingaben werden vertraulich behandelt und getrennt von Ihren Eingaben auf den folgenden Seiten gespeichert.";
+		firstnametext = "Vorname";
+		lastnametext = "Nachname";
+		streettext = "Adresse";
+		zipcodetext = "Postleitzahl";
+		locationtext = "Ort";
+		teltext = "Telefon";
+		emailtext = "E-Mail";
+		furtherexpquestiontext = "Wollen Sie an weiteren Experimenten teilnehmen?";
+		furtherexpyestext = "Ja";
+		furtherexpnotext = "Nein";
+		buttontext = "Weiter";
+		helplabel = "Hilfe";
+		helptext = "Danke für Ihre Teilnahme am Experiment. Wir benötigen die Angaben auf diesem Formular, um Ihre Auszahlung vorbereiten zu können.
+		
+		Bitte füllen Sie dieses aus und klicken Sie Weiter.";
+	}
+	questionnaire "Präambel"{
+		title = "Fragebogen";
+		do{
+			Participate=1-IsExperimenter;
+		}
+		ruler{
+			leftborder = 9%;
+			rightborder = 9%;
+			space = 7p;
+			labelsize = 61%;
+		}
+		item{
+			label = "Bitte beantworten Sie jede der folgenden Fragen so wahrheitsgemäß wie möglich. Selbstverständlich werden Ihre Antworten absolut vertraulich behandelt. Ihre Antworten sind von enormer Wichtigkeit für unsere wissenschaftliche Untersuchung. Wir bedanken uns im Voraus für Ihre Mithilfe.";
+			type = text;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+		}
+		item{
+			type = text;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+		}
+		button{
+			name = "Weiter";
+		}
+	}
+	questionnaire "Socioeconomics"{
+		title = "Hintergrundangaben";
+		do{
+			Participate=1-IsExperimenter;
+		}
+		ruler{
+			leftborder = 9%;
+			rightborder = 9%;
+			space = 7p;
+			labelsize = 61%;
+		}
+		item{
+			label = "Was ist Ihr Geschlecht?";
+			variable = Female;
+			type = radio;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Weiblich";"Männlich";
+			}
+		}
+		item{
+			label = "Wie lautet Ihr Alter in Jahren?";
+			variable = Age;
+			type = number;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 121;
+			inc = 1;
+			numtextlines = 1;
+		}
+		item{
+			label = "Was ist Ihre Nationalität?";
+			variable = Nationality;
+			type = text;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Schweiz";"EU";"Andere";
+			}
+		}
+		item{
+			label = "Was ist Ihre Beschäftigungssituation?";
+			variable = Employment;
+			type = radio;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Vollzeit";"Teilzeit";"Keine";
+			}
+		}
+		item{
+			label = "Falls Sie Studierende/r sind, wie lautet Ihr Hauptfach?";
+			variable = Major;
+			type = text;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = TRUE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Geisteswissenschaften";"Naturwissenschaften";"Technik";"Medizin";"Volkswirtschaftslehre";"Betriebswirtschaftslehre";"Staatswissenschaften";"Rechtswissenschaften";"übrige Sozialwissenschaften";
+			}
+		}
+		item{
+			label = "Welches ist das höchste Studium, das Sie gerade belegen?";
+			variable = LevelDegree;
+			type = radio;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = TRUE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Bachelor";"Master";"Doktorat/PhD";"Anderes";
+			}
+		}
+		button{
+			name = "Weiter";
+		}
+	}
+	questionnaire "Allgemeine Risikofrage"{
+		title = "Hintergrundangaben";
+		do{
+			Participate=1-IsExperimenter;
+		}
+		ruler{
+			leftborder = 9%;
+			rightborder = 9%;
+			space = 7p;
+			labelsize = 61%;
+		}
+		item{
+			type = radiolineheader;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+			texts{"gar nicht risikobereit";"sehr risikobereit";
+			}
+		}
+		item{
+			label = "Wie schätzen Sie sich persönlich ein: Sind Sie im allgemeinen ein risikobereiter Mensch oder versuchen Sie, Risiken zu vermeiden?";
+			variable = RiskGeneral;
+			type = radioline;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 10;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Never";"A few times";"Occasionally";"Often";"Every chance I get";
+			}
+		}
+		button{
+			name = "Weiter";
+		}
+	}
+	questionnaire "Kontext Risikofragen"{
+		title = "Hintergrundangaben";
+		do{
+			Participate=1-IsExperimenter;
+		}
+		ruler{
+			leftborder = 9%;
+			rightborder = 9%;
+			space = 7p;
+			labelsize = 61%;
+		}
+		item{
+			label = "Man kann sich in verschiedenen Bereichen ja auch unterschiedlich verhalten.\r\nWie würden Sie Ihre Risikobereitschaft in Bezug auf die folgenden Bereiche einschätzen?";
+			type = number;
+			input = FALSE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 4;
+			inc = 1;
+			numtextlines = 1;
+		}
+		item{
+			type = radiolineheader;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 5;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Gar nicht risikobereit";"Sehr risikobereit";
+			}
+		}
+		item{
+			type = radiolineheader;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 4;
+			inc = 1;
+			numtextlines = 1;
+			texts{"0";"1";"2";"3";"4";"5";"6";"7";"8";"9";"10";
+			}
+		}
+		item{
+			label = "Wie ist das ... beim Autofahren?";
+			variable = RiskDriving;
+			type = radioline;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 10;
+			inc = 1;
+			numtextlines = 1;
+		}
+		item{
+			label = "Wie ist das ... bei Geldanlagen?";
+			variable = RiskFinancial;
+			type = radioline;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 10;
+			inc = 1;
+			numtextlines = 1;
+		}
+		item{
+			label = "Wie ist das ... bei Freizeit und Sport?";
+			variable = RiskLeisureSport;
+			type = radioline;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 10;
+			inc = 1;
+			numtextlines = 1;
+		}
+		item{
+			label = "Wie ist das ... bei Ihrer beruflichen Karriere?";
+			variable = RiskWork;
+			type = radioline;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 10;
+			inc = 1;
+			numtextlines = 1;
+		}
+		item{
+			label = "Wie ist das ... bei Ihrer Gesundheit?";
+			variable = RiskHealth;
+			type = radioline;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 10;
+			inc = 1;
+			numtextlines = 1;
+		}
+		item{
+			label = "Wie ist das ... beim Vertrauen in fremde Menschen?";
+			variable = RiskOthers;
+			type = radioline;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 10;
+			inc = 1;
+			numtextlines = 1;
+		}
+		button{
+			name = "Weiter";
+		}
+	}
+	questionnaire "Risikofragen"{
+		title = "Hintergrundangaben";
+		do{
+			Participate=1-IsExperimenter;
+		}
+		ruler{
+			leftborder = 9%;
+			rightborder = 9%;
+			space = 7p;
+			labelsize = 61%;
+		}
+		item{
+			label = "Wie oft betreiben Sie Extremsport? (Extremsport umfasst Bungee-Jumping, Paragleiten, Fallschirmspringen, Segelflug, Rafting, Tauchen und andere gefährliche Sportarten.)";
+			variable = ExtremeSports;
+			type = radio;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Nie";"Selten";"Von Zeit zu Zeit";"Oft";"Wann immer ich Gelegenheit dazu habe";
+			}
+		}
+		item{
+			label = "Rauchen Sie zur Zeit Zigaretten?";
+			variable = Smoker;
+			type = radio;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Nein";"Ja";
+			}
+		}
+		item{
+			label = "Falls ja, wie viele Zigaretten rauchen Sie am Tag?";
+			variable = NumberCigarettes;
+			type = number;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = TRUE;
+			min = 0;
+			max = 1000;
+			inc = 1;
+			numtextlines = 1;
+			texts{"0";"1";"2";"3";"4";"5";">5";
+			}
+		}
+		button{
+			name = "Weiter";
+		}
+	}
+	questionnaire "Probleme"{
+		title = "Probleme während des Experiments";
+		do{
+			Participate=1-IsExperimenter;
+		}
+		ruler{
+			leftborder = 5p;
+			rightborder = 5p;
+			space = 7p;
+			labelsize = 61%;
+		}
+		item{
+			label = "Haben Sie jemals einen Fehler bei der Eingabe eines Preises gemacht, oder einen falschen Knopf geklickt? Falls ja, bitte teilen Sie uns genau mit, worin der Fehler bestand und in welcher Periode er sich ereignet hat:";
+			variable = Typo;
+			type = text;
+			input = TRUE;
+			longformat = TRUE;
+			emptyallowed = TRUE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 5;
+			texts{"1";"2";"3";"4";"5+";
+			}
+		}
+		item{
+			label = "Fanden Sie die Anleitung zum Marktexperiment klar und verständlich? Was könnte daran verbessert werden?";
+			variable = ClarityInstructionsMarket;
+			type = text;
+			input = TRUE;
+			longformat = TRUE;
+			emptyallowed = TRUE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 5;
+			texts{"1";"2";"3";"4";"5+";
+			}
+		}
+		button{
+			name = "Weiter";
+		}
+	}
+	questionnaire "Anmerkungen"{
+		title = "Weitere Anmerkungen";
+		do{
+			Participate=1-IsExperimenter;
+		}
+		item{
+			label = "Platz für Ihre Anmerkungen:";
+			variable = Comments;
+			type = text;
+			input = TRUE;
+			longformat = TRUE;
+			emptyallowed = TRUE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 5;
+			texts{"1";"2";"3";"4";"5+";
+			}
+		}
+		button{
+			name = "Weiter";
+		}
+	}
+	questionnaire "Auszahlungsinformation"{
+		title = "Auszahlung";
+		do{
+			Participate=1-IsExperimenter;
+		}
+		ruler{
+			leftborder = 15%;
+			rightborder = 15%;
+			space = 7p;
+			labelsize = 61%;
+		}
+		item{
+			type = text;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+		}
+		item{
+			type = text;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+		}
+		item{
+			label = "Ihre Einkünfte aus diesem Experiment lauten:";
+			variable = MoneyEarned;
+			type = number;
+			input = FALSE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 0.5;
+			numtextlines = 1;
+		}
+		item{
+			type = text;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+		}
+		item{
+			label = "Danke für Ihre Teilnahme!";
+			type = text;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+		}
+	}
+}
