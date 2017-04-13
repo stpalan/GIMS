@@ -1,4 +1,4 @@
-treatment "GIMS_v7.3.5_2016-09-23.ztt"{
+treatment "GIMS_v7.3.6_2016-10-05.ztt"{
 	background{
 		table globals{
 		}
@@ -111,10 +111,10 @@ treatment "GIMS_v7.3.5_2016-09-23.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.3.5 #####
+				//##### GIMS Version 7.3.6 #####
 				
-				GIMSVersion="7.3.5";
-				GIMSDate="23.09.2016";
+				GIMSVersion="7.3.6";
+				GIMSDate="05.10.2016";
 			}
 		}
 		program{
@@ -1056,6 +1056,7 @@ treatment "GIMS_v7.3.5_2016-09-23.ztt"{
 				array SSWValue[\NumMarkets];
 				array AvgPriceCA[\NumMarkets];
 				array AvgPriceCDA[\NumMarkets];
+				array AvgVolPriceCDA[\NumMarkets];
 				array MedianPriceCDA[\NumMarkets];
 				array LastPriceCDA[\NumMarkets];
 				array NumTradesCA[\NumMarkets];
@@ -12116,7 +12117,7 @@ treatment "GIMS_v7.3.5_2016-09-23.ztt"{
 						table = globals;
 						do{
 							subjects.do{LeaveStage=1;}
-							ForceLeavePeriod=1;
+							\ForcedExitPeriod=1;
 						}
 					}
 					program{
@@ -12130,7 +12131,7 @@ treatment "GIMS_v7.3.5_2016-09-23.ztt"{
 							    ID=timelog.maximum(ID)+1;
 							    Time=gettime()-\StartTime;
 							    Period=\Period;
-							    Event=15;
+							    Event=95;
 							    }
 						}
 					}
@@ -12822,7 +12823,6 @@ treatment "GIMS_v7.3.5_2016-09-23.ztt"{
 					right = 0p;
 					top = 0p;
 					cuttop = TRUE;
-					displaycondition = NumMarkets>=1;
 					containerbox "MarketContainer"{
 						hasframe = TRUE;
 						width = 617p;
@@ -21087,8 +21087,9 @@ treatment "GIMS_v7.3.5_2016-09-23.ztt"{
 				iterator(Market,\NumMarkets).do{
 				    :Dividend[Market]=\Dividend[Market];
 				    :SSWValue[Market]=(\NumPeriods - Period +1) * \MeanDividend[Market];
-				    :AvgPriceCDA=transactions.average(same(Market)&Phase==2,Price);
-				    :MedianPriceCDA=transactions.median(same(Market)&Phase==2,Price);
+				    :AvgPriceCDA[Market]=transactions.average(same(Market)&Phase==2,Price);
+				    :AvgVolPriceCDA[Market]=transactions.sum(same(Market)&Phase==2,Price*Volume)/transactions.sum(same(Market)&Phase==2,Volume);
+				    :MedianPriceCDA[Market]=transactions.median(same(Market)&Phase==2,Price);
 				    :LastPriceCDA[Market]=\LastPrice[Market];
 				    :NumTradesCDA[Market] = transactions.count(same(Market)&Phase==2);
 				    :VolumeCDA[Market]=transactions.sum(same(Market)&Phase==2,Volume);
