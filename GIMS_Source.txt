@@ -1,4 +1,4 @@
-treatment "GIMS_v7.3.4_2016-09-06.ztt"{
+treatment "GIMS_v7.3.5_2016-09-23.ztt"{
 	background{
 		table globals{
 		}
@@ -111,10 +111,10 @@ treatment "GIMS_v7.3.4_2016-09-06.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.3.4 #####
+				//##### GIMS Version 7.3.5 #####
 				
-				GIMSVersion="7.3.4";
-				GIMSDate="06.09.2016";
+				GIMSVersion="7.3.5";
+				GIMSDate="23.09.2016";
 			}
 		}
 		program{
@@ -168,6 +168,8 @@ treatment "GIMS_v7.3.4_2016-09-06.ztt"{
 				
 				//Payoff settings
 				ExchangeRate=1;
+				MinPayoffCurrency=5;
+				MinPayoffECU=0;
 				Currency=1;    //1=Euro 2=US Dollars 3=Danish Kroner 4=Australian Dollars
 				
 				
@@ -28165,9 +28167,6 @@ treatment "GIMS_v7.3.4_2016-09-06.ztt"{
 				//Payoff calculation FinLit
 				
 				Profit=if (\PayFinLitRandom==1,Profit+\PayoffFinLit*AnswerFinLit[FinLitRandomPayQuestion], Profit+\PayoffFinLit*FinLitScore/\NumFinLit);
-				
-				
-				
 			}
 		}
 		program{
@@ -28234,6 +28233,23 @@ treatment "GIMS_v7.3.4_2016-09-06.ztt"{
 				        }
 				    }
 				
+			}
+		}
+		program{
+			table = subjects;
+			condition = Period==\NumPeriods;
+			do{
+				//Minimum payoff addition
+				
+				//Adds Profit if profit to date including this period is below MinPayoffEuro
+				if(\MinPayoffCurrency>0){
+				    Profit=Profit+if((session.find(same(Subject),FinalProfit)+Profit)*\ExchangeRate<\MinPayoffCurrency,\MinPayoffCurrency/\ExchangeRate-session.find(same(Subject),FinalProfit)-Profit,0);
+				    }
+				
+				//Adds Profit if profit to date including this period is below MinPayoffECU
+				if(\MinPayoffECU>0){
+				    Profit=Profit+if(session.find(same(Subject),FinalProfit)+Profit<\MinPayoffECU,\MinPayoffECU-session.find(same(Subject),FinalProfit)-Profit,0);
+				    }
 			}
 		}
 		screen action{
