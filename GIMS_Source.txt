@@ -1,4 +1,4 @@
-treatment "GIMS_v7.1.2_2015-07-16.ztt"{
+treatment "GIMS_v7.2.1_2015-07-27.ztt"{
 	background{
 		table globals{
 		}
@@ -85,6 +85,10 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 			execute = WITHEACH;
 		}
 		table marketsummary{
+			lifetime = PERIOD;
+			execute = WITHEACH;
+		}
+		table auctionpractice{
 			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
@@ -192,7 +196,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 			do{
 				//### P3: General market parameters ###
 				
-				NumMarkets=1;
+				NumMarkets=5;
 				array MultiUnitTrading[NumMarkets];
 				PresetDividends=0;
 				PresetSignals=0;
@@ -228,6 +232,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 				//Defines variables
 				
 				IndicativePriceInterval=-1;
+				ShowCAPracticeResults=1;
 				
 				array NumTypedOffersCallAuction[\NumMarkets];
 				array MarketOrderPriority[\NumMarkets];
@@ -5133,7 +5138,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 														specialbuttoncolor = TRUE;
 														buttoncolor = 13158600;
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -5254,7 +5259,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -5400,7 +5405,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 														specialbuttoncolor = TRUE;
 														buttoncolor = 13158600;
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -5521,7 +5526,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -5680,7 +5685,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -5809,7 +5814,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -5970,7 +5975,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -6097,7 +6102,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -6248,7 +6253,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -6397,7 +6402,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+															condition = 0 <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -6560,7 +6565,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
 															message = "You do not have enough assets to submit this offer!";
 															noButtonStr = "OK";
 														}
@@ -6726,7 +6731,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 															noButtonStr = "OK";
 														}
 														checker{
-															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1],Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 															noButtonStr = "OK";
 														}
@@ -7894,7 +7899,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 															specialbuttoncolor = TRUE;
 															buttoncolor = 13158600;
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
 																message = "You do not have enough assets to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -8015,7 +8020,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
 																message = "You do not have enough assets to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -8161,7 +8166,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 															specialbuttoncolor = TRUE;
 															buttoncolor = 13158600;
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -8282,7 +8287,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -8441,7 +8446,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
 																message = "You do not have enough assets to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -8570,7 +8575,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
 																message = "You do not have enough assets to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -8731,7 +8736,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -8858,7 +8863,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -9009,7 +9014,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
 																message = "You do not have enough assets to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -9158,7 +9163,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+																condition = 0 <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -9321,7 +9326,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
 																message = "You do not have enough assets to submit this offer!";
 																noButtonStr = "OK";
 															}
@@ -9487,7 +9492,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 																noButtonStr = "OK";
 															}
 															checker{
-																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1,Volume);
+																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2],Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
 																noButtonStr = "OK";
 															}
@@ -10818,7 +10823,7 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 		program{
 			table = subjects;
 			do{
-				Participate=if(\ForcedExitExperiment+\ForcedExitPeriod>0,0,1)*(1-\PracticePeriod*(1-\Testmode1))*\CallAuction;
+				Participate=if(\ForcedExitExperiment+\ForcedExitPeriod>0,0,1)*if(PracticePeriod==0|ShowCAPracticeResults==1,1,0)*(1-\Testmode1)*\CallAuction;
 			}
 		}
 		program{
@@ -10833,6 +10838,51 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 				    Time=gettime()-\StartTime;
 				    Period=\Period;
 				    Event=100;
+				    }
+			}
+		}
+		program{
+			table = subjects;
+			condition = \PracticePeriod==1&IsExperimenter==0;
+			do{
+				//Fills auctionpractice table
+				
+				iterator(Market,\NumMarkets).do{
+				    //Writes entries
+				    \Temp[1]=0;
+				    while(auctionoffers.count(Market==:Market&Offerer==::Subject&Status==0&Type==1&Price>\Temp[1])>0) {
+				        auctionoffers.do{
+				            if(Market==:Market&Offerer==::Subject&Status==0&Type==1&Price==auctionoffers.minimum(Market==:Market&Offerer==::Subject&Status==0&Type==1&Price>\Temp[1],Price)){
+				                auctionpractice.new{
+				                    Market=:Market;
+				                    DisplayMarket=if(Market==1,2,if(Market==2,1,Market));
+				                    Subject=:Offerer;
+				                    Type=:Type;
+				                    PriceLow=\Temp[1];
+				                    PriceHigh=:Price;
+				                    Volume=auctionoffers.sum(Market==:Market&Offerer==::Subject&Status==0&Type==1&Price>=:PriceHigh,Volume);
+				                    }
+				                \Temp[1]=Price;
+				                }
+				            }
+				        }
+				    \Temp[1]=\MaxPrice+1;
+				    while(auctionoffers.count(Market==:Market&Offerer==::Subject&Status==0&Type==-1&Price<\Temp[1])>0) {
+				        auctionoffers.do{
+				            if(Market==:Market&Offerer==::Subject&Status==0&Type==-1&Price==auctionoffers.maximum(Market==:Market&Offerer==::Subject&Status==0&Type==-1&Price<\Temp[1],Price)){
+				                auctionpractice.new{
+				                    Market=:Market;
+				                    DisplayMarket=if(Market==1,2,if(Market==2,1,Market));
+				                    Subject=:Offerer;
+				                    Type=:Type;
+				                    PriceLow=:Price;
+				                    PriceHigh=\Temp[1];
+				                    Volume=auctionoffers.sum(Market==:Market&Offerer==:Subject&Status==0&Type==-1&Price<=:PriceLow,Volume);
+				                    }
+				                \Temp[1]=Price;
+				                }
+				            }
+				        }
 				    }
 			}
 		}
@@ -11957,6 +12007,179 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 						}
 					}
 				}
+				containerbox "ContentPractice"{
+					hasframe = FALSE;
+					displaycondition = PracticePeriod==1;
+					standardbox "Text"{
+						hasframe = FALSE;
+						height = 20%;
+						top = 0p;
+						cuttop = TRUE;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						item{
+							variable = \Language;
+							format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Results summary}\"; 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Ergebniszusammenfassung}\"";
+							input = FALSE;
+						}
+						item{
+						}
+						item{
+							label = "<><\\Language|!text:1=\"Depending on the market price, your entries would lead to the following results:\";2=\"In Abhängigkeit vom resultierenden Marktpreis würden Ihre Eingaben zu folgenden Ergebnissen führen:\">";
+						}
+						item{
+							label = "<><\\Language|!text:1=\"(In case of a market price which does not correspond to any of the results below, your cash and asset balances would remain unchanged.)\"; 2=\"(Ergibt sich ein Marktpreis, für welchen keine Ergebnisse angezeigt werden, so ändert sich Ihr Vermögen nicht.)\">";
+						}
+					}
+					selectcontractbox "TradePreviewMultiMarketDE"{
+						hasframe = TRUE;
+						top = 5%;
+						displaycondition = \Language==2&\NumMarkets>1;
+						table = auctionpractice;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						emptyallowed = FALSE;
+						allemptyallowed = FALSE;
+						condition = Subject==:Subject;
+						sortfields = "DisplayMarket;PriceLow";
+						tablelayout = LIST;
+						scrollatstart = FALSE;
+						scrollatEnd = TRUE;
+						selectbest = FALSE;
+						item{
+							label = "Aktie";
+							variable = DisplayMarket;
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "Preis zwischen...";
+							variable = PriceLow;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
+						item{
+							label = "...und";
+							variable = PriceHigh;
+							format = "<>!text:\\MaxPrice=\"<PriceHigh|0.01>\";\\MaxPrice+1=\"unendlich\"";
+							input = FALSE;
+						}
+						item{
+							label = "Ergebnis";
+							variable = Type;
+							format = "<>!text:-1=\"Verkauf <Volume|1> Stück\"; 1=\"Kauf <Volume|1> Stück\"";
+							input = FALSE;
+						}
+					}
+					selectcontractbox "TradePreviewMultiMarketEN"{
+						hasframe = TRUE;
+						top = 5%;
+						displaycondition = \Language==1&\NumMarkets>1;
+						table = auctionpractice;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						emptyallowed = FALSE;
+						allemptyallowed = FALSE;
+						condition = Subject==:Subject;
+						sortfields = "DisplayMarket;PriceLow";
+						tablelayout = LIST;
+						scrollatstart = FALSE;
+						scrollatEnd = TRUE;
+						selectbest = FALSE;
+						item{
+							label = "Asset";
+							variable = DisplayMarket;
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "Price between...";
+							variable = PriceLow;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
+						item{
+							label = "...and";
+							variable = PriceHigh;
+							format = "<>!text:\\MaxPrice=\"<PriceHigh|0.01>\";\\MaxPrice+1=\"infinite\"";
+							input = FALSE;
+						}
+						item{
+							label = "Outcome";
+							variable = Type;
+							format = "<>!text:-1=\"Sell <Volume|1> assets\"; 1=\"Buy <Volume|1> assets\"";
+							input = FALSE;
+						}
+					}
+					selectcontractbox "TradePreviewSingleMarketDE"{
+						hasframe = TRUE;
+						top = 5%;
+						displaycondition = \Language==2&\NumMarkets==1;
+						table = auctionpractice;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						emptyallowed = FALSE;
+						allemptyallowed = FALSE;
+						condition = Subject==:Subject;
+						sortfields = "PriceLow";
+						tablelayout = LIST;
+						scrollatstart = FALSE;
+						scrollatEnd = TRUE;
+						selectbest = FALSE;
+						item{
+							label = "Preis zwischen...";
+							variable = PriceLow;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
+						item{
+							label = "...und";
+							variable = PriceHigh;
+							format = "<>!text:\\MaxPrice=\"<PriceHigh|0.01>\";\\MaxPrice+1=\"unendlich\"";
+							input = FALSE;
+						}
+						item{
+							label = "Ergebnis";
+							variable = Type;
+							format = "<>!text:-1=\"Verkauf <Volume|1> Stück\"; 1=\"Kauf <Volume|1> Stück\"";
+							input = FALSE;
+						}
+					}
+					selectcontractbox "TradePreviewSingleMarketEN"{
+						hasframe = TRUE;
+						top = 5%;
+						displaycondition = \Language==1&\NumMarkets==1;
+						table = auctionpractice;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						emptyallowed = FALSE;
+						allemptyallowed = FALSE;
+						condition = Subject==:Subject;
+						sortfields = "PriceLow";
+						tablelayout = LIST;
+						scrollatstart = FALSE;
+						scrollatEnd = TRUE;
+						selectbest = FALSE;
+						item{
+							label = "Price between...";
+							variable = PriceLow;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
+						item{
+							label = "...and";
+							variable = PriceHigh;
+							format = "<>!text:\\MaxPrice=\"<PriceHigh|0.01>\";\\MaxPrice+1=\"infinite\"";
+							input = FALSE;
+						}
+						item{
+							label = "Outcome";
+							variable = Type;
+							format = "<>!text:-1=\"Sell <Volume|1> assets\"; 1=\"Buy <Volume|1> assets\"";
+							input = FALSE;
+						}
+					}
+				}
 			}
 			standardbox "ButtonBox Testmode"{
 				hasframe = FALSE;
@@ -12250,6 +12473,179 @@ treatment "GIMS_v7.1.2_2015-07-16.ztt"{
 							label = "Total dividend";
 							variable = Dividend*Amount;
 							format = "\\PricePrecision";
+							input = FALSE;
+						}
+					}
+				}
+				containerbox "ContentPractice"{
+					hasframe = FALSE;
+					displaycondition = PracticePeriod==1;
+					standardbox "Text"{
+						hasframe = FALSE;
+						height = 20%;
+						top = 0p;
+						cuttop = TRUE;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						item{
+							variable = \Language;
+							format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Results summary}\"; 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Ergebniszusammenfassung}\"";
+							input = FALSE;
+						}
+						item{
+						}
+						item{
+							label = "<><\\Language|!text:1=\"Depending on the market price, your entries would lead to the following results:\";2=\"In Abhängigkeit vom resultierenden Marktpreis würden Ihre Eingaben zu folgenden Ergebnissen führen:\">";
+						}
+						item{
+							label = "<><\\Language|!text:1=\"(In case of a market price which does not correspond to any of the results below, your cash and asset balances would remain unchanged.)\"; 2=\"(Ergibt sich ein Marktpreis, für welchen keine Ergebnisse angezeigt werden, so ändert sich Ihr Vermögen nicht.)\">";
+						}
+					}
+					selectcontractbox "TradePreviewMultiMarketDE"{
+						hasframe = TRUE;
+						top = 5%;
+						displaycondition = \Language==2&\NumMarkets>1;
+						table = auctionpractice;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						emptyallowed = FALSE;
+						allemptyallowed = FALSE;
+						condition = Subject==:Subject;
+						sortfields = "DisplayMarket;PriceLow";
+						tablelayout = LIST;
+						scrollatstart = FALSE;
+						scrollatEnd = TRUE;
+						selectbest = FALSE;
+						item{
+							label = "Aktie";
+							variable = DisplayMarket;
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "Preis zwischen...";
+							variable = PriceLow;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
+						item{
+							label = "...und";
+							variable = PriceHigh;
+							format = "<>!text:\\MaxPrice=\"<PriceHigh|0.01>\";\\MaxPrice+1=\"unendlich\"";
+							input = FALSE;
+						}
+						item{
+							label = "Ergebnis";
+							variable = Type;
+							format = "<>!text:-1=\"Verkauf <Volume|1> Stück\"; 1=\"Kauf <Volume|1> Stück\"";
+							input = FALSE;
+						}
+					}
+					selectcontractbox "TradePreviewMultiMarketEN"{
+						hasframe = TRUE;
+						top = 5%;
+						displaycondition = \Language==1&\NumMarkets>1;
+						table = auctionpractice;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						emptyallowed = FALSE;
+						allemptyallowed = FALSE;
+						condition = Subject==:Subject;
+						sortfields = "DisplayMarket;PriceLow";
+						tablelayout = LIST;
+						scrollatstart = FALSE;
+						scrollatEnd = TRUE;
+						selectbest = FALSE;
+						item{
+							label = "Asset";
+							variable = DisplayMarket;
+							format = "1";
+							input = FALSE;
+						}
+						item{
+							label = "Price between...";
+							variable = PriceLow;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
+						item{
+							label = "...and";
+							variable = PriceHigh;
+							format = "<>!text:\\MaxPrice=\"<PriceHigh|0.01>\";\\MaxPrice+1=\"infinite\"";
+							input = FALSE;
+						}
+						item{
+							label = "Outcome";
+							variable = Type;
+							format = "<>!text:-1=\"Sell <Volume|1> assets\"; 1=\"Buy <Volume|1> assets\"";
+							input = FALSE;
+						}
+					}
+					selectcontractbox "TradePreviewSingleMarketDE"{
+						hasframe = TRUE;
+						top = 5%;
+						displaycondition = \Language==2&\NumMarkets==1;
+						table = auctionpractice;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						emptyallowed = FALSE;
+						allemptyallowed = FALSE;
+						condition = Subject==:Subject;
+						sortfields = "PriceLow";
+						tablelayout = LIST;
+						scrollatstart = FALSE;
+						scrollatEnd = TRUE;
+						selectbest = FALSE;
+						item{
+							label = "Preis zwischen...";
+							variable = PriceLow;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
+						item{
+							label = "...und";
+							variable = PriceHigh;
+							format = "<>!text:\\MaxPrice=\"<PriceHigh|0.01>\";\\MaxPrice+1=\"unendlich\"";
+							input = FALSE;
+						}
+						item{
+							label = "Ergebnis";
+							variable = Type;
+							format = "<>!text:-1=\"Verkauf <Volume|1> Stück\"; 1=\"Kauf <Volume|1> Stück\"";
+							input = FALSE;
+						}
+					}
+					selectcontractbox "TradePreviewSingleMarketEN"{
+						hasframe = TRUE;
+						top = 5%;
+						displaycondition = \Language==1&\NumMarkets==1;
+						table = auctionpractice;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						emptyallowed = FALSE;
+						allemptyallowed = FALSE;
+						condition = Subject==:Subject;
+						sortfields = "PriceLow";
+						tablelayout = LIST;
+						scrollatstart = FALSE;
+						scrollatEnd = TRUE;
+						selectbest = FALSE;
+						item{
+							label = "Price between...";
+							variable = PriceLow;
+							format = "\\PricePrecision";
+							input = FALSE;
+						}
+						item{
+							label = "...and";
+							variable = PriceHigh;
+							format = "<>!text:\\MaxPrice=\"<PriceHigh|0.01>\";\\MaxPrice+1=\"infinite\"";
+							input = FALSE;
+						}
+						item{
+							label = "Outcome";
+							variable = Type;
+							format = "<>!text:-1=\"Sell <Volume|1> assets\"; 1=\"Buy <Volume|1> assets\"";
 							input = FALSE;
 						}
 					}
