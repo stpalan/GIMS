@@ -1,4 +1,4 @@
-treatment "GIMS_v7.4.12_2017-02-03.ztt"{
+treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 	background{
 		table globals{
 		}
@@ -111,10 +111,10 @@ treatment "GIMS_v7.4.12_2017-02-03.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.4.12 #####
+				//##### GIMS Version 7.4.13 #####
 				
-				GIMSVersion="7.4.12";
-				GIMSDate="03.02.2017";
+				GIMSVersion="7.4.13";
+				GIMSDate="04.02.2017";
 			}
 		}
 		program{
@@ -5647,7 +5647,7 @@ treatment "GIMS_v7.4.12_2017-02-03.ztt"{
 														}
 														checker{
 															condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[1], Price);
-															message = "The price of a new buy offer must be lower than the highest price you offer to sell for.";
+															message = "The price of a new buy offer must be lower than the lowest price you offer to sell for.";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -6206,7 +6206,7 @@ treatment "GIMS_v7.4.12_2017-02-03.ztt"{
 														}
 														checker{
 															condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[1], Price);
-															message = "The price of a new buy offer must be lower than the highest price you offer to sell for.";
+															message = "The price of a new buy offer must be lower than the lowest price you offer to sell for.";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -6577,7 +6577,7 @@ treatment "GIMS_v7.4.12_2017-02-03.ztt"{
 														}
 														checker{
 															condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[1], Price);
-															message = "The price of a new sell offer must be higher than the highest price you offer to buy for.";
+															message = "The price of a new sell offer must be higher than the lowest price you offer to buy for.";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -6956,7 +6956,7 @@ treatment "GIMS_v7.4.12_2017-02-03.ztt"{
 														}
 														checker{
 															condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[1], Price);
-															message = "The price of a new buy offer must be lower than the highest price you offer to sell for.";
+															message = "The price of a new buy offer must be lower than the lowest price you offer to sell for.";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -8408,7 +8408,7 @@ treatment "GIMS_v7.4.12_2017-02-03.ztt"{
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
-																message = "The price of a new buy offer must be lower than the highest price you offer to sell for.";
+																message = "The price of a new buy offer must be lower than the lowest price you offer to sell for.";
 																noButtonStr = "OK";
 															}
 															checker{
@@ -8967,7 +8967,7 @@ treatment "GIMS_v7.4.12_2017-02-03.ztt"{
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
-																message = "The price of a new buy offer must be lower than the highest price you offer to sell for.";
+																message = "The price of a new buy offer must be lower than the lowest price you offer to sell for.";
 																noButtonStr = "OK";
 															}
 															checker{
@@ -9401,7 +9401,7 @@ treatment "GIMS_v7.4.12_2017-02-03.ztt"{
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
-																message = "The price of a new buy offer must be lower than the highest price you offer to sell for.";
+																message = "The price of a new buy offer must be lower than the lowest price you offer to sell for.";
 																noButtonStr = "OK";
 															}
 															checker{
@@ -9717,7 +9717,7 @@ treatment "GIMS_v7.4.12_2017-02-03.ztt"{
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
-																message = "The price of a new buy offer must be lower than the highest price you offer to sell for.";
+																message = "The price of a new buy offer must be lower than the lowest price you offer to sell for.";
 																noButtonStr = "OK";
 															}
 															checker{
