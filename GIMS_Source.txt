@@ -1,4 +1,4 @@
-treatment "GIMS_v7.4.0_2016-10-06.ztt"{
+treatment "GIMS_v7.4.2_2016-10-24.ztt"{
 	background{
 		table globals{
 		}
@@ -92,7 +92,7 @@ treatment "GIMS_v7.4.0_2016-10-06.ztt"{
 			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
-		numsubjects = 5;
+		numsubjects = 3;
 		numgroups = 1;
 		numpracticeperiods = 0;
 		numactualperiods = 1;
@@ -111,10 +111,10 @@ treatment "GIMS_v7.4.0_2016-10-06.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.4.0 #####
+				//##### GIMS Version 7.4.2 #####
 				
-				GIMSVersion="7.4.0";
-				GIMSDate="06.10.2016";
+				GIMSVersion="7.4.2";
+				GIMSDate="24.10.2016";
 			}
 		}
 		program{
@@ -191,8 +191,7 @@ treatment "GIMS_v7.4.0_2016-10-06.ztt"{
 				FinLit=0;//if(PracticePeriod==1,0,0);
 				HLBefore=0;    //Currently only before or after supported. Reset HLChoice=\I in between if you want to record both.
 				HLAfter=0;
-				ControlQuestions=1;
-				CQBeforePracticePeriod=0;
+				ControlQuestions=if(PracticePeriod==0&Period==1,1,0);
 				subjects.do{array CQ[2];}
 				
 				//Stage durations
@@ -1165,7 +1164,7 @@ treatment "GIMS_v7.4.0_2016-10-06.ztt"{
 		program{
 			table = subjects;
 			do{
-				Participate=if(\ForcedExitExperiment+\ForcedExitPeriod>0,0,1)*\ControlQuestions*if(Period==1&\CQBeforePracticePeriod==\PracticePeriod,1,0);
+				Participate=if(\ForcedExitExperiment+\ForcedExitPeriod>0,0,1)*\ControlQuestions;
 			}
 		}
 		screen action{
@@ -1188,10 +1187,10 @@ treatment "GIMS_v7.4.0_2016-10-06.ztt"{
 					item{
 					}
 					item{
-						label = "<><\\Language|!text:1=\"Your answer on this question is not correct.\";2=\"Ihre Antwort auf diese Frage ist leider nicht korrekt.\">";
+						label = "<>{\\rtf \\fs<\\FontSizeCQ|1> \\qc <\\Language|!text:1=\"Your answer on this question is not correct.\";2=\"Ihre Antwort auf diese Frage ist leider nicht korrekt.\">}";
 					}
 					item{
-						label = "<><\\Language|!text:1=\"If you are uncertain of the correct answer, please consult the instructions. If you need further help, please raise your hand and the experimenter will come to assist you.\";2=\"Bei Unklarheiten lesen Sie bitte in der Anleitung nach. Sollten Sie weitere Hilfe benötigen, heben Sie bitte Ihre Hand und der Experimentator wird zu Ihnen kommen, um Ihnen behilflich zu sein.\">";
+						label = "<>{\\rtf \\fs<\\FontSizeCQ|1> \\qc <\\Language|!text:1=\"If you are uncertain of the correct answer, please consult the instructions. If you need further help, please raise your hand and the experimenter will come to assist you.\";2=\"Bei Unklarheiten lesen Sie bitte in der Anleitung nach. Sollten Sie weitere Hilfe benötigen, heben Sie bitte Ihre Hand und der Experimentator wird zu Ihnen kommen, um Ihnen behilflich zu sein.\">}";
 					}
 					button "OK"{
 						clearinputafterok = TRUE;
@@ -1238,7 +1237,7 @@ treatment "GIMS_v7.4.0_2016-10-06.ztt"{
 					item{
 					}
 					item{
-						label = "<><\\Language|!text:1=\"Please answer the questions on the subsequent screens. If you are uncertain of the correct answer, please consult the instructions. If you need further help, please raise your hand and the experimenter will come to assist you.\";2=\"Bitte beantworten Sie die Fragen auf den folgenden Seiten. Bei Unklarheiten lesen Sie bitte in der Anleitung nach. Sollten Sie Hilfe benötigen, heben Sie bitte Ihre Hand und der Experimentator wird zu Ihnen kommen, um Ihnen behilflich zu sein.\">";
+						label = "<>{\\rtf \\fs<\\FontSizeCQ|1> \\qc <\\Language|!text:1=\"Please answer the questions on the subsequent screens. If you are uncertain of the correct answer, please consult the instructions. If you need further help, please raise your hand and the experimenter will come to assist you.\";2=\"Bitte beantworten Sie die Fragen auf den folgenden Seiten. Bei Unklarheiten lesen Sie bitte in der Anleitung nach. Sollten Sie Hilfe benötigen, heben Sie bitte Ihre Hand und der Experimentator wird zu Ihnen kommen, um Ihnen behilflich zu sein.\">}";
 					}
 					button "OK"{
 						clearinputafterok = FALSE;
@@ -1284,11 +1283,11 @@ treatment "GIMS_v7.4.0_2016-10-06.ztt"{
 					item{
 					}
 					item{
-						label = "<><\\Language|!text:1=\"Question 1 text\";2=\"Fragetext 1\">";
+						label = "<>{\\rtf \\fs<\\FontSizeCQ|1> \\qc <\\Language|!text:1=\"Question 1 text\";2=\"Fragetext 1\">}";
 					}
 					item{
 						variable = CQ[1];
-						format = "<>!radio: 1=\"<\\Language|!text: 1=\"Answer 1\"; 2=\"Antwort 1\">;2=\"<\\Language|!text: 1=\"Answer 2\";  2=\"Antwort 2\">;";
+						format = "<>!radio: 1=\"<\\Language|!text: 1=\"Answer 1\"; 2=\"Antwort 1\">\";2=\"<\\Language|!text: 1=\"Answer 2\";  2=\"Antwort 2\">\";";
 						input = TRUE;
 						showdefault = FALSE;
 						emptyallowed = FALSE;
@@ -1339,11 +1338,11 @@ treatment "GIMS_v7.4.0_2016-10-06.ztt"{
 					item{
 					}
 					item{
-						label = "<><\\Language|!text:1=\"Question 2 text\";2=\"Fragetext 2\">";
+						label = "<>{\\rtf \\fs<\\FontSizeCQ|1> \\qc <\\Language|!text:1=\"Question 2 text\";2=\"Fragetext 2\">}";
 					}
 					item{
 						variable = CQ[2];
-						format = "<>!radio: 1=\"<\\Language|!text: 1=\"Answer 1\"; 2=\"Antwort 1\">;2=\"<\\Language|!text: 1=\"Answer 2\";  2=\"Antwort 2\">;3=\"<\\Language|!text: 1=\"Answer 3\";  2=\"Antwort 3\">;";
+						format = "<>!radio: 1=\"<\\Language|!text: 1=\"Answer 1\"; 2=\"Antwort 1\">\";2=\"<\\Language|!text: 1=\"Answer 2\";  2=\"Antwort 2\">\";3=\"<\\Language|!text: 1=\"Answer 3\";  2=\"Antwort 3\">\";";
 						input = TRUE;
 						showdefault = FALSE;
 						emptyallowed = FALSE;
@@ -1417,7 +1416,7 @@ treatment "GIMS_v7.4.0_2016-10-06.ztt"{
 						buttonposition = BOTTOMRIGHT;
 						buttonsequence = HORIZONTAL;
 						item{
-							label = "<><\\Language|!text:1=\"(Open calculator)\";2=\"(Taschenrechner öffnen)\">";
+							label = "<>{\\rtf \\fs<\\FontSizeCQ|1> \\qc <\\Language|!text:1=\"(Open calculator)\";2=\"(Taschenrechner öffnen)\">}";
 						}
 					}
 				}
@@ -21490,7 +21489,7 @@ treatment "GIMS_v7.4.0_2016-10-06.ztt"{
 		}
 		program{
 			table = summary;
-			condition = \ContinuousDoubleAuction==1;
+			condition = \ContinuousDoubleAuction==1&Period==\Period;
 			do{
 				//Writes statistics into summary table
 				
@@ -21619,7 +21618,7 @@ treatment "GIMS_v7.4.0_2016-10-06.ztt"{
 									ResultsDone=ResultsDone+1;
 									
 									//If no further stages, proceeds after last subject is finished, irrespective of experimenter input
-									if (ResultsDone==NumSubjects&FinLit==0&CRTAfter==0) {
+									if (ResultsDone==NumSubjects&(FinLit==0&CRTAfter==0)|Period<\NumPeriods) {
 									    subjects.do{LeaveStage=1;}
 									    }
 								}
@@ -21662,7 +21661,7 @@ treatment "GIMS_v7.4.0_2016-10-06.ztt"{
 									ResultsDone=ResultsDone+1;
 									
 									//If no further stages, proceeds after last subject is finished, irrespective of experimenter input
-									if (ResultsDone==NumSubjects&FinLit==0&CRTAfter==0) {
+									if (ResultsDone==NumSubjects&(FinLit==0&CRTAfter==0)|Period<\NumPeriods) {
 									    subjects.do{LeaveStage=1;}
 									    }
 								}
@@ -29000,10 +28999,6 @@ treatment "GIMS_v7.4.0_2016-10-06.ztt"{
 		}
 		role "S 3"{
 		}
-		role "S 4"{
-		}
-		role "S 5"{
-		}
 	}
 	period "1"{
 		subject 1{
@@ -29013,12 +29008,6 @@ treatment "GIMS_v7.4.0_2016-10-06.ztt"{
 			group = 1;
 		}
 		subject 3{
-			group = 1;
-		}
-		subject 4{
-			group = 1;
-		}
-		subject 5{
 			group = 1;
 		}
 	}
