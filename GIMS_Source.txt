@@ -1,4 +1,4 @@
-treatment "GIMS_v7.4.13_2017-02-04.ztt"{
+treatment "GIMS_v7.5.0_2017-02-27.ztt"{
 	background{
 		table globals{
 		}
@@ -10,13 +10,11 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 		}
 		table session{
 		}
-		table logfile{
-		}
 		table auctionoffers{
 			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
-		table debug{
+		table auctionpractice{
 			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
@@ -40,7 +38,15 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 			lifetime = TREATMENT;
 			execute = WITHEACH;
 		}
+		table marketsummary{
+			lifetime = PERIOD;
+			execute = WITHEACH;
+		}
 		table offers{
+			lifetime = PERIOD;
+			execute = WITHEACH;
+		}
+		table practicetasks{
 			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
@@ -50,6 +56,10 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 		}
 		table profit{
 			lifetime = TREATMENT;
+			execute = WITHEACH;
+		}
+		table results{
+			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
 		table settlement{
@@ -73,22 +83,10 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 			execute = WITHEACH;
 		}
 		table timelog{
-			lifetime = TREATMENT;
+			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
 		table transactions{
-			lifetime = PERIOD;
-			execute = WITHEACH;
-		}
-		table results{
-			lifetime = PERIOD;
-			execute = WITHEACH;
-		}
-		table marketsummary{
-			lifetime = PERIOD;
-			execute = WITHEACH;
-		}
-		table auctionpractice{
 			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
@@ -111,10 +109,10 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.4.13 #####
+				//##### GIMS Version 7.5.0 #####
 				
-				GIMSVersion="7.4.13";
-				GIMSDate="04.02.2017";
+				GIMSVersion="7.5.0";
+				GIMSDate="27.02.2017";
 			}
 		}
 		program{
@@ -140,15 +138,26 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 				StartTime=gettime();
 				
 				//Timelogs program start
-				timelog.new
-				    {
-				    ID=1;
-				    Time=0;
-				    Period=0;
-				    Subject=0;
-				    Event=1;
+				if(Period==1){
+				    timelog.new
+				        {
+				        ID=1;
+				        Time=0;
+				        Period=1;
+				        Subject=0;
+				        Event=1;
+				        }
 				    }
-				
+				else{
+				    timelog.new
+				        {
+				        ID=OLDtimelog.maximum(ID)+1;
+				        Time=0;
+				        Period=\Period;
+				        Subject=0;
+				        Event=1;
+				        }
+				    }
 			}
 		}
 		program{
@@ -193,11 +202,12 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 				HLBefore=0;    //Currently only before or after supported. Reset HLChoice=\I in between if you want to record both.
 				HLAfter=0;
 				ControlQuestions=if(PracticePeriod==0&Period==1,1,0);
-				subjects.do{array CQ[2];}
+				NumCQ=2;
+				subjects.do{array CQ[\NumCQ];}
 				
 				//Stage durations
-				TimeContinuousDoubleAuction=180;
-				TimeContinuousDoubleAuctionResults=30;
+				TimeContinuousDoubleAuction=if(\PracticePeriod==1,300,180);
+				TimeContinuousDoubleAuctionResults=if(\PracticePeriod==1,60,30);
 				TimeCallAuction=-1;
 				TimeCallAuctionResults=30;
 				TimeFinLitResult=1;
@@ -210,7 +220,7 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 			do{
 				//### P3: General market parameters ###
 				
-				NumMarkets=5;
+				NumMarkets=1;
 				array MultiUnitTrading[NumMarkets];
 				PresetDividends=0;
 				PresetSignals=0;
@@ -273,9 +283,10 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 				ShowPricelist=1;
 				ShowChart=1;
 				SpamControl=0;
+				PracticeTasks=1;
 				ContinuousDoubleAuctionSignals=1;
 				array OrderBookDepth[\NumMarkets];
-				EarlyEndingVote=1;
+				EarlyEndingVote=0;
 				PriceHighlightScheme=if(\NumMarkets>1,1,0);
 				PriceHighlightDuration=2;
 				CDATimer=TimerInterval;
@@ -330,6 +341,7 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 		}
 		program{
 			table = layout;
+			condition = \Period==1;
 			do{
 				//Variable initialization layout
 				
@@ -348,6 +360,8 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 				array Temp[4];
 				iterator(i,4).do {Temp[i]=\I;}
 				Done=0;
+				Blink=1;
+				BlinkOn=1;
 				
 				NumSubjects=subjects.count()-NumExperimenterSubjects;
 				NumFinLit=(AskFinLit[1]+AskFinLit[2]+AskFinLit[3]+AskFinLit[4]+AskFinLit[5]+AskFinLit[6]+AskFinLit[7]+AskFinLit[8]+AskFinLit[9]+AskFinLit[10]+AskFinLit[11]+AskFinLit[12]+AskFinLit[13]+AskFinLit[14]+AskFinLit[15]+AskFinLit[16])*FinLit;
@@ -412,6 +426,9 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 				MinVol=1;
 				MaxVol=100000;
 				
+				//Blink
+				BlinkInterval=1;
+				
 				//Chart
 				array ChartYMax[NumMarkets];
 				array ChartYTickDistance[NumMarkets];
@@ -432,28 +449,30 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 				    }
 				
 				//Colors
-				layout.new{IDNumeric=1;ID="CA_Signals_BG";R=0.88;G=1;B=0.85;}
-				layout.new{IDNumeric=2;ID="CA_PriceList_BG";R=1;G=0.83;B=0.83;}
-				layout.new{IDNumeric=3;ID="CA_BuyOffers_BG";R=1;G=0.9;B=0.8;}
-				layout.new{IDNumeric=4;ID="CA_SellOffers_BG";R=1;G=0.9;B=0.8;}
-				layout.new{IDNumeric=5;ID="CA_OrderSubmission_BG";R=1;G=1;B=0.8;}
-				layout.new{IDNumeric=6;ID="CA_History_BG";R=0.82;G=0.85;B=1;}
-				layout.new{IDNumeric=7;ID="CA_BG";R=1;G=1;B=1;}
-				layout.new{IDNumeric=8;ID="CDA_Signals_BG";R=0.96;G=0.79;B=0.95;}
-				layout.new{IDNumeric=9;ID="CDA_PriceList_BG";R=1;G=0.83;B=0.83;}
-				layout.new{IDNumeric=10;ID="CDA_BuyOffers_BG";R=1;G=0.9;B=0.8;}
-				layout.new{IDNumeric=11;ID="CDA_SellOffers_BG";R=1;G=0.9;B=0.8;}
-				layout.new{IDNumeric=12;ID="CDA_OrderSubmission_BG";R=1;G=1;B=0.8;}
-				layout.new{IDNumeric=13;ID="CDA_History_BG";R=0.82;G=0.85;B=1;}
-				layout.new{IDNumeric=14;ID="CDA_Chart_Line";R=0;G=0;B=1;}
-				layout.new{IDNumeric=15;ID="CDA_Chart_BG";R=1;G=1;B=1;}
-				layout.new{IDNumeric=16;ID="CDA_BG";R=1;G=1;B=1;}
-				layout.new{IDNumeric=17;ID="Highlighting_Scheme0";R=0.94;G=0.94;B=0.94;}
-				layout.new{IDNumeric=18;ID="Highlighting_Scheme1_Up";R=0;G=0.79;B=0;}
-				layout.new{IDNumeric=19;ID="Highlighting_Scheme1_Down";R=1;G=0;B=0;}
-				layout.new{IDNumeric=20;ID="Highlighting_Scheme2_Up";R=1;G=0.5;B=0;}
-				layout.new{IDNumeric=21;ID="Highlighting_Scheme2_Down";R=0;G=0;B=1;}
-				layout.new{IDNumeric=22;ID="CDA_MarketOverview_BG";R=0.88;G=1;B=0.85;}
+				if(\Period==1){
+				    layout.new{IDNumeric=1;ID="CA_Signals_BG";R=0.88;G=1;B=0.85;}
+				    layout.new{IDNumeric=2;ID="CA_PriceList_BG";R=1;G=0.83;B=0.83;}
+				    layout.new{IDNumeric=3;ID="CA_BuyOffers_BG";R=1;G=0.9;B=0.8;}
+				    layout.new{IDNumeric=4;ID="CA_SellOffers_BG";R=1;G=0.9;B=0.8;}
+				    layout.new{IDNumeric=5;ID="CA_OrderSubmission_BG";R=1;G=1;B=0.8;}
+				    layout.new{IDNumeric=6;ID="CA_History_BG";R=0.82;G=0.85;B=1;}
+				    layout.new{IDNumeric=7;ID="CA_BG";R=1;G=1;B=1;}
+				    layout.new{IDNumeric=8;ID="CDA_Signals_BG";R=0.96;G=0.79;B=0.95;}
+				    layout.new{IDNumeric=9;ID="CDA_PriceList_BG";R=1;G=0.83;B=0.83;}
+				    layout.new{IDNumeric=10;ID="CDA_BuyOffers_BG";R=1;G=0.9;B=0.8;}
+				    layout.new{IDNumeric=11;ID="CDA_SellOffers_BG";R=1;G=0.9;B=0.8;}
+				    layout.new{IDNumeric=12;ID="CDA_OrderSubmission_BG";R=1;G=1;B=0.8;}
+				    layout.new{IDNumeric=13;ID="CDA_History_BG";R=0.82;G=0.85;B=1;}
+				    layout.new{IDNumeric=14;ID="CDA_Chart_Line";R=0;G=0;B=1;}
+				    layout.new{IDNumeric=15;ID="CDA_Chart_BG";R=1;G=1;B=1;}
+				    layout.new{IDNumeric=16;ID="CDA_BG";R=1;G=1;B=1;}
+				    layout.new{IDNumeric=17;ID="Highlighting_Scheme0";R=0.94;G=0.94;B=0.94;}
+				    layout.new{IDNumeric=18;ID="Highlighting_Scheme1_Up";R=0;G=0.79;B=0;}
+				    layout.new{IDNumeric=19;ID="Highlighting_Scheme1_Down";R=1;G=0;B=0;}
+				    layout.new{IDNumeric=20;ID="Highlighting_Scheme2_Up";R=1;G=0.5;B=0;}
+				    layout.new{IDNumeric=21;ID="Highlighting_Scheme2_Down";R=0;G=0;B=1;}
+				    layout.new{IDNumeric=22;ID="CDA_MarketOverview_BG";R=0.88;G=1;B=0.85;}
+				    }
 			}
 		}
 		program{
@@ -620,20 +639,6 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 				    }
 				
 				EndowmentFillerType=2;
-			}
-		}
-		program{
-			table = globals;
-			condition = Testmode1==1;
-			do{
-				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Testmode parameters
-				
-				endowments.do{
-				    Cash=5000;
-				    iterator(Market,\NumMarkets).do{
-				        :Assets[Market]=100;
-				        }
-				    }
 			}
 		}
 		program{
@@ -1018,28 +1023,68 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 			}
 		}
 		program{
-			table = globals;
+			table = practicetasks;
+			condition = \PracticePeriod==1;
+			do{
+				//Variable initialization practicetasks
+				
+				Subject=\I;
+				ID=0;
+				Text="Hallo";
+				Done=0;
+			}
+		}
+		program{
+			table = subjects;
 			condition = \PracticePeriod==1;
 			do{
 				//### P10: Practice period settings ###
 				
-				
-				/*
-				Attention! If you change the timeout for the ContinuousDoubleAuction stage here,
-				the chart x-axis will not reflect this change in the length of the stage. You will also
-				need to change \ChartXMax[ ] to account for the changed timeout.
-				*/
-				
-				
 				//Sets practice period endowments
-				subjects.do {
-				    InitialCash=5000;
-				    Cash=InitialCash;
-				    iterator(Market,\NumMarkets).do{
-				        :InitialAssets[Market]=100;
-				        :Assets[Market]=:InitialAssets[Market];
-				         }
+				InitialCash=5000;
+				Cash=InitialCash;
+				iterator(Market,\NumMarkets).do{
+				    :InitialAssets[Market]=100;
+				    :Assets[Market]=:InitialAssets[Market];
+				     }
+				
+				//Generates practice tasks
+				practicetasks.new{
+				    Subject=:Subject;
+				    ID=practicetasks.count(same(Subject));
+				    Done=0;
+				    if(Language==1){Text="* Please submit at least one buy offer.";}
+				    if(Language==2){Text="* Geben Sie mindestens ein Kaufgebot ab.";}
 				    }
+				practicetasks.new{
+				    Subject=:Subject;
+				    ID=practicetasks.count(same(Subject));
+				    Done=0;
+				    if(Language==1){Text="* Please submit at least one sell offer.";}
+				    if(Language==2){Text="* Geben Sie ein mindestens Verkaufsgebot ab.";}
+				    }
+				practicetasks.new{
+				    Subject=:Subject;
+				    ID=practicetasks.count(same(Subject));
+				    Done=0;
+				    if(Language==1){Text="* Please cancel at least one of your own offers.";}
+				    if(Language==2){Text="* Stornieren Sie mindestens ein eigenes Gebot.";}
+				    }
+				practicetasks.new{
+				    Subject=:Subject;
+				    ID=practicetasks.count(same(Subject));
+				    Done=0;
+				    if(Language==1){Text="* Please accept at least one buy offer.";}
+				    if(Language==2){Text="* Akzeptieren Sie mindestens ein Kaufgebot.";}
+				    }
+				practicetasks.new{
+				    Subject=:Subject;
+				    ID=practicetasks.count(same(Subject));
+				    Done=0;
+				    if(Language==1){Text="* Please accept at least one sell offer.";}
+				    if(Language==2){Text="* Akzeptieren Sie mindestens ein Verkaufsgebot.";}
+				    }
+				
 			}
 		}
 		program{
@@ -1185,6 +1230,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 				Participate=if(\ForcedExitExperiment+\ForcedExitPeriod>0,0,1)*\ControlQuestions*(1-\CQTestmode);
 			}
 		}
+		program{
+			table = globals;
+			do{
+				//Timer for blinking text
+				
+				later (BlinkInterval*BlinkOn) repeat {
+				    Blink=1-Blink;
+				    }
+			}
+		}
 		screen action{
 			usesbg = TRUE;
 			withalertscreen = FALSE;
@@ -1290,7 +1345,7 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 				}
 				standardbox "Question1"{
 					hasframe = TRUE;
-					displaycondition = CQAnswered==0;
+					displaycondition = CQAnswered==0&\CQDone<\NumSubjects;
 					buttonposition = BOTTOMRIGHT;
 					buttonsequence = HORIZONTAL;
 					item{
@@ -1339,6 +1394,14 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 							do{
 								//Sets CQAnswered
 								CQAnswered=if(CQ[1]==2,CQAnswered+1,-(CQAnswered+1));
+							}
+						}
+						program{
+							table = globals;
+							do{
+								//Increments \CQDone
+								
+								\CQDone=subjects.count(CQAnswered==\NumCQ);
 							}
 						}
 					}
@@ -1397,20 +1460,103 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 							}
 						}
 						program{
-							table = subjects;
+							table = globals;
 							do{
-								//Final question
+								//Increments \CQDone
 								
-								//Moves subject to waiting screen upon correct answer
-								LeaveStage=if(CQAnswered>0,1,0);
-								\CQDone=\CQDone+if(CQAnswered>0,1,0);
-								
-								//Moves experimenter subject in case all subjects have answered all questions
-								if(\CQDone==\NumSubjects){
-								    subjects.do{
-								        LeaveStage=1;
-								        }
-								    }
+								\CQDone=subjects.count(CQAnswered==\NumCQ);
+							}
+						}
+					}
+				}
+				containerbox "WaitToContinue"{
+					hasframe = FALSE;
+					displaycondition = CQAnswered==\NumCQ;
+					standardbox "WaitToContinue"{
+						hasframe = FALSE;
+						bottom = 100p;
+						displaycondition = \CQDone<\NumSubjects;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						item{
+							variable = \Language;
+							format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Control questions finished}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Kontrollfragen abgeschlossen}\"";
+							input = FALSE;
+						}
+						item{
+						}
+						item{
+							variable = \Language;
+							format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeCQ|1> \\qc You have answered all control questions. Please wait until the other participants are also finished.}\";2=\"{\\rtf \\fs<\\FontSizeCQ|1> \\qc Sie haben nun alle Kontrollfragen beantwortet. Bitte warten Sie, bis die anderen Personen im Raum ebenfalls fertig sind.}\"";
+							input = FALSE;
+						}
+					}
+					standardbox "Continue"{
+						hasframe = FALSE;
+						bottom = 100p;
+						displaycondition = \CQDone==\NumSubjects;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						item{
+							variable = \Language;
+							format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Control questions finished}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Kontrollfragen abgeschlossen}\"";
+							input = FALSE;
+						}
+						item{
+						}
+						item{
+						}
+						item{
+							variable = \Language;
+							format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeCQ|1> \\qc The control questions are now finished.}\";2=\"{\\rtf \\fs<\\FontSizeCQ|1> \\qc Die Kontrollfragen sind nun abgeschlossen.}\"";
+							input = FALSE;
+						}
+						item{
+						}
+						item{
+							variable = \Blink;
+							format = "<>!text: 0=\"\";1=\"{\\rtf \\fs<\\FontSizeCQ|1> \\qc <\\Language|!text:1=\"<\\Blink|!text:1=\"Please click OK to continue.\";2=\"\">\";2=\"<\\Blink|!text:1=\"Bitte klicken Sie OK um fortzufahren.\";2=\"\">\">}\"";
+							input = FALSE;
+						}
+					}
+					standardbox "WaitToContinueButton"{
+						hasframe = FALSE;
+						height = 100p;
+						bottom = 0p;
+						displaycondition = \CQDone==\NumSubjects;
+						buttonposition = BOTTOMRIGHT;
+						buttonsequence = HORIZONTAL;
+						button "OK"{
+							clearinputafterok = FALSE;
+							norecordmadeorselected = FALSE;
+							terminatestage = TRUE;
+							donotterminatestage = FALSE;
+							specialbuttoncolor = TRUE;
+							buttoncolor = 5921535;
+							program{
+								table = subjects;
+								do{
+									//Timelog
+									
+									timelog.new
+									    {
+									    ID=timelog.maximum(ID)+1;
+									    Time=gettime()-\StartTime;
+									    Period=\Period;
+									    Subject=:Subject;
+									    Event=119;
+									    }
+								}
+							}
+							program{
+								table = globals;
+								do{
+									//Moves experimenter subject
+									
+									subjects.do{
+									    LeaveStage=IsExperimenter;
+									    }
+								}
 							}
 						}
 					}
@@ -1587,6 +1733,14 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 			table = subjects;
 			do{
 				Participate=if(\ForcedExitExperiment+\ForcedExitPeriod>0,0,1)*\HLBefore*if(\Period==1,1,0)*(1-IsExperimenter);
+			}
+		}
+		program{
+			table = globals;
+			do{
+				//Stops blinking loop from previous stage
+				
+				BlinkOn=-1;
 			}
 		}
 		program{
@@ -14609,6 +14763,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 														}
 													}
 													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==3){Done=1;}
+															    }
+														}
+													}
+													program{
 														table = offers;
 														do{
 															//Timelog
@@ -14913,6 +15077,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 														}
 													}
 													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==4){Done=1;}
+															    }
+														}
+													}
+													program{
 														table = offers;
 														do{
 															//Timelog
@@ -15011,6 +15185,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 															
 															contracts.do{
 															    PriceListRank=contracts.count(same(Market)&ID>=:ID);
+															    }
+														}
+													}
+													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==3){Done=1;}
 															    }
 														}
 													}
@@ -15319,6 +15503,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 														}
 													}
 													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==4){Done=1;}
+															    }
+														}
+													}
+													program{
 														table = offers;
 														do{
 															//Timelog
@@ -15434,6 +15628,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 															
 															contracts.do{
 															    PriceListRank=contracts.count(same(Market)&ID>=:ID);
+															    }
+														}
+													}
+													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==3){Done=1;}
 															    }
 														}
 													}
@@ -15740,6 +15944,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 														}
 													}
 													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==4){Done=1;}
+															    }
+														}
+													}
+													program{
 														table = offers;
 														do{
 															//Timelog
@@ -15855,6 +16069,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 															
 															contracts.do{
 															    PriceListRank=contracts.count(same(Market)&ID>=:ID);
+															    }
+														}
+													}
+													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==3){Done=1;}
 															    }
 														}
 													}
@@ -16157,6 +16381,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 															
 															contracts.do{
 															    PriceListRank=contracts.count(same(Market)&ID>=:ID);
+															    }
+														}
+													}
+													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==4){Done=1;}
 															    }
 														}
 													}
@@ -16539,6 +16773,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 														}
 													}
 													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==5){Done=1;}
+															    }
+														}
+													}
+													program{
 														table = offers;
 														do{
 															//Timelog
@@ -16617,6 +16861,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 															
 															contracts.do{
 															    PriceListRank=contracts.count(same(Market)&ID>=:ID);
+															    }
+														}
+													}
+													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==3){Done=1;}
 															    }
 														}
 													}
@@ -16964,6 +17218,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 														}
 													}
 													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==5){Done=1;}
+															    }
+														}
+													}
+													program{
 														table = offers;
 														do{
 															//Timelog
@@ -17040,6 +17304,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 															
 															contracts.do{
 															    PriceListRank=contracts.count(same(Market)&ID>=:ID);
+															    }
+														}
+													}
+													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==3){Done=1;}
 															    }
 														}
 													}
@@ -17372,6 +17646,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 														}
 													}
 													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==5){Done=1;}
+															    }
+														}
+													}
+													program{
 														table = offers;
 														do{
 															//Timelog
@@ -17450,6 +17734,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 															
 															contracts.do{
 															    PriceListRank=contracts.count(same(Market)&ID>=:ID);
+															    }
+														}
+													}
+													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==3){Done=1;}
 															    }
 														}
 													}
@@ -17782,6 +18076,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 														}
 													}
 													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==5){Done=1;}
+															    }
+														}
+													}
+													program{
 														table = offers;
 														do{
 															//Timelog
@@ -17860,6 +18164,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 															
 															contracts.do{
 															    PriceListRank=contracts.count(same(Market)&ID>=:ID);
+															    }
+														}
+													}
+													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==3){Done=1;}
 															    }
 														}
 													}
@@ -18002,6 +18316,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 															}
 														}
 														program{
+															table = subjects;
+															do{
+																//Updates practicetasks
+																
+																practicetasks.do{
+																    if(same(Subject)&ID==2){Done=1;}
+																    }
+															}
+														}
+														program{
 															table = offers;
 															do{
 																//Timelog
@@ -18076,6 +18400,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 																
 																offers.do{
 																    OrderBookRank=if(Status==0,offers.count(same(Market)&same(Type)&Status==0&(Type*Price>Type*:Price|(Price==:Price&OfferTime<:OfferTime)))+1,\I);
+																    }
+															}
+														}
+														program{
+															table = subjects;
+															do{
+																//Updates practicetasks
+																
+																practicetasks.do{
+																    if(same(Subject)&ID==1){Done=1;}
 																    }
 															}
 														}
@@ -18179,6 +18513,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 															}
 														}
 														program{
+															table = subjects;
+															do{
+																//Updates practicetasks
+																
+																practicetasks.do{
+																    if(same(Subject)&ID==2){Done=1;}
+																    }
+															}
+														}
+														program{
 															table = offers;
 															do{
 																//Timelog
@@ -18253,6 +18597,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 																
 																offers.do{
 																    OrderBookRank=if(Status==0,offers.count(same(Market)&same(Type)&Status==0&(Type*Price>Type*:Price|(Price==:Price&OfferTime<:OfferTime)))+1,\I);
+																    }
+															}
+														}
+														program{
+															table = subjects;
+															do{
+																//Updates practicetasks
+																
+																practicetasks.do{
+																    if(same(Subject)&ID==1){Done=1;}
 																    }
 															}
 														}
@@ -18371,6 +18725,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 															}
 														}
 														program{
+															table = subjects;
+															do{
+																//Updates practicetasks
+																
+																practicetasks.do{
+																    if(same(Subject)&ID==2){Done=1;}
+																    }
+															}
+														}
+														program{
 															table = offers;
 															do{
 																//Timelog
@@ -18449,6 +18813,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 																
 																offers.do{
 																    OrderBookRank=if(Status==0,offers.count(same(Market)&same(Type)&Status==0&(Type*Price>Type*:Price|(Price==:Price&OfferTime<:OfferTime)))+1,\I);
+																    }
+															}
+														}
+														program{
+															table = subjects;
+															do{
+																//Updates practicetasks
+																
+																practicetasks.do{
+																    if(same(Subject)&ID==1){Done=1;}
 																    }
 															}
 														}
@@ -18567,6 +18941,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 															}
 														}
 														program{
+															table = subjects;
+															do{
+																//Updates practicetasks
+																
+																practicetasks.do{
+																    if(same(Subject)&ID==2){Done=1;}
+																    }
+															}
+														}
+														program{
 															table = offers;
 															do{
 																//Timelog
@@ -18645,6 +19029,16 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 																
 																offers.do{
 																    OrderBookRank=if(Status==0,offers.count(same(Market)&same(Type)&Status==0&(Type*Price>Type*:Price|(Price==:Price&OfferTime<:OfferTime)))+1,\I);
+																    }
+															}
+														}
+														program{
+															table = subjects;
+															do{
+																//Updates practicetasks
+																
+																practicetasks.do{
+																    if(same(Subject)&ID==1){Done=1;}
 																    }
 															}
 														}
@@ -18730,7 +19124,7 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 									hasframe = FALSE;
 									containerbox "PriceListContainer"{
 										hasframe = TRUE;
-										width = 50%;
+										width = 150p;
 										left = 0p;
 										top = 0p;
 										cutleft = TRUE;
@@ -18808,54 +19202,129 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 											ybottom = -100;
 											ytop = 100;
 										}
-										selectcontractbox "SignalsEN"{
+										containerbox "Signals"{
 											hasframe = FALSE;
-											left = 5p;
-											right = 5p;
-											top = 5p;
-											bottom = 5p;
-											displaycondition = \ContinuousDoubleAuctionSignals==1&\Language==1;
-											table = signals;
-											buttonposition = BOTTOMRIGHT;
-											buttonsequence = HORIZONTAL;
-											emptyallowed = FALSE;
-											allemptyallowed = FALSE;
-											condition = same(Period)&Set==:Subject&Market==:DisplayMarket[1];
-											sortfields = "Type";
-											tablelayout = LIST;
-											scrollatstart = FALSE;
-											scrollatEnd = TRUE;
-											selectbest = TRUE;
-											item{
-												label = "Signals";
-												variable = Signal;
-												format = "\\SignalPrecision";
-												input = FALSE;
+											displaycondition = \PracticePeriod==0|\PracticeTasks==0;
+											selectcontractbox "SignalsEN"{
+												hasframe = FALSE;
+												left = 5p;
+												right = 5p;
+												top = 5p;
+												bottom = 5p;
+												displaycondition = \ContinuousDoubleAuctionSignals==1&\Language==1;
+												table = signals;
+												buttonposition = BOTTOMRIGHT;
+												buttonsequence = HORIZONTAL;
+												emptyallowed = FALSE;
+												allemptyallowed = FALSE;
+												condition = same(Period)&Set==:Subject&Market==:DisplayMarket[1];
+												sortfields = "Type";
+												tablelayout = LIST;
+												scrollatstart = FALSE;
+												scrollatEnd = TRUE;
+												selectbest = TRUE;
+												item{
+													label = "Signals";
+													variable = Signal;
+													format = "\\SignalPrecision";
+													input = FALSE;
+												}
+											}
+											selectcontractbox "SignalsDE"{
+												hasframe = FALSE;
+												left = 5p;
+												right = 5p;
+												top = 5p;
+												bottom = 5p;
+												displaycondition = \ContinuousDoubleAuctionSignals==1&Language==2;
+												table = signals;
+												buttonposition = BOTTOMRIGHT;
+												buttonsequence = HORIZONTAL;
+												emptyallowed = FALSE;
+												allemptyallowed = FALSE;
+												condition = same(Period)&Set==:Subject&Market==:DisplayMarket[1];
+												sortfields = "Type";
+												tablelayout = LIST;
+												scrollatstart = FALSE;
+												scrollatEnd = TRUE;
+												selectbest = TRUE;
+												item{
+													label = "Signale";
+													variable = Signal;
+													format = "\\SignalPrecision";
+													input = FALSE;
+												}
 											}
 										}
-										selectcontractbox "SignalsDE"{
+										containerbox "PracticeTasks"{
 											hasframe = FALSE;
-											left = 5p;
-											right = 5p;
-											top = 5p;
-											bottom = 5p;
-											displaycondition = \ContinuousDoubleAuctionSignals==1&Language==2;
-											table = signals;
-											buttonposition = BOTTOMRIGHT;
-											buttonsequence = HORIZONTAL;
-											emptyallowed = FALSE;
-											allemptyallowed = FALSE;
-											condition = same(Period)&Set==:Subject&Market==:DisplayMarket[1];
-											sortfields = "Type";
-											tablelayout = LIST;
-											scrollatstart = FALSE;
-											scrollatEnd = TRUE;
-											selectbest = TRUE;
-											item{
-												label = "Signale";
-												variable = Signal;
-												format = "\\SignalPrecision";
-												input = FALSE;
+											displaycondition = PracticePeriod==1&PracticeTasks==1;
+											containerbox "Open"{
+												hasframe = FALSE;
+												height = 50%;
+												top = 0p;
+												cuttop = TRUE;
+												standardbox "Heading"{
+													hasframe = FALSE;
+													height = 23p;
+													top = 5p;
+													cuttop = TRUE;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													item{
+														label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Suggested training - Open\";2=\"Übungsvorschläge - Offen\">}";
+													}
+												}
+												selectcontractbox "PracticeTasks"{
+													hasframe = TRUE;
+													table = practicetasks;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													emptyallowed = FALSE;
+													allemptyallowed = FALSE;
+													condition = same(Subject)&Done==0;
+													tablelayout = LIST;
+													scrollatstart = FALSE;
+													scrollatEnd = TRUE;
+													selectbest = TRUE;
+													item{
+														variable = Text;
+														format = "-1";
+														input = FALSE;
+													}
+												}
+											}
+											containerbox "Completed"{
+												hasframe = FALSE;
+												standardbox "Heading"{
+													hasframe = FALSE;
+													height = 23p;
+													top = 0p;
+													cuttop = TRUE;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													item{
+														label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Suggested training - Completed\";2=\"Übungsvorschläge - Abgeschlossen\">}";
+													}
+												}
+												selectcontractbox "PracticeTasks"{
+													hasframe = TRUE;
+													table = practicetasks;
+													buttonposition = BOTTOMRIGHT;
+													buttonsequence = HORIZONTAL;
+													emptyallowed = FALSE;
+													allemptyallowed = FALSE;
+													condition = same(Subject)&Done==1;
+													tablelayout = LIST;
+													scrollatstart = FALSE;
+													scrollatEnd = TRUE;
+													selectbest = TRUE;
+													item{
+														variable = Text;
+														format = "-1";
+														input = FALSE;
+													}
+												}
 											}
 										}
 									}
@@ -21856,7 +22325,7 @@ treatment "GIMS_v7.4.13_2017-02-04.ztt"{
 				        Market=:Market;
 				        DisplayMarket=if(Market==1,2,if(Market==2,1,Market));    //Switches order for markets 1 and 2 for display purposes
 				        Subject=::Subject;
-				        Price=contracts.sum(same(Market)&(Offerer==::Subject|Accepter==::Subject)&Phase==2,Price*VolumeTraded)/contracts.sum(same(Market)&(Offerer==::Subject|Accepter==::Subject)&Phase==2,VolumeTraded);
+				        Price=if(contracts.count(same(Market)&(Offerer==::Subject|Accepter==::Subject)&Phase==2&VolumeTraded>0)>0,contracts.sum(same(Market)&(Offerer==::Subject|Accepter==::Subject)&Phase==2&VolumeTraded>0,Price*VolumeTraded)/contracts.sum(same(Market)&(Offerer==::Subject|Accepter==::Subject)&Phase==2&VolumeTraded>0,VolumeTraded),-1);
 				        Dividend=\Dividend[Market];
 				        Phase=2;
 				        Amount=::Assets[Market];
