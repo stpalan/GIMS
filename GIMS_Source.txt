@@ -1,4 +1,4 @@
-treatment "GIMS_v7.5.0_2017-02-27.ztt"{
+treatment "GIMS_v7.5.1_2017-04-27.ztt"{
 	background{
 		table globals{
 		}
@@ -109,10 +109,10 @@ treatment "GIMS_v7.5.0_2017-02-27.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.5.0 #####
+				//##### GIMS Version 7.5.1 #####
 				
-				GIMSVersion="7.5.0";
-				GIMSDate="27.02.2017";
+				GIMSVersion="7.5.1";
+				GIMSDate="27.04.2017";
 			}
 		}
 		program{
@@ -11446,13 +11446,13 @@ treatment "GIMS_v7.5.0_2017-02-27.ztt"{
 				        }
 				
 				    //There are more than one volume maximizing prices, but there is a surplus of buy volume for all of them
-				    elsif (pricedetermination.count(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus>0)==2) {
+				    elsif (pricedetermination.count(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus>0)==pricedetermination.count(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus)))) {
 				        \AuctionPrice[Market]=pricedetermination.find(FeasibleVol==\AuctionVolume[:Market]&same(Market)&Price==pricedetermination.maximum(FeasibleVol==\AuctionVolume[:Market]&same(Market),Price),Price);
 				        \PriceDeterminationRule[Market]=3;
 				        }
 				
 				    //There are more than one volume maximizing prices, but there is a surplus of sell volume for all of them
-				    elsif (pricedetermination.count(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus<0)==2) {
+				    elsif (pricedetermination.count(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus<0)==pricedetermination.count(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus)))) {
 				        \AuctionPrice[Market]=pricedetermination.find(FeasibleVol==\AuctionVolume[:Market]&same(Market)&Price==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),Price),Price);
 				        \PriceDeterminationRule[Market]=4;
 				        }
@@ -11460,7 +11460,7 @@ treatment "GIMS_v7.5.0_2017-02-27.ztt"{
 				    //The price is set to the average volume maximizing and absolute surplus minimizing price,
 				    //rounded to the nearest tick and rounded down in case of equal distance
 				    else {
-				        \AuctionPrice[Market]=round(pricedetermination.average(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus)),Price)-0.00000000001,\TickSize);
+				        \AuctionPrice[Market]=round((pricedetermination.maximum(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus>0,Price)+pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus<0,Price))/2-0.00000000001,\TickSize);
 				        \PriceDeterminationRule[Market]=5;
 				        }
 				    }
