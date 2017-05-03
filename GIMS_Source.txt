@@ -1,4 +1,4 @@
-treatment "GIMS_v7.5.1_2017-04-27.ztt"{
+treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 	background{
 		table globals{
 		}
@@ -90,7 +90,7 @@ treatment "GIMS_v7.5.1_2017-04-27.ztt"{
 			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
-		numsubjects = 3;
+		numsubjects = 19;
 		numgroups = 1;
 		numpracticeperiods = 0;
 		numactualperiods = 1;
@@ -109,10 +109,10 @@ treatment "GIMS_v7.5.1_2017-04-27.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.5.1 #####
+				//##### GIMS Version 7.5.2 #####
 				
-				GIMSVersion="7.5.1";
-				GIMSDate="27.04.2017";
+				GIMSVersion="7.5.2";
+				GIMSDate="03.05.2017";
 			}
 		}
 		program{
@@ -5579,7 +5579,7 @@ treatment "GIMS_v7.5.1_2017-04-27.ztt"{
 											}
 											containerbox "ContractMaker"{
 												hasframe = FALSE;
-												height = 127p;
+												height = 157p;
 												bottom = 0p;
 												cutbottom = TRUE;
 												makecontractbox "ContractMakerSingleUnitEN"{
@@ -11420,6 +11420,7 @@ treatment "GIMS_v7.5.1_2017-04-27.ztt"{
 			table = globals;
 			condition = \CallAuction==1;
 			do{
+				
 				//Determines price
 				
 				iterator(Market, \NumMarkets).do{
@@ -11460,10 +11461,11 @@ treatment "GIMS_v7.5.1_2017-04-27.ztt"{
 				    //The price is set to the average volume maximizing and absolute surplus minimizing price,
 				    //rounded to the nearest tick and rounded down in case of equal distance
 				    else {
-				        \AuctionPrice[Market]=round((pricedetermination.maximum(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus>0,Price)+pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus<0,Price))/2-0.00000000001,\TickSize);
+				        \AuctionPrice[Market]=round((pricedetermination.maximum(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus>=0,Price)+pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus<=0,Price))/2-0.00000000001,\TickSize);
 				        \PriceDeterminationRule[Market]=5;
 				        }
 				    }
+				
 			}
 		}
 		program{
@@ -12144,6 +12146,24 @@ treatment "GIMS_v7.5.1_2017-04-27.ztt"{
 			usesbg = TRUE;
 			withalertscreen = FALSE;
 			noalertscreen = FALSE;
+			standardbox "ExperimenterMarketResult"{
+				hasframe = FALSE;
+				displaycondition = IsExperimenter==1;
+				buttonposition = BOTTOMRIGHT;
+				buttonsequence = HORIZONTAL;
+				item{
+					label = "Price:";
+					variable = \AuctionPrice[1];
+					format = "\\PricePrecision";
+					input = FALSE;
+				}
+				item{
+					label = "Volume:";
+					variable = contracts.sum(Transacted)/2;
+					format = "1";
+					input = FALSE;
+				}
+			}
 			standardbox "ExperimenterContinue"{
 				hasframe = FALSE;
 				displaycondition = \Period==\NumPeriods&IsExperimenter==1&(\CRTAfter==1|FinLit==1)&\ContinuousDoubleAuction==0;
@@ -12752,6 +12772,24 @@ treatment "GIMS_v7.5.1_2017-04-27.ztt"{
 			usesbg = FALSE;
 			withalertscreen = FALSE;
 			noalertscreen = FALSE;
+			standardbox "ExperimenterMarketResult"{
+				hasframe = FALSE;
+				displaycondition = IsExperimenter==1;
+				buttonposition = BOTTOMRIGHT;
+				buttonsequence = HORIZONTAL;
+				item{
+					label = "Price:";
+					variable = \AuctionPrice[1];
+					format = "\\PricePrecision";
+					input = FALSE;
+				}
+				item{
+					label = "Volume:";
+					variable = contracts.sum(Transacted)/2;
+					format = "1";
+					input = FALSE;
+				}
+			}
 			containerbox "TraderContainer"{
 				hasframe = FALSE;
 				displaycondition = IsExperimenter==0&\PracticePeriod==0;
@@ -29786,6 +29824,38 @@ treatment "GIMS_v7.5.1_2017-04-27.ztt"{
 		}
 		role "S 3"{
 		}
+		role "S 4"{
+		}
+		role "S 5"{
+		}
+		role "S 6"{
+		}
+		role "S 7"{
+		}
+		role "S 8"{
+		}
+		role "S 9"{
+		}
+		role "S 10"{
+		}
+		role "S 11"{
+		}
+		role "S 12"{
+		}
+		role "S 13"{
+		}
+		role "S 14"{
+		}
+		role "S 15"{
+		}
+		role "S 16"{
+		}
+		role "S 17"{
+		}
+		role "S 18"{
+		}
+		role "S 19"{
+		}
 	}
 	period "1"{
 		subject 1{
@@ -29795,6 +29865,54 @@ treatment "GIMS_v7.5.1_2017-04-27.ztt"{
 			group = 1;
 		}
 		subject 3{
+			group = 1;
+		}
+		subject 4{
+			group = 1;
+		}
+		subject 5{
+			group = 1;
+		}
+		subject 6{
+			group = 1;
+		}
+		subject 7{
+			group = 1;
+		}
+		subject 8{
+			group = 1;
+		}
+		subject 9{
+			group = 1;
+		}
+		subject 10{
+			group = 1;
+		}
+		subject 11{
+			group = 1;
+		}
+		subject 12{
+			group = 1;
+		}
+		subject 13{
+			group = 1;
+		}
+		subject 14{
+			group = 1;
+		}
+		subject 15{
+			group = 1;
+		}
+		subject 16{
+			group = 1;
+		}
+		subject 17{
+			group = 1;
+		}
+		subject 18{
+			group = 1;
+		}
+		subject 19{
 			group = 1;
 		}
 	}
