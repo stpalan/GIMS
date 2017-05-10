@@ -1,4 +1,4 @@
-treatment "GIMS_v7.5.2_2017-05-03.ztt"{
+treatment "GIMS_v7.5.3_2017-05-05.ztt"{
 	background{
 		table globals{
 		}
@@ -90,7 +90,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
-		numsubjects = 19;
+		numsubjects = 3;
 		numgroups = 1;
 		numpracticeperiods = 0;
 		numactualperiods = 1;
@@ -109,10 +109,10 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.5.2 #####
+				//##### GIMS Version 7.5.3 #####
 				
-				GIMSVersion="7.5.2";
-				GIMSDate="03.05.2017";
+				GIMSVersion="7.5.3";
+				GIMSDate="05.05.2017";
 			}
 		}
 		program{
@@ -166,11 +166,11 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 				//### P1: General parameters ###
 				
 				Testmode1=0;   //Turns on Experimenter buttons on all screens
-				CQTestmode=0;    //Skips ControlQuestion stage
+				CQTestmode=1;    //Skips ControlQuestion stage
 				
 				PracticePeriod=0;
 				NumExperimenterSubjects=1;
-				Language=1;    //1=English, 2=German
+				Language=2;    //1=English, 2=German
 				TimerInterval=1;
 				
 				//Questionnaire settings
@@ -4669,7 +4669,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 						displaycondition = \Language==1;
 						buttonposition = BOTTOMRIGHT;
 						buttonsequence = HORIZONTAL;
-						button "Submit offers"{
+						button "Submit orders"{
 							clearinputafterok = FALSE;
 							norecordmadeorselected = FALSE;
 							terminatestage = FALSE;
@@ -4678,25 +4678,25 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 							buttoncolor = 5921535;
 							checker{
 								condition = auctionoffers.count(Offerer==:Subject&Type==1&Status==0)+auctionoffers.count(Offerer==:Subject&Type==-1&Status==0)>0;
-								message = "Are you sure you do not want to enter any offer?";
+								message = "Are you sure you do not want to enter any order?";
 								yesButtonStr = "Yes, proceed";
 								noButtonStr = "No, go back";
 							}
 							checker{
 								condition = auctionoffers.count(Offerer==:Subject&Type==1&Status==0)+auctionoffers.count(Offerer==:Subject&Type==-1&Status==0)==0|auctionoffers.count(Offerer==:Subject&Type==1&Status==0)>0;
-								message = "Are you sure you do not want to enter a buy offer?";
+								message = "Are you sure you do not want to enter a buy order?";
 								yesButtonStr = "Yes, proceed";
 								noButtonStr = "No, go back";
 							}
 							checker{
 								condition = auctionoffers.count(Offerer==:Subject&Type==1&Status==0)+auctionoffers.count(Offerer==:Subject&Type==-1&Status==0)==0|auctionoffers.count(Offerer==:Subject&Type==-1&Status==0)>0;
-								message = "Are you sure you do not want to enter a sell offer?";
+								message = "Are you sure you do not want to enter a sell order?";
 								yesButtonStr = "Yes, proceed";
 								noButtonStr = "No, go back";
 							}
 							checker{
 								condition = auctionoffers.count(Offerer==:Subject&Type==-1&Status==0)>0&auctionoffers.count(Offerer==:Subject&Type==1&Status==0)>0;
-								message = "Are you sure you want to proceed? You will not be able to change your offers anymore.";
+								message = "Are you sure you want to proceed? You will not be able to change your orders anymore.";
 								yesButtonStr = "Yes, proceed";
 								noButtonStr = "No, go back";
 							}
@@ -4737,7 +4737,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 					hasframe = FALSE;
 					containerbox "1Market"{
 						hasframe = TRUE;
-						width = 608p;
+						width = 638p;
 						top = 0p;
 						cutleft = TRUE;
 						displaycondition = NumMarkets>=1;
@@ -4794,7 +4794,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 												buttonposition = BOTTOMRIGHT;
 												buttonsequence = HORIZONTAL;
 												item{
-													label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Buy offers\";2=\"Kaufgebote\">}";
+													label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Buy orders\";2=\"Kaufgebote\">}";
 												}
 											}
 											selectcontractbox "BuyOffersSingleUnitEN"{
@@ -5184,7 +5184,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 												buttonposition = BOTTOMRIGHT;
 												buttonsequence = HORIZONTAL;
 												item{
-													label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Sell offers\";2=\"Verkaufsgebote\">}";
+													label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Sell orders\";2=\"Verkaufsgebote\">}";
 												}
 											}
 											selectcontractbox "SellOffersMultiUnitEN"{
@@ -5611,12 +5611,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														buttoncolor = 13158600;
 														checker{
 															condition = 0 < (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
-															message = "You do not have enough assets to submit this offer!";
+															message = "You do not have enough assets to submit this order!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
-															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> offer(s) to sell. Please cancel an existing offer to sell before submitting a new one.";
+															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
 															noButtonStr = "OK";
 														}
 														program{
@@ -5666,12 +5666,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														buttoncolor = 13158600;
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
-															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> offer(s) to buy outstanding at any time. Please cancel an existing offer to buy before submitting a new one.";
+															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = \MinPrice <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
-															message = "You do not have enough cash to submit this offer!";
+															message = "You do not have enough cash to submit this order!";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -5732,17 +5732,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 														checker{
 															condition = 0 < (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
-															message = "You do not have enough assets to submit this offer!";
+															message = "You do not have enough assets to submit this order!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[1], Price);
-															message = "The price of a new sell offer must be higher than the highest price you offer to buy for.";
+															message = "The price of a new sell order must be higher than the highest price you offer to buy for.";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
-															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> offer(s) to sell. Please cancel an existing offer to sell before submitting a new one.";
+															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
 															noButtonStr = "OK";
 														}
 														program{
@@ -5801,12 +5801,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 														checker{
 															condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[1], Price);
-															message = "The price of a new buy offer must be lower than the lowest price you offer to sell for.";
+															message = "The price of a new buy orders must be lower than the lowest price you offer to sell for.";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
-															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> offer(s) to buy outstanding at any time. Please cancel an existing offer to buy before submitting a new one.";
+															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
 															noButtonStr = "OK";
 														}
 														program{
@@ -6125,16 +6125,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													numrecords = 1;
 													tablelayout = VERTICAL;
 													item{
-														label = "Price";
-														variable = Price;
-														format = "\\PricePrecision";
-														input = TRUE;
-														showdefault = FALSE;
-														emptyallowed = TRUE;
-														min = \MinPrice;
-														max = \MaxPrice;
-													}
-													item{
 														label = "Volume";
 														variable = Volume;
 														format = "\\VolumePrecision";
@@ -6143,6 +6133,16 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														emptyallowed = TRUE;
 														min = \MinVol;
 														max = \MaxVol;
+													}
+													item{
+														label = "Price";
+														variable = Price;
+														format = "\\PricePrecision";
+														input = TRUE;
+														showdefault = FALSE;
+														emptyallowed = TRUE;
+														min = \MinPrice;
+														max = \MaxPrice;
 													}
 													button "Sell at best"{
 														clearinputafterok = FALSE;
@@ -6158,12 +6158,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 														checker{
 															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
-															message = "You do not have enough assets to submit this offer!";
+															message = "You do not have enough assets to submit this order!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
-															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> offer(s) to sell. Please cancel an existing offer to sell before submitting a new one.";
+															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
 															noButtonStr = "OK";
 														}
 														program{
@@ -6217,12 +6217,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
-															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> offer(s) to buy outstanding at any time. Please cancel an existing offer to buy before submitting a new one.";
+															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = \MinPrice * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
-															message = "You do not have enough cash to submit this offer!";
+															message = "You do not have enough cash to submit this order!";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -6287,17 +6287,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 														checker{
 															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
-															message = "You do not have enough assets to submit this offer!";
+															message = "You do not have enough assets to submit this order!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[1], Price);
-															message = "The price of a new sell offer must be higher than the highest price you offer to buy for.";
+															message = "The price of a new sell order must be higher than the highest price you offer to buy for.";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
-															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> offer(s) to sell. Please cancel an existing offer to sell before submitting a new one.";
+															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
 															noButtonStr = "OK";
 														}
 														program{
@@ -6355,17 +6355,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 														checker{
 															condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
-															message = "You do not have enough cash to submit this offer!";
+															message = "You do not have enough cash to submit this order!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[1], Price);
-															message = "The price of a new buy offer must be lower than the lowest price you offer to sell for.";
+															message = "The price of a new buy order must be lower than the lowest price you offer to sell for.";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
-															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> offer(s) to buy outstanding at any time. Please cancel an existing offer to buy before submitting a new one.";
+															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
 															noButtonStr = "OK";
 														}
 														program{
@@ -6415,16 +6415,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													numrecords = 1;
 													tablelayout = VERTICAL;
 													item{
-														label = "Preis";
-														variable = Price;
-														format = "\\PricePrecision";
-														input = TRUE;
-														showdefault = FALSE;
-														emptyallowed = TRUE;
-														min = \MinPrice;
-														max = \MaxPrice;
-													}
-													item{
 														label = "Volumen";
 														variable = Volume;
 														format = "\\VolumePrecision";
@@ -6433,6 +6423,16 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														emptyallowed = TRUE;
 														min = \MinVol;
 														max = \MaxVol;
+													}
+													item{
+														label = "Preis";
+														variable = Price;
+														format = "\\PricePrecision";
+														input = TRUE;
+														showdefault = FALSE;
+														emptyallowed = TRUE;
+														min = \MinPrice;
+														max = \MaxPrice;
 													}
 													button "  Verkauf bestens  "{
 														clearinputafterok = FALSE;
@@ -6726,17 +6726,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 														checker{
 															condition = 0 < (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
-															message = "You do not have enough assets to submit this offer!";
+															message = "You do not have enough assets to submit this order!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[1], Price);
-															message = "The price of a new sell offer must be higher than the lowest price you offer to buy for.";
+															message = "The price of a new sell order must be higher than the lowest price you offer to buy for.";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
-															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> offer(s) to sell. Please cancel an existing offer to sell before submitting a new one.";
+															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
 															noButtonStr = "OK";
 														}
 														program{
@@ -6794,12 +6794,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 														checker{
 															condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[1], Price);
-															message = "The price of a new buy offer must be lower than the highest price you offer to sell for.";
+															message = "The price of a new buy order must be lower than the highest price you offer to sell for.";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
-															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> offer(s) to buy outstanding at any time. Please cancel an existing offer to buy before submitting a new one.";
+															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
 															noButtonStr = "OK";
 														}
 														program{
@@ -7000,16 +7000,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													numrecords = 1;
 													tablelayout = VERTICAL;
 													item{
-														label = "Price";
-														variable = Price;
-														format = "\\PricePrecision";
-														input = TRUE;
-														showdefault = FALSE;
-														emptyallowed = TRUE;
-														min = \MinPrice;
-														max = \MaxPrice;
-													}
-													item{
 														label = "Volume";
 														variable = Volume;
 														format = "\\VolumePrecision";
@@ -7018,6 +7008,16 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														emptyallowed = TRUE;
 														min = \MinVol;
 														max = \MaxVol;
+													}
+													item{
+														label = "Price";
+														variable = Price;
+														format = "\\PricePrecision";
+														input = TRUE;
+														showdefault = FALSE;
+														emptyallowed = TRUE;
+														min = \MinPrice;
+														max = \MaxPrice;
 													}
 													button "Submit sell order"{
 														clearinputafterok = FALSE;
@@ -7038,17 +7038,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 														checker{
 															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
-															message = "You do not have enough assets to submit this offer!";
+															message = "You do not have enough assets to submit this order!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[1], Price);
-															message = "The price of a new sell offer must be higher than the highest price you offer to buy for.";
+															message = "The price of a new sell order must be higher than the highest price you offer to buy for.";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
-															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> offer(s) to sell. Please cancel an existing offer to sell before submitting a new one.";
+															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
 															noButtonStr = "OK";
 														}
 														program{
@@ -7105,17 +7105,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 														checker{
 															condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
-															message = "You do not have enough cash to submit this offer!";
+															message = "You do not have enough cash to submit this order!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[1], Price);
-															message = "The price of a new buy offer must be lower than the lowest price you offer to sell for.";
+															message = "The price of a new buy order must be lower than the lowest price you offer to sell for.";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
-															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> offer(s) to buy outstanding at any time. Please cancel an existing offer to buy before submitting a new one.";
+															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
 															noButtonStr = "OK";
 														}
 														program{
@@ -7166,16 +7166,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													numrecords = 1;
 													tablelayout = VERTICAL;
 													item{
-														label = "Preis";
-														variable = Price;
-														format = "\\PricePrecision";
-														input = TRUE;
-														showdefault = FALSE;
-														emptyallowed = TRUE;
-														min = \MinPrice;
-														max = \MaxPrice;
-													}
-													item{
 														label = "Volumen";
 														variable = Volume;
 														format = "\\VolumePrecision";
@@ -7184,6 +7174,16 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														emptyallowed = TRUE;
 														min = \MinVol;
 														max = \MaxVol;
+													}
+													item{
+														label = "Preis";
+														variable = Price;
+														format = "\\PricePrecision";
+														input = TRUE;
+														showdefault = FALSE;
+														emptyallowed = TRUE;
+														min = \MinPrice;
+														max = \MaxPrice;
 													}
 													button "  Verkaufsgebot  "{
 														clearinputafterok = FALSE;
@@ -7555,7 +7555,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													buttonposition = BOTTOMRIGHT;
 													buttonsequence = HORIZONTAL;
 													item{
-														label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Buy offers\";2=\"Kaufgebote\">}";
+														label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Buy orders\";2=\"Kaufgebote\">}";
 													}
 												}
 												selectcontractbox "BuyOffersSingleUnitEN"{
@@ -7945,7 +7945,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													buttonposition = BOTTOMRIGHT;
 													buttonsequence = HORIZONTAL;
 													item{
-														label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Sell offers\";2=\"Verkaufsgebote\">}";
+														label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Sell orders\";2=\"Verkaufsgebote\">}";
 													}
 												}
 												selectcontractbox "SellOffersMultiUnitEN"{
@@ -8340,7 +8340,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 												}
 												containerbox "ContractMaker"{
 													hasframe = FALSE;
-													height = 127p;
+													height = 157p;
 													bottom = 0p;
 													cutbottom = TRUE;
 													makecontractbox "ContractMakerSingleUnitEN"{
@@ -8372,12 +8372,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															buttoncolor = 13158600;
 															checker{
 																condition = 0 < (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
-																message = "You do not have enough assets to submit this offer!";
+																message = "You do not have enough assets to submit this order!";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
-																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> offer(s) to sell. Please cancel an existing offer to sell before submitting a new one.";
+																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
 																noButtonStr = "OK";
 															}
 															program{
@@ -8427,12 +8427,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															buttoncolor = 13158600;
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
-																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> offer(s) to buy outstanding at any time. Please cancel an existing offer to buy before submitting a new one.";
+																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = \MinPrice <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
-																message = "You do not have enough cash to submit this offer!";
+																message = "You do not have enough cash to submit this order!";
 																noButtonStr = "OK";
 															}
 															checker{
@@ -8493,17 +8493,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															}
 															checker{
 																condition = 0 < (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
-																message = "You do not have enough assets to submit this offer!";
+																message = "You do not have enough assets to submit this order!";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[2], Price);
-																message = "The price of a new sell offer must be higher than the highest price you offer to buy for.";
+																message = "The price of a new sell order must be higher than the highest price you offer to buy for.";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
-																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> offer(s) to sell. Please cancel an existing offer to sell before submitting a new one.";
+																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
 																noButtonStr = "OK";
 															}
 															program{
@@ -8562,12 +8562,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
-																message = "The price of a new buy offer must be lower than the lowest price you offer to sell for.";
+																message = "The price of a new buy order must be lower than the lowest price you offer to sell for.";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
-																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> offer(s) to buy outstanding at any time. Please cancel an existing offer to buy before submitting a new one.";
+																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
 																noButtonStr = "OK";
 															}
 															program{
@@ -8886,16 +8886,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														numrecords = 1;
 														tablelayout = VERTICAL;
 														item{
-															label = "Price";
-															variable = Price;
-															format = "\\PricePrecision";
-															input = TRUE;
-															showdefault = FALSE;
-															emptyallowed = TRUE;
-															min = \MinPrice;
-															max = \MaxPrice;
-														}
-														item{
 															label = "Volume";
 															variable = Volume;
 															format = "\\VolumePrecision";
@@ -8904,6 +8894,16 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															emptyallowed = TRUE;
 															min = \MinVol;
 															max = \MaxVol;
+														}
+														item{
+															label = "Price";
+															variable = Price;
+															format = "\\PricePrecision";
+															input = TRUE;
+															showdefault = FALSE;
+															emptyallowed = TRUE;
+															min = \MinPrice;
+															max = \MaxPrice;
 														}
 														button "Sell at best"{
 															clearinputafterok = FALSE;
@@ -8919,12 +8919,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															}
 															checker{
 																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
-																message = "You do not have enough assets to submit this offer!";
+																message = "You do not have enough assets to submit this order!";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
-																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> offer(s) to sell. Please cancel an existing offer to sell before submitting a new one.";
+																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
 																noButtonStr = "OK";
 															}
 															program{
@@ -8978,12 +8978,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
-																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> offer(s) to buy outstanding at any time. Please cancel an existing offer to buy before submitting a new one.";
+																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = \MinPrice * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
-																message = "You do not have enough cash to submit this offer!";
+																message = "You do not have enough cash to submit this order!";
 																noButtonStr = "OK";
 															}
 															checker{
@@ -9048,17 +9048,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															}
 															checker{
 																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
-																message = "You do not have enough assets to submit this offer!";
+																message = "You do not have enough assets to submit this order!";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[2], Price);
-																message = "The price of a new sell offer must be higher than the highest price you offer to buy for.";
+																message = "The price of a new sell order must be higher than the highest price you offer to buy for.";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
-																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> offer(s) to sell. Please cancel an existing offer to sell before submitting a new one.";
+																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
 																noButtonStr = "OK";
 															}
 															program{
@@ -9116,17 +9116,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															}
 															checker{
 																condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
-																message = "You do not have enough cash to submit this offer!";
+																message = "You do not have enough cash to submit this order!";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
-																message = "The price of a new buy offer must be lower than the lowest price you offer to sell for.";
+																message = "The price of a new buy order must be lower than the lowest price you offer to sell for.";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
-																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> offer(s) to buy outstanding at any time. Please cancel an existing offer to buy before submitting a new one.";
+																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
 																noButtonStr = "OK";
 															}
 															program{
@@ -9176,16 +9176,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														numrecords = 1;
 														tablelayout = VERTICAL;
 														item{
-															label = "Preis";
-															variable = Price;
-															format = "\\PricePrecision";
-															input = TRUE;
-															showdefault = FALSE;
-															emptyallowed = TRUE;
-															min = \MinPrice;
-															max = \MaxPrice;
-														}
-														item{
 															label = "Volumen";
 															variable = Volume;
 															format = "\\VolumePrecision";
@@ -9194,6 +9184,16 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															emptyallowed = TRUE;
 															min = \MinVol;
 															max = \MaxVol;
+														}
+														item{
+															label = "Preis";
+															variable = Price;
+															format = "\\PricePrecision";
+															input = TRUE;
+															showdefault = FALSE;
+															emptyallowed = TRUE;
+															min = \MinPrice;
+															max = \MaxPrice;
 														}
 														button "  Verkauf bestens  "{
 															clearinputafterok = FALSE;
@@ -9487,17 +9487,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															}
 															checker{
 																condition = 0 < (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
-																message = "You do not have enough assets to submit this offer!";
+																message = "You do not have enough assets to submit this order!";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[2], Price);
-																message = "The price of a new sell offer must be higher than the highest price you offer to buy for.";
+																message = "The price of a new sell order must be higher than the highest price you offer to buy for.";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
-																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> offer(s) to sell. Please cancel an existing offer to sell before submitting a new one.";
+																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
 																noButtonStr = "OK";
 															}
 															program{
@@ -9555,12 +9555,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
-																message = "The price of a new buy offer must be lower than the lowest price you offer to sell for.";
+																message = "The price of a new buy order must be lower than the lowest price you offer to sell for.";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
-																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> offer(s) to buy outstanding at any time. Please cancel an existing offer to buy before submitting a new one.";
+																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
 																noButtonStr = "OK";
 															}
 															program{
@@ -9761,16 +9761,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														numrecords = 1;
 														tablelayout = VERTICAL;
 														item{
-															label = "Price";
-															variable = Price;
-															format = "\\PricePrecision";
-															input = TRUE;
-															showdefault = FALSE;
-															emptyallowed = TRUE;
-															min = \MinPrice;
-															max = \MaxPrice;
-														}
-														item{
 															label = "Volume";
 															variable = Volume;
 															format = "\\VolumePrecision";
@@ -9779,6 +9769,16 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															emptyallowed = TRUE;
 															min = \MinVol;
 															max = \MaxVol;
+														}
+														item{
+															label = "Price";
+															variable = Price;
+															format = "\\PricePrecision";
+															input = TRUE;
+															showdefault = FALSE;
+															emptyallowed = TRUE;
+															min = \MinPrice;
+															max = \MaxPrice;
 														}
 														button "Submit sell order"{
 															clearinputafterok = FALSE;
@@ -9799,17 +9799,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															}
 															checker{
 																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
-																message = "You do not have enough assets to submit this offer!";
+																message = "You do not have enough assets to submit this order!";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[2], Price);
-																message = "The price of a new sell offer must be higher than the highest price you offer to buy for.";
+																message = "The price of a new sell order must be higher than the highest price you offer to buy for.";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
-																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> offer(s) to sell. Please cancel an existing offer to sell before submitting a new one.";
+																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
 																noButtonStr = "OK";
 															}
 															program{
@@ -9866,17 +9866,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															}
 															checker{
 																condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
-																message = "You do not have enough cash to submit this offer!";
+																message = "You do not have enough cash to submit this order!";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
-																message = "The price of a new buy offer must be lower than the lowest price you offer to sell for.";
+																message = "The price of a new buy order must be lower than the lowest price you offer to sell for.";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
-																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> offer(s) to buy outstanding at any time. Please cancel an existing offer to buy before submitting a new one.";
+																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
 																noButtonStr = "OK";
 															}
 															program{
@@ -9927,16 +9927,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														numrecords = 1;
 														tablelayout = VERTICAL;
 														item{
-															label = "Preis";
-															variable = Price;
-															format = "\\PricePrecision";
-															input = TRUE;
-															showdefault = FALSE;
-															emptyallowed = TRUE;
-															min = \MinPrice;
-															max = \MaxPrice;
-														}
-														item{
 															label = "Volumen";
 															variable = Volume;
 															format = "\\VolumePrecision";
@@ -9945,6 +9935,16 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															emptyallowed = TRUE;
 															min = \MinVol;
 															max = \MaxVol;
+														}
+														item{
+															label = "Preis";
+															variable = Price;
+															format = "\\PricePrecision";
+															input = TRUE;
+															showdefault = FALSE;
+															emptyallowed = TRUE;
+															min = \MinPrice;
+															max = \MaxPrice;
 														}
 														button "  Verkaufsgebot  "{
 															clearinputafterok = FALSE;
@@ -13444,7 +13444,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 					cuttop = TRUE;
 					containerbox "MarketContainer"{
 						hasframe = TRUE;
-						width = 617p;
+						width = 619p;
 						right = 0p;
 						top = 0p;
 						cutright = TRUE;
@@ -13490,7 +13490,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 									containerbox "Buttons"{
 										hasframe = FALSE;
 										width = 140p;
-										height = 138p;
+										height = 148p;
 										right = 0p;
 										top = 0p;
 										cutright = TRUE;
@@ -14686,7 +14686,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 									cutbottom = TRUE;
 									containerbox "BuyOffersContainer"{
 										hasframe = TRUE;
-										width = 175p;
+										width = 179p;
 										left = 0p;
 										cutleft = TRUE;
 										plotbox "Background"{
@@ -14714,7 +14714,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 												buttonposition = BOTTOMRIGHT;
 												buttonsequence = HORIZONTAL;
 												item{
-													label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Buy offers\";2=\"Kaufgebote\">}";
+													label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Buy orders\";2=\"Kaufgebote\">}";
 												}
 											}
 											selectcontractbox "BuyOffersSingleUnitEN"{
@@ -14737,96 +14737,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													variable = Price;
 													format = "\\PricePrecision";
 													input = FALSE;
-												}
-												button "Cancel"{
-													clearinputafterok = FALSE;
-													norecordmadeorselected = FALSE;
-													terminatestage = FALSE;
-													donotterminatestage = TRUE;
-													specialbuttoncolor = TRUE;
-													buttoncolor = 5921535;
-													checker{
-														condition = Offerer == :Subject;
-														message = "You have selected an order from another trader. You can only cancel your own orders!";
-														noButtonStr = "OK";
-													}
-													checker{
-														condition = Status==0;
-														message = "Somebody else was faster!";
-														noButtonStr = "OK";
-													}
-													program{
-														table = offers;
-														do{
-															//Processes cancellation
-															
-															//Marks offer as cancelled
-															Status = 2;
-															StatusTime = gettime() - \StartTime;
-															
-															//Generates contracts table record
-															contracts.new{
-															    Period=\Period;
-															    Market=:Market;
-															    ID=contracts.count(same(Market));
-															    Price=:Price;
-															    Volume=:Volume;
-															    Transacted=:Transacted;
-															    Invalidated=:Invalidated;
-															    VolumeTraded=\I;
-															    Status=:Status;
-															    Type=:Type;
-															    OfferTime=:OfferTime;
-															    OfferID=:ID;
-															    TransactionID=\I;
-															    Time=:StatusTime;
-															    Offerer=:Offerer;
-															    Accepter=\I;
-															    Phase=2;
-															    }
-														}
-													}
-													program{
-														table = globals;
-														do{
-															//Updates OrderBookRank and PriceListRank
-															
-															offers.do{
-															    OrderBookRank=if(Status==0,offers.count(same(Market)&same(Type)&Status==0&(Type*Price>Type*:Price|(Price==:Price&OfferTime<:OfferTime)))+1,\I);
-															    }
-															
-															contracts.do{
-															    PriceListRank=contracts.count(same(Market)&ID>=:ID);
-															    }
-														}
-													}
-													program{
-														table = subjects;
-														do{
-															//Updates practicetasks
-															
-															practicetasks.do{
-															    if(same(Subject)&ID==3){Done=1;}
-															    }
-														}
-													}
-													program{
-														table = offers;
-														do{
-															//Timelog
-															
-															timelog.new
-															    {
-															    ID=timelog.maximum(ID)+1;
-															    Time=gettime()-\StartTime;
-															    Period=\Period;
-															    Subject=:Subject;
-															    Event=6;
-															    Data[1]=:ID;
-															    Data[2]=:Market;
-															    }
-														}
-													}
 												}
 												button "Sell"{
 													clearinputafterok = FALSE;
@@ -14852,12 +14762,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													}
 													checker{
 														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price);
-														message = "There is an offer to buy at a higher price. Please always select the best offer to trade.";
+														message = "There is an offer to buy at a higher price. Please always select the best order to trade.";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==1&Price==:Price,OfferTime);
-														message = "There is an offer to buy at the same price which was submitted sooner. Please always select the best offer to trade.";
+														message = "There is an offer to buy at the same price which was submitted sooner. Please always select the best order to trade.";
 														noButtonStr = "OK";
 													}
 													program{
@@ -15142,29 +15052,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 													}
 												}
-											}
-											selectcontractbox "BuyOffersSingleUnitDE"{
-												hasframe = FALSE;
-												displaycondition = \Language==2&\MultiUnitTrading[DisplayMarket[1]]==0;
-												table = offers;
-												buttonposition = BOTTOMLEFT;
-												buttonsequence = HORIZONTAL;
-												emptyallowed = FALSE;
-												allemptyallowed = FALSE;
-												ownervariable = Offerer;
-												condition = Type==1&Status==0&Market==:DisplayMarket[1] & (\OrderBookDepth[:DisplayMarket[1]]<0|OrderBookRank<=\OrderBookDepth[:DisplayMarket[1]]|Offerer==:Subject);
-												sortfields = "-Price;OfferTime";
-												tablelayout = LIST;
-												scrollatstart = TRUE;
-												scrollatEnd = FALSE;
-												selectbest = TRUE;
-												item{
-													label = "Preis";
-													variable = Price;
-													format = "\\PricePrecision";
-													input = FALSE;
-												}
-												button "Stornieren"{
+												button "Cancel"{
 													clearinputafterok = FALSE;
 													norecordmadeorselected = FALSE;
 													terminatestage = FALSE;
@@ -15173,12 +15061,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													buttoncolor = 5921535;
 													checker{
 														condition = Offerer == :Subject;
-														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+														message = "You have selected an order from another trader. You can only cancel your own orders!";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
-														message = "Jemand anderes war schneller!";
+														message = "Somebody else was faster!";
 														noButtonStr = "OK";
 													}
 													program{
@@ -15253,6 +15141,28 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															    }
 														}
 													}
+												}
+											}
+											selectcontractbox "BuyOffersSingleUnitDE"{
+												hasframe = FALSE;
+												displaycondition = \Language==2&\MultiUnitTrading[DisplayMarket[1]]==0;
+												table = offers;
+												buttonposition = BOTTOMRIGHT;
+												buttonsequence = HORIZONTAL;
+												emptyallowed = FALSE;
+												allemptyallowed = FALSE;
+												ownervariable = Offerer;
+												condition = Type==1&Status==0&Market==:DisplayMarket[1] & (\OrderBookDepth[:DisplayMarket[1]]<0|OrderBookRank<=\OrderBookDepth[:DisplayMarket[1]]|Offerer==:Subject);
+												sortfields = "-Price;OfferTime";
+												tablelayout = LIST;
+												scrollatstart = TRUE;
+												scrollatEnd = FALSE;
+												selectbest = TRUE;
+												item{
+													label = "Preis";
+													variable = Price;
+													format = "\\PricePrecision";
+													input = FALSE;
 												}
 												button "Verkauf"{
 													clearinputafterok = FALSE;
@@ -15568,46 +15478,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 													}
 												}
-											}
-											selectcontractbox "BuyOffersMultiUnitEN"{
-												hasframe = FALSE;
-												displaycondition = Language==1&\MultiUnitTrading[DisplayMarket[1]]==1;
-												table = offers;
-												buttonposition = BOTTOMRIGHT;
-												buttonsequence = HORIZONTAL;
-												emptyallowed = FALSE;
-												allemptyallowed = FALSE;
-												ownervariable = Offerer;
-												condition = Type==1&Status==0&Market==:DisplayMarket[1] & (\OrderBookDepth[:DisplayMarket[1]]<0|OrderBookRank<=\OrderBookDepth[:DisplayMarket[1]]|Offerer==:Subject);
-												sortfields = "-Price;OfferTime";
-												tablelayout = LIST;
-												scrollatstart = TRUE;
-												scrollatEnd = FALSE;
-												selectbest = TRUE;
-												item{
-													label = "Volume";
-													variable = Volume-Transacted-Invalidated;
-													format = "\\VolumePrecision";
-													input = FALSE;
-												}
-												item{
-													label = "Price";
-													variable = Price;
-													format = "\\PricePrecision";
-													input = FALSE;
-												}
-												item{
-													label = "Sell volume";
-													variable = SellVol;
-													format = "\\VolumePrecision";
-													input = TRUE;
-													showdefault = FALSE;
-													emptyallowed = TRUE;
-													min = \MinVol;
-													max = \MaxVol;
-													defaultvalue = 0;
-												}
-												button "Cancel"{
+												button "Stornieren"{
 													clearinputafterok = FALSE;
 													norecordmadeorselected = FALSE;
 													terminatestage = FALSE;
@@ -15616,12 +15487,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													buttoncolor = 5921535;
 													checker{
 														condition = Offerer == :Subject;
-														message = "You have selected an order from another trader. You can only cancel your own orders!";
+														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
-														message = "Somebody else was faster!";
+														message = "Jemand anderes war schneller!";
 														noButtonStr = "OK";
 													}
 													program{
@@ -15697,6 +15568,45 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 													}
 												}
+											}
+											selectcontractbox "BuyOffersMultiUnitEN"{
+												hasframe = FALSE;
+												displaycondition = Language==1&\MultiUnitTrading[DisplayMarket[1]]==1;
+												table = offers;
+												buttonposition = BOTTOMRIGHT;
+												buttonsequence = HORIZONTAL;
+												emptyallowed = FALSE;
+												allemptyallowed = FALSE;
+												ownervariable = Offerer;
+												condition = Type==1&Status==0&Market==:DisplayMarket[1] & (\OrderBookDepth[:DisplayMarket[1]]<0|OrderBookRank<=\OrderBookDepth[:DisplayMarket[1]]|Offerer==:Subject);
+												sortfields = "-Price;OfferTime";
+												tablelayout = LIST;
+												scrollatstart = TRUE;
+												scrollatEnd = FALSE;
+												selectbest = TRUE;
+												item{
+													label = "Volume";
+													variable = Volume-Transacted-Invalidated;
+													format = "\\VolumePrecision";
+													input = FALSE;
+												}
+												item{
+													label = "Price";
+													variable = Price;
+													format = "\\PricePrecision";
+													input = FALSE;
+												}
+												item{
+													label = "Sell volume";
+													variable = SellVol;
+													format = "\\VolumePrecision";
+													input = TRUE;
+													showdefault = FALSE;
+													emptyallowed = TRUE;
+													min = \MinVol;
+													max = \MaxVol;
+													defaultvalue = 0;
+												}
 												button "Sell"{
 													clearinputafterok = FALSE;
 													norecordmadeorselected = FALSE;
@@ -15726,12 +15636,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													}
 													checker{
 														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price);
-														message = "There is an offer to buy at a higher price. Please always select the best offer to trade.";
+														message = "There is an offer to buy at a higher price. Please always select the best order to trade.";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==1&Price==:Price,OfferTime);
-														message = "There is an offer to buy at the same price which was submitted sooner. Please always select the best offer to trade.";
+														message = "There is an offer to buy at the same price which was submitted sooner. Please always select the best order to trade.";
 														noButtonStr = "OK";
 													}
 													program{
@@ -16009,46 +15919,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 													}
 												}
-											}
-											selectcontractbox "BuyOffersMultiUnitDE"{
-												hasframe = FALSE;
-												displaycondition = Language==2&\MultiUnitTrading[DisplayMarket[1]]==1;
-												table = offers;
-												buttonposition = BOTTOMRIGHT;
-												buttonsequence = HORIZONTAL;
-												emptyallowed = FALSE;
-												allemptyallowed = FALSE;
-												ownervariable = Offerer;
-												condition = Type==1&Status==0&Market==:DisplayMarket[1] & (\OrderBookDepth[:DisplayMarket[1]]<0|OrderBookRank<=\OrderBookDepth[:DisplayMarket[1]]|Offerer==:Subject);
-												sortfields = "-Price;OfferTime";
-												tablelayout = LIST;
-												scrollatstart = TRUE;
-												scrollatEnd = FALSE;
-												selectbest = TRUE;
-												item{
-													label = "Volumen";
-													variable = Volume-Transacted-Invalidated;
-													format = "\\VolumePrecision";
-													input = FALSE;
-												}
-												item{
-													label = "Preis";
-													variable = Price;
-													format = "\\PricePrecision";
-													input = FALSE;
-												}
-												item{
-													label = "Verkaufsvol.";
-													variable = SellVol;
-													format = "\\VolumePrecision";
-													input = TRUE;
-													showdefault = FALSE;
-													emptyallowed = TRUE;
-													min = \MinVol;
-													max = \MaxVol;
-													defaultvalue = 0;
-												}
-												button "Stornieren"{
+												button "Cancel"{
 													clearinputafterok = FALSE;
 													norecordmadeorselected = FALSE;
 													terminatestage = FALSE;
@@ -16057,12 +15928,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													buttoncolor = 5921535;
 													checker{
 														condition = Offerer == :Subject;
-														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+														message = "You have selected an order from another trader. You can only cancel your own orders!";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
-														message = "Jemand anderes war schneller!";
+														message = "Somebody else was faster!";
 														noButtonStr = "OK";
 													}
 													program{
@@ -16137,6 +16008,45 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															    }
 														}
 													}
+												}
+											}
+											selectcontractbox "BuyOffersMultiUnitDE"{
+												hasframe = FALSE;
+												displaycondition = Language==2&\MultiUnitTrading[DisplayMarket[1]]==1;
+												table = offers;
+												buttonposition = BOTTOMRIGHT;
+												buttonsequence = HORIZONTAL;
+												emptyallowed = FALSE;
+												allemptyallowed = FALSE;
+												ownervariable = Offerer;
+												condition = Type==1&Status==0&Market==:DisplayMarket[1] & (\OrderBookDepth[:DisplayMarket[1]]<0|OrderBookRank<=\OrderBookDepth[:DisplayMarket[1]]|Offerer==:Subject);
+												sortfields = "-Price;OfferTime";
+												tablelayout = LIST;
+												scrollatstart = TRUE;
+												scrollatEnd = FALSE;
+												selectbest = TRUE;
+												item{
+													label = "Volumen";
+													variable = Volume-Transacted-Invalidated;
+													format = "\\VolumePrecision";
+													input = FALSE;
+												}
+												item{
+													label = "Preis";
+													variable = Price;
+													format = "\\PricePrecision";
+													input = FALSE;
+												}
+												item{
+													label = "Verkaufsvol.";
+													variable = SellVol;
+													format = "\\VolumePrecision";
+													input = TRUE;
+													showdefault = FALSE;
+													emptyallowed = TRUE;
+													min = \MinVol;
+													max = \MaxVol;
+													defaultvalue = 0;
 												}
 												button "Verkauf"{
 													clearinputafterok = FALSE;
@@ -16450,12 +16360,102 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 													}
 												}
+												button "Stornieren"{
+													clearinputafterok = FALSE;
+													norecordmadeorselected = FALSE;
+													terminatestage = FALSE;
+													donotterminatestage = TRUE;
+													specialbuttoncolor = TRUE;
+													buttoncolor = 5921535;
+													checker{
+														condition = Offerer == :Subject;
+														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+														noButtonStr = "OK";
+													}
+													checker{
+														condition = Status==0;
+														message = "Jemand anderes war schneller!";
+														noButtonStr = "OK";
+													}
+													program{
+														table = offers;
+														do{
+															//Processes cancellation
+															
+															//Marks offer as cancelled
+															Status = 2;
+															StatusTime = gettime() - \StartTime;
+															
+															//Generates contracts table record
+															contracts.new{
+															    Period=\Period;
+															    Market=:Market;
+															    ID=contracts.count(same(Market));
+															    Price=:Price;
+															    Volume=:Volume;
+															    Transacted=:Transacted;
+															    Invalidated=:Invalidated;
+															    VolumeTraded=\I;
+															    Status=:Status;
+															    Type=:Type;
+															    OfferTime=:OfferTime;
+															    OfferID=:ID;
+															    TransactionID=\I;
+															    Time=:StatusTime;
+															    Offerer=:Offerer;
+															    Accepter=\I;
+															    Phase=2;
+															    }
+														}
+													}
+													program{
+														table = globals;
+														do{
+															//Updates OrderBookRank and PriceListRank
+															
+															offers.do{
+															    OrderBookRank=if(Status==0,offers.count(same(Market)&same(Type)&Status==0&(Type*Price>Type*:Price|(Price==:Price&OfferTime<:OfferTime)))+1,\I);
+															    }
+															
+															contracts.do{
+															    PriceListRank=contracts.count(same(Market)&ID>=:ID);
+															    }
+														}
+													}
+													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==3){Done=1;}
+															    }
+														}
+													}
+													program{
+														table = offers;
+														do{
+															//Timelog
+															
+															timelog.new
+															    {
+															    ID=timelog.maximum(ID)+1;
+															    Time=gettime()-\StartTime;
+															    Period=\Period;
+															    Subject=:Subject;
+															    Event=6;
+															    Data[1]=:ID;
+															    Data[2]=:Market;
+															    }
+														}
+													}
+												}
 											}
 										}
 									}
 									containerbox "SellOffersContainer"{
 										hasframe = TRUE;
-										width = 175p;
+										width = 179p;
 										left = 0p;
 										cutleft = TRUE;
 										plotbox "Background"{
@@ -16483,7 +16483,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 												buttonposition = BOTTOMRIGHT;
 												buttonsequence = HORIZONTAL;
 												item{
-													label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Sell offers\";2=\"Verkaufsgebote\">}";
+													label = "<>{\\rtf \\fs18 \\qc \\b <\\Language|!text: 1=\"Sell orders\";2=\"Verkaufsgebote\">}";
 												}
 											}
 											selectcontractbox "SellOffersMultiUnitEN"{
@@ -16524,6 +16524,96 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													max = \MaxVol;
 													defaultvalue = 0;
 												}
+												button "Cancel"{
+													clearinputafterok = FALSE;
+													norecordmadeorselected = FALSE;
+													terminatestage = FALSE;
+													donotterminatestage = TRUE;
+													specialbuttoncolor = TRUE;
+													buttoncolor = 5921535;
+													checker{
+														condition = Offerer == :Subject;
+														message = "You have selected an order from another trader. You can only cancel your own orders!";
+														noButtonStr = "OK";
+													}
+													checker{
+														condition = Status==0;
+														message = "Somebody else was faster!";
+														noButtonStr = "OK";
+													}
+													program{
+														table = offers;
+														do{
+															//Processes cancellation
+															
+															//Marks offer as cancelled
+															Status = 2;
+															StatusTime = gettime() - \StartTime;
+															
+															//Generates contracts table record
+															contracts.new{
+															    Period=\Period;
+															    Market=:Market;
+															    ID=contracts.count(same(Market));
+															    Price=:Price;
+															    Volume=:Volume;
+															    Transacted=:Transacted;
+															    Invalidated=:Invalidated;
+															    VolumeTraded=\I;
+															    Status=:Status;
+															    Type=:Type;
+															    OfferTime=:OfferTime;
+															    OfferID=:ID;
+															    TransactionID=\I;
+															    Time=:StatusTime;
+															    Offerer=:Offerer;
+															    Accepter=\I;
+															    Phase=2;
+															    }
+														}
+													}
+													program{
+														table = globals;
+														do{
+															//Updates OrderBookRank and PriceListRank
+															
+															offers.do{
+															    OrderBookRank=if(Status==0,offers.count(same(Market)&same(Type)&Status==0&(Type*Price>Type*:Price|(Price==:Price&OfferTime<:OfferTime)))+1,\I);
+															    }
+															
+															contracts.do{
+															    PriceListRank=contracts.count(same(Market)&ID>=:ID);
+															    }
+														}
+													}
+													program{
+														table = subjects;
+														do{
+															//Updates practicetasks
+															
+															practicetasks.do{
+															    if(same(Subject)&ID==3){Done=1;}
+															    }
+														}
+													}
+													program{
+														table = offers;
+														do{
+															//Timelog
+															
+															timelog.new
+															    {
+															    ID=timelog.maximum(ID)+1;
+															    Time=gettime()-\StartTime;
+															    Period=\Period;
+															    Subject=:Subject;
+															    Event=5;
+															    Data[1]=:ID;
+															    Data[2]=:Market;
+															    }
+														}
+													}
+												}
 												button "Buy"{
 													clearinputafterok = FALSE;
 													norecordmadeorselected = FALSE;
@@ -16553,12 +16643,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													}
 													checker{
 														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price);
-														message = "There is an offer to sell at a lower price. Please always select the best offer to trade.";
+														message = "There is an offer to sell at a lower price. Please always select the best order to trade.";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1&Price==:Price,OfferTime);
-														message = "There is an offer to sell at the same price which was submitted sooner. Please always select the best offer to trade.";
+														message = "There is an offer to sell at the same price which was submitted sooner. Please always select the best order to trade.";
 														noButtonStr = "OK";
 													}
 													program{
@@ -16840,7 +16930,46 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 													}
 												}
-												button "Cancel"{
+											}
+											selectcontractbox "SellOffersMultiUnitDE"{
+												hasframe = FALSE;
+												displaycondition = \Language==2&\MultiUnitTrading[DisplayMarket[1]]==1;
+												table = offers;
+												buttonposition = BOTTOMLEFT;
+												buttonsequence = HORIZONTAL;
+												emptyallowed = FALSE;
+												allemptyallowed = FALSE;
+												ownervariable = Offerer;
+												condition = Type==-1&Status==0&Market==:DisplayMarket[1] & (\OrderBookDepth[:DisplayMarket[1]]<0|OrderBookRank<=\OrderBookDepth[:DisplayMarket[1]]|Offerer==:Subject);
+												sortfields = "Price;OfferTime";
+												tablelayout = LIST;
+												scrollatstart = TRUE;
+												scrollatEnd = FALSE;
+												selectbest = TRUE;
+												item{
+													label = "Preis";
+													variable = Price;
+													format = "\\PricePrecision";
+													input = FALSE;
+												}
+												item{
+													label = "Volumen";
+													variable = Volume-Transacted-Invalidated;
+													format = "\\VolumePrecision";
+													input = FALSE;
+												}
+												item{
+													label = "Kaufvol.";
+													variable = BuyVol;
+													format = "\\VolumePrecision";
+													input = TRUE;
+													showdefault = FALSE;
+													emptyallowed = TRUE;
+													min = \MinVol;
+													max = \MaxVol;
+													defaultvalue = 0;
+												}
+												button "Stornieren"{
 													clearinputafterok = FALSE;
 													norecordmadeorselected = FALSE;
 													terminatestage = FALSE;
@@ -16849,12 +16978,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													buttoncolor = 5921535;
 													checker{
 														condition = Offerer == :Subject;
-														message = "You have selected an order from another trader. You can only cancel your own orders!";
+														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
-														message = "Somebody else was faster!";
+														message = "Jemand anderes war schneller!";
 														noButtonStr = "OK";
 													}
 													program{
@@ -16929,45 +17058,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															    }
 														}
 													}
-												}
-											}
-											selectcontractbox "SellOffersMultiUnitDE"{
-												hasframe = FALSE;
-												displaycondition = \Language==2&\MultiUnitTrading[DisplayMarket[1]]==1;
-												table = offers;
-												buttonposition = BOTTOMLEFT;
-												buttonsequence = HORIZONTAL;
-												emptyallowed = FALSE;
-												allemptyallowed = FALSE;
-												ownervariable = Offerer;
-												condition = Type==-1&Status==0&Market==:DisplayMarket[1] & (\OrderBookDepth[:DisplayMarket[1]]<0|OrderBookRank<=\OrderBookDepth[:DisplayMarket[1]]|Offerer==:Subject);
-												sortfields = "Price;OfferTime";
-												tablelayout = LIST;
-												scrollatstart = TRUE;
-												scrollatEnd = FALSE;
-												selectbest = TRUE;
-												item{
-													label = "Preis";
-													variable = Price;
-													format = "\\PricePrecision";
-													input = FALSE;
-												}
-												item{
-													label = "Volumen";
-													variable = Volume-Transacted-Invalidated;
-													format = "\\VolumePrecision";
-													input = FALSE;
-												}
-												item{
-													label = "Kaufvol.";
-													variable = BuyVol;
-													format = "\\VolumePrecision";
-													input = TRUE;
-													showdefault = FALSE;
-													emptyallowed = TRUE;
-													min = \MinVol;
-													max = \MaxVol;
-													defaultvalue = 0;
 												}
 												button "Kauf"{
 													clearinputafterok = FALSE;
@@ -17283,7 +17373,29 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 													}
 												}
-												button "Stornieren"{
+											}
+											selectcontractbox "SellOffersSingleUnitEN"{
+												hasframe = FALSE;
+												displaycondition = \Language==1&\MultiUnitTrading[DisplayMarket[1]]==0;
+												table = offers;
+												buttonposition = BOTTOMLEFT;
+												buttonsequence = HORIZONTAL;
+												emptyallowed = FALSE;
+												allemptyallowed = FALSE;
+												ownervariable = Offerer;
+												condition = Type==-1&Status==0&Market==:DisplayMarket[1] & (\OrderBookDepth[:DisplayMarket[1]]<0|OrderBookRank<=\OrderBookDepth[:DisplayMarket[1]]|Offerer==:Subject);
+												sortfields = "Price;OfferTime";
+												tablelayout = LIST;
+												scrollatstart = TRUE;
+												scrollatEnd = FALSE;
+												selectbest = TRUE;
+												item{
+													label = "Price";
+													variable = Price;
+													format = "\\PricePrecision";
+													input = FALSE;
+												}
+												button "Cancel"{
 													clearinputafterok = FALSE;
 													norecordmadeorselected = FALSE;
 													terminatestage = FALSE;
@@ -17292,12 +17404,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													buttoncolor = 5921535;
 													checker{
 														condition = Offerer == :Subject;
-														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+														message = "You have selected an order from another trader. You can only cancel your own orders!";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
-														message = "Jemand anderes war schneller!";
+														message = "Somebody else was faster!";
 														noButtonStr = "OK";
 													}
 													program{
@@ -17373,28 +17485,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 													}
 												}
-											}
-											selectcontractbox "SellOffersSingleUnitEN"{
-												hasframe = FALSE;
-												displaycondition = \Language==1&\MultiUnitTrading[DisplayMarket[1]]==0;
-												table = offers;
-												buttonposition = BOTTOMLEFT;
-												buttonsequence = HORIZONTAL;
-												emptyallowed = FALSE;
-												allemptyallowed = FALSE;
-												ownervariable = Offerer;
-												condition = Type==-1&Status==0&Market==:DisplayMarket[1] & (\OrderBookDepth[:DisplayMarket[1]]<0|OrderBookRank<=\OrderBookDepth[:DisplayMarket[1]]|Offerer==:Subject);
-												sortfields = "Price;OfferTime";
-												tablelayout = LIST;
-												scrollatstart = TRUE;
-												scrollatEnd = FALSE;
-												selectbest = TRUE;
-												item{
-													label = "Price";
-													variable = Price;
-													format = "\\PricePrecision";
-													input = FALSE;
-												}
 												button "Buy"{
 													clearinputafterok = FALSE;
 													norecordmadeorselected = FALSE;
@@ -17419,12 +17509,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													}
 													checker{
 														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price);
-														message = "There is an offer to sell at a lower price. Please always select the best offer to trade.";
+														message = "There is an offer to sell at a lower price. Please always select the best order to trade.";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1&Price==:Price,OfferTime);
-														message = "There is an offer to sell at the same price which was submitted sooner. Please always select the best offer to trade.";
+														message = "There is an offer to sell at the same price which was submitted sooner. Please always select the best order to trade.";
 														noButtonStr = "OK";
 													}
 													program{
@@ -17713,7 +17803,29 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 													}
 												}
-												button "Cancel"{
+											}
+											selectcontractbox "SellOffersSingleUnitDE"{
+												hasframe = FALSE;
+												displaycondition = \Language==2&\MultiUnitTrading[DisplayMarket[1]]==0;
+												table = offers;
+												buttonposition = BOTTOMLEFT;
+												buttonsequence = HORIZONTAL;
+												emptyallowed = FALSE;
+												allemptyallowed = FALSE;
+												ownervariable = Offerer;
+												condition = Type==-1&Status==0&Market==:DisplayMarket[1] & (\OrderBookDepth[:DisplayMarket[1]]<0|OrderBookRank<=\OrderBookDepth[:DisplayMarket[1]]|Offerer==:Subject);
+												sortfields = "Price;OfferTime";
+												tablelayout = LIST;
+												scrollatstart = TRUE;
+												scrollatEnd = FALSE;
+												selectbest = TRUE;
+												item{
+													label = "Preis";
+													variable = Price;
+													format = "\\PricePrecision";
+													input = FALSE;
+												}
+												button "Stornieren"{
 													clearinputafterok = FALSE;
 													norecordmadeorselected = FALSE;
 													terminatestage = FALSE;
@@ -17722,12 +17834,12 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													buttoncolor = 5921535;
 													checker{
 														condition = Offerer == :Subject;
-														message = "You have selected an order from another trader. You can only cancel your own orders!";
+														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
-														message = "Somebody else was faster!";
+														message = "Jemand anderes war schneller!";
 														noButtonStr = "OK";
 													}
 													program{
@@ -17802,28 +17914,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 															    }
 														}
 													}
-												}
-											}
-											selectcontractbox "SellOffersSingleUnitDE"{
-												hasframe = FALSE;
-												displaycondition = \Language==2&\MultiUnitTrading[DisplayMarket[1]]==0;
-												table = offers;
-												buttonposition = BOTTOMLEFT;
-												buttonsequence = HORIZONTAL;
-												emptyallowed = FALSE;
-												allemptyallowed = FALSE;
-												ownervariable = Offerer;
-												condition = Type==-1&Status==0&Market==:DisplayMarket[1] & (\OrderBookDepth[:DisplayMarket[1]]<0|OrderBookRank<=\OrderBookDepth[:DisplayMarket[1]]|Offerer==:Subject);
-												sortfields = "Price;OfferTime";
-												tablelayout = LIST;
-												scrollatstart = TRUE;
-												scrollatEnd = FALSE;
-												selectbest = TRUE;
-												item{
-													label = "Preis";
-													variable = Price;
-													format = "\\PricePrecision";
-													input = FALSE;
 												}
 												button "Kauf"{
 													clearinputafterok = FALSE;
@@ -18143,96 +18233,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 													}
 												}
-												button "Stornieren"{
-													clearinputafterok = FALSE;
-													norecordmadeorselected = FALSE;
-													terminatestage = FALSE;
-													donotterminatestage = TRUE;
-													specialbuttoncolor = TRUE;
-													buttoncolor = 5921535;
-													checker{
-														condition = Offerer == :Subject;
-														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
-														noButtonStr = "OK";
-													}
-													checker{
-														condition = Status==0;
-														message = "Jemand anderes war schneller!";
-														noButtonStr = "OK";
-													}
-													program{
-														table = offers;
-														do{
-															//Processes cancellation
-															
-															//Marks offer as cancelled
-															Status = 2;
-															StatusTime = gettime() - \StartTime;
-															
-															//Generates contracts table record
-															contracts.new{
-															    Period=\Period;
-															    Market=:Market;
-															    ID=contracts.count(same(Market));
-															    Price=:Price;
-															    Volume=:Volume;
-															    Transacted=:Transacted;
-															    Invalidated=:Invalidated;
-															    VolumeTraded=\I;
-															    Status=:Status;
-															    Type=:Type;
-															    OfferTime=:OfferTime;
-															    OfferID=:ID;
-															    TransactionID=\I;
-															    Time=:StatusTime;
-															    Offerer=:Offerer;
-															    Accepter=\I;
-															    Phase=2;
-															    }
-														}
-													}
-													program{
-														table = globals;
-														do{
-															//Updates OrderBookRank and PriceListRank
-															
-															offers.do{
-															    OrderBookRank=if(Status==0,offers.count(same(Market)&same(Type)&Status==0&(Type*Price>Type*:Price|(Price==:Price&OfferTime<:OfferTime)))+1,\I);
-															    }
-															
-															contracts.do{
-															    PriceListRank=contracts.count(same(Market)&ID>=:ID);
-															    }
-														}
-													}
-													program{
-														table = subjects;
-														do{
-															//Updates practicetasks
-															
-															practicetasks.do{
-															    if(same(Subject)&ID==3){Done=1;}
-															    }
-														}
-													}
-													program{
-														table = offers;
-														do{
-															//Timelog
-															
-															timelog.new
-															    {
-															    ID=timelog.maximum(ID)+1;
-															    Time=gettime()-\StartTime;
-															    Period=\Period;
-															    Subject=:Subject;
-															    Event=5;
-															    Data[1]=:ID;
-															    Data[2]=:Market;
-															    }
-														}
-													}
-												}
 											}
 										}
 									}
@@ -18273,7 +18273,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 												cutbottom = TRUE;
 												makecontractbox "SingleUnitEN"{
 													hasframe = FALSE;
-													height = 100p;
 													bottom = 0p;
 													displaycondition = \Language==1&\MultiUnitTrading[DisplayMarket[1]]==0;
 													table = offers;
@@ -18307,17 +18306,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 														checker{
 															condition = 0 < :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
-															message = "You do not have enough assets to submit this offer!";
+															message = "You do not have enough assets to submit this order!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price > offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price);
-															message = "The price of a new sell offer must be higher than the highest outstanding buy offer price. If you really want to sell for this price, click \"Sell\" instead!";
+															message = "The price of a new sell order must be higher than the highest outstanding buy order price. If you really want to sell for this price, click \"Sell\" instead!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price <= offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
-															message = "A new sell offer price must be smaller than or equal to the lowest existing sell offer price!";
+															message = "A new sell order price must be smaller than or equal to the lowest existing sell order price!";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -18395,17 +18394,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 														checker{
 															condition = Price <= :Cash+:ShortingCapacityCash;
-															message = "You do not have enough cash to submit this offer!";
+															message = "You do not have enough cash to submit this order!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price < offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price);
-															message = "The price of a new buy offer must be lower than the price of the cheapest outstanding sell offer. If you really want to buy for this price, click \"Buy\" instead!";
+															message = "The price of a new buy order must be lower than the price of the cheapest outstanding sell order. If you really want to buy for this price, click \"Buy\" instead!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price >= offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
-															message = "A new buy offer price must be greater than or equal to the highest existing buy offer price!";
+															message = "A new buy order price must be greater than or equal to the highest existing buy order price!";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -18678,16 +18677,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													numrecords = 1;
 													tablelayout = VERTICAL;
 													item{
-														label = "Price";
-														variable = Price;
-														format = "\\PricePrecision";
-														input = TRUE;
-														showdefault = FALSE;
-														emptyallowed = TRUE;
-														min = \MinPrice;
-														max = \MaxPrice;
-													}
-													item{
 														label = "Volume";
 														variable = Volume;
 														format = "\\VolumePrecision";
@@ -18696,6 +18685,16 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														emptyallowed = TRUE;
 														min = \MinVol;
 														max = \MaxVol;
+													}
+													item{
+														label = "Price";
+														variable = Price;
+														format = "\\PricePrecision";
+														input = TRUE;
+														showdefault = FALSE;
+														emptyallowed = TRUE;
+														min = \MinPrice;
+														max = \MaxPrice;
 													}
 													button "Submit sell order"{
 														clearinputafterok = FALSE;
@@ -18716,17 +18715,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 														checker{
 															condition = Volume <= :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
-															message = "You do not have enough assets to submit this offer!";
+															message = "You do not have enough assets to submit this order!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price > offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price);
-															message = "The price of a new sell offer must be higher than the highest outstanding buy offer price. If you really want to sell for this price, click \"Sell\" instead!";
+															message = "The price of a new sell order must be higher than the highest outstanding buy order price. If you really want to sell for this price, click \"Sell\" instead!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price <= offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
-															message = "A new sell offer price must be smaller than or equal to the lowest existing sell offer price!";
+															message = "A new sell order price must be smaller than or equal to the lowest existing sell order price!";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -18809,17 +18808,17 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														}
 														checker{
 															condition = Price * Volume <= :Cash+:ShortingCapacityCash;
-															message = "You do not have enough cash to submit this offer!";
+															message = "You do not have enough cash to submit this order!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price < offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price);
-															message = "The price of a new buy offer must be lower than the price of the cheapest outstanding sell offer. If you really want to buy for this price, click \"Buy\" instead!";
+															message = "The price of a new buy order must be lower than the price of the cheapest outstanding sell order. If you really want to buy for this price, click \"Buy\" instead!";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price >= offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
-															message = "A new buy offer price must be greater than or equal to the highest existing buy offer price!";
+															message = "A new buy order price must be greater than or equal to the highest existing buy order price!";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -18894,16 +18893,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 													numrecords = 1;
 													tablelayout = VERTICAL;
 													item{
-														label = "Preis";
-														variable = Price;
-														format = "\\PricePrecision";
-														input = TRUE;
-														showdefault = FALSE;
-														emptyallowed = TRUE;
-														min = \MinPrice;
-														max = \MaxPrice;
-													}
-													item{
 														label = "Volumen";
 														variable = Volume;
 														format = "\\VolumePrecision";
@@ -18912,6 +18901,16 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 														emptyallowed = TRUE;
 														min = \MinVol;
 														max = \MaxVol;
+													}
+													item{
+														label = "Preis";
+														variable = Price;
+														format = "\\PricePrecision";
+														input = TRUE;
+														showdefault = FALSE;
+														emptyallowed = TRUE;
+														min = \MinPrice;
+														max = \MaxPrice;
 													}
 													button "Verkaufsgebot"{
 														clearinputafterok = FALSE;
@@ -19979,7 +19978,7 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 									containerbox "Buttons"{
 										hasframe = FALSE;
 										width = 140p;
-										height = 138p;
+										height = 148p;
 										right = 0p;
 										top = 0p;
 										cutright = TRUE;
@@ -29824,38 +29823,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 		}
 		role "S 3"{
 		}
-		role "S 4"{
-		}
-		role "S 5"{
-		}
-		role "S 6"{
-		}
-		role "S 7"{
-		}
-		role "S 8"{
-		}
-		role "S 9"{
-		}
-		role "S 10"{
-		}
-		role "S 11"{
-		}
-		role "S 12"{
-		}
-		role "S 13"{
-		}
-		role "S 14"{
-		}
-		role "S 15"{
-		}
-		role "S 16"{
-		}
-		role "S 17"{
-		}
-		role "S 18"{
-		}
-		role "S 19"{
-		}
 	}
 	period "1"{
 		subject 1{
@@ -29865,54 +29832,6 @@ treatment "GIMS_v7.5.2_2017-05-03.ztt"{
 			group = 1;
 		}
 		subject 3{
-			group = 1;
-		}
-		subject 4{
-			group = 1;
-		}
-		subject 5{
-			group = 1;
-		}
-		subject 6{
-			group = 1;
-		}
-		subject 7{
-			group = 1;
-		}
-		subject 8{
-			group = 1;
-		}
-		subject 9{
-			group = 1;
-		}
-		subject 10{
-			group = 1;
-		}
-		subject 11{
-			group = 1;
-		}
-		subject 12{
-			group = 1;
-		}
-		subject 13{
-			group = 1;
-		}
-		subject 14{
-			group = 1;
-		}
-		subject 15{
-			group = 1;
-		}
-		subject 16{
-			group = 1;
-		}
-		subject 17{
-			group = 1;
-		}
-		subject 18{
-			group = 1;
-		}
-		subject 19{
 			group = 1;
 		}
 	}
