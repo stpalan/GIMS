@@ -1,4 +1,4 @@
-treatment "GIMS_v7.5.4_2017-05-10.ztt"{
+treatment "GIMS_v7.5.5_2017-12-19.ztt"{
 	background{
 		table globals{
 		}
@@ -93,7 +93,7 @@ treatment "GIMS_v7.5.4_2017-05-10.ztt"{
 		numsubjects = 3;
 		numgroups = 1;
 		numpracticeperiods = 0;
-		numactualperiods = 1;
+		numactualperiods = 102;
 		exchangerate = 1;
 		startendowment = 0;
 		showupfee = 0;
@@ -109,10 +109,10 @@ treatment "GIMS_v7.5.4_2017-05-10.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.5.4 #####
+				//##### GIMS Version 7.5.5 #####
 				
-				GIMSVersion="7.5.4";
-				GIMSDate="10.05.2017";
+				GIMSVersion="7.5.5";
+				GIMSDate="19.12.2017";
 			}
 		}
 		program{
@@ -172,6 +172,7 @@ treatment "GIMS_v7.5.4_2017-05-10.ztt"{
 				NumExperimenterSubjects=1;
 				Language=1;    //1=English, 2=German
 				TimerInterval=1;
+				BackupDump=1;
 				
 				//Questionnaire settings
 				CurrentYear=2016;
@@ -6136,7 +6137,7 @@ treatment "GIMS_v7.5.4_2017-05-10.ztt"{
 														max = \MaxVol;
 													}
 													item{
-														label = "Price";
+														label = "Price per unit";
 														variable = Price;
 														format = "\\PricePrecision";
 														input = TRUE;
@@ -6426,7 +6427,7 @@ treatment "GIMS_v7.5.4_2017-05-10.ztt"{
 														max = \MaxVol;
 													}
 													item{
-														label = "Preis";
+														label = "Preis pro Stück";
 														variable = Price;
 														format = "\\PricePrecision";
 														input = TRUE;
@@ -7011,7 +7012,7 @@ treatment "GIMS_v7.5.4_2017-05-10.ztt"{
 														max = \MaxVol;
 													}
 													item{
-														label = "Price";
+														label = "Price per unit";
 														variable = Price;
 														format = "\\PricePrecision";
 														input = TRUE;
@@ -7177,7 +7178,7 @@ treatment "GIMS_v7.5.4_2017-05-10.ztt"{
 														max = \MaxVol;
 													}
 													item{
-														label = "Preis";
+														label = "Preis pro Stück";
 														variable = Price;
 														format = "\\PricePrecision";
 														input = TRUE;
@@ -8897,7 +8898,7 @@ treatment "GIMS_v7.5.4_2017-05-10.ztt"{
 															max = \MaxVol;
 														}
 														item{
-															label = "Price";
+															label = "Price per unit";
 															variable = Price;
 															format = "\\PricePrecision";
 															input = TRUE;
@@ -9187,7 +9188,7 @@ treatment "GIMS_v7.5.4_2017-05-10.ztt"{
 															max = \MaxVol;
 														}
 														item{
-															label = "Preis";
+															label = "Preis pro Stück";
 															variable = Price;
 															format = "\\PricePrecision";
 															input = TRUE;
@@ -9772,7 +9773,7 @@ treatment "GIMS_v7.5.4_2017-05-10.ztt"{
 															max = \MaxVol;
 														}
 														item{
-															label = "Price";
+															label = "Price per unit";
 															variable = Price;
 															format = "\\PricePrecision";
 															input = TRUE;
@@ -9938,7 +9939,7 @@ treatment "GIMS_v7.5.4_2017-05-10.ztt"{
 															max = \MaxVol;
 														}
 														item{
-															label = "Preis";
+															label = "Preis pro Stück";
 															variable = Price;
 															format = "\\PricePrecision";
 															input = TRUE;
@@ -18690,7 +18691,7 @@ treatment "GIMS_v7.5.4_2017-05-10.ztt"{
 														max = \MaxVol;
 													}
 													item{
-														label = "Price";
+														label = "Price per unit";
 														variable = Price;
 														format = "\\PricePrecision";
 														input = TRUE;
@@ -18906,7 +18907,7 @@ treatment "GIMS_v7.5.4_2017-05-10.ztt"{
 														max = \MaxVol;
 													}
 													item{
-														label = "Preis";
+														label = "Preis pro Stück";
 														variable = Price;
 														format = "\\PricePrecision";
 														input = TRUE;
@@ -29819,6 +29820,28 @@ treatment "GIMS_v7.5.4_2017-05-10.ztt"{
 			}
 		}
 	}
+	stage "BackupDump"{
+		startwaitforall = TRUE;
+		singleentry = FALSE;
+		singleentrycontinuation = FALSE;
+		timeouttype = always;
+		timeout = 0;
+		tabledumper{
+			condition = \BackupDump==1;
+			outputfilename = "<>GIMS_P<\\Period|!text:9=\"00<Period|1>\";10=\"0<Period|1>\";99=\"0<Period|1>\";100=\"<Period|1>\";>_<gettime()|1>.zBackup";
+			tabledescriptions = "globals;subjects;summary;contracts;session;auctionoffers;auctionpractice;dividends;marketsummary;offers;practicetasks;profit;results;signals;timelog;transactions";
+		}
+		screen action{
+			usesbg = TRUE;
+			withalertscreen = FALSE;
+			noalertscreen = FALSE;
+		}
+		screen wait{
+			usesbg = TRUE;
+			withalertscreen = FALSE;
+			noalertscreen = FALSE;
+		}
+	}
 	roles{
 		role "S 1"{
 		}
@@ -29828,6 +29851,1117 @@ treatment "GIMS_v7.5.4_2017-05-10.ztt"{
 		}
 	}
 	period "1"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "2"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "3"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "4"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "5"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "6"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "7"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "8"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "9"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "10"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "11"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "12"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "13"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "14"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "15"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "16"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "17"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "18"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "19"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "20"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "21"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "22"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "23"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "24"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "25"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "26"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "27"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "28"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "29"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "30"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "31"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "32"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "33"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "34"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "35"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "36"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "37"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "38"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "39"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "40"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "41"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "42"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "43"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "44"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "45"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "46"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "47"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "48"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "49"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "50"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "51"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "52"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "53"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "54"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "55"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "56"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "57"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "58"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "59"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "60"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "61"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "62"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "63"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "64"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "65"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "66"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "67"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "68"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "69"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "70"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "71"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "72"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "73"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "74"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "75"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "76"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "77"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "78"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "79"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "80"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "81"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "82"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "83"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "84"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "85"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "86"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "87"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "88"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "89"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "90"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "91"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "92"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "93"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "94"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "95"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "96"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "97"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "98"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "99"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "100"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "101"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "102"{
 		subject 1{
 			group = 1;
 		}
