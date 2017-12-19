@@ -1,4 +1,4 @@
-treatment "GIMS_v7.6.1_2017-04-12.ztt"{
+treatment "GIMS_vDev7.6.2_2017-12-19.ztt"{
 	background{
 		table globals{
 		}
@@ -1442,6 +1442,36 @@ treatment "GIMS_v7.6.1_2017-04-12.ztt"{
 					cutbottom = TRUE;
 					buttonposition = BOTTOMRIGHT;
 					buttonsequence = HORIZONTAL;
+					button "Leave Experiment"{
+						clearinputafterok = FALSE;
+						norecordmadeorselected = FALSE;
+						terminatestage = FALSE;
+						donotterminatestage = TRUE;
+						specialbuttoncolor = TRUE;
+						buttoncolor = 13158600;
+						program{
+							table = globals;
+							do{
+								subjects.do{LeaveStage=1;}
+								\ForcedExitExperiment=1;
+							}
+						}
+						program{
+							table = subjects;
+							ownervariable = Subject;
+							do{
+								//Timelog
+								
+								timelog.new
+								    {
+								    ID=timelog.maximum(ID)+1;
+								    Time=gettime()-\StartTime;
+								    Period=\Period;
+								    Event=303;
+								    }
+							}
+						}
+					}
 					button "START NOW"{
 						clearinputafterok = FALSE;
 						norecordmadeorselected = FALSE;
