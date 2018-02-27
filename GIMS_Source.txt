@@ -1,4 +1,4 @@
-treatment "GIMS_v7.7.1_2018-01-22.ztt"{
+treatment "GIMS_v7.7.2_2018-02-27.ztt"{
 	background{
 		table globals{
 		}
@@ -119,10 +119,10 @@ treatment "GIMS_v7.7.1_2018-01-22.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.7.0 #####
+				//##### GIMS Version 7.7.2 #####
 				
-				GIMSVersion="7.7.0";
-				GIMSDate="19.12.2017";
+				GIMSVersion="7.7.2";
+				GIMSDate="27.02.2018";
 				
 			}
 		}
@@ -17547,17 +17547,18 @@ treatment "GIMS_v7.7.1_2018-01-22.ztt"{
 															//Updates chart display
 															
 															iterator(Market,\NumMarkets).do{
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)<=20,2,1);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>20,5,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>50,20,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>300,50,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>600,100,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>1250,250,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>5000,1000,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>15000,5000,\ChartYLabelDistance[Market]);
-															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(contracts.maximum(Status==1&Market==:Market&Phase==2,Price),\ChartYLabelDistance[Market]));
+																MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
+															    \ChartYLabelDistance[Market]=if(MaxPrice<=20,2,1);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>20,5,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>50,20,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>300,50,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>600,100,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>1250,250,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>5000,1000,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>15000,5000,\ChartYLabelDistance[Market]);
+															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(MaxPrice*(1+\SpaceAboveMaxPrice),\ChartYLabelDistance[Market]));
 															    \ChartYTickDistance[Market]=\ChartYLabelDistance[Market]/2;
-															    }
+																}
 															
 														}
 													}
@@ -17985,17 +17986,18 @@ treatment "GIMS_v7.7.1_2018-01-22.ztt"{
 															//Updates chart display
 															
 															iterator(Market,\NumMarkets).do{
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)<=20,2,1);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>20,5,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>50,20,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>300,50,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>600,100,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>1250,250,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>5000,1000,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>15000,5000,\ChartYLabelDistance[Market]);
-															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(contracts.maximum(Status==1&Market==:Market&Phase==2,Price),\ChartYLabelDistance[Market]));
+																MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
+															    \ChartYLabelDistance[Market]=if(MaxPrice<=20,2,1);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>20,5,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>50,20,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>300,50,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>600,100,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>1250,250,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>5000,1000,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>15000,5000,\ChartYLabelDistance[Market]);
+															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(MaxPrice*(1+\SpaceAboveMaxPrice),\ChartYLabelDistance[Market]));
 															    \ChartYTickDistance[Market]=\ChartYLabelDistance[Market]/2;
-															    }
+																}
 															
 														}
 													}
@@ -18890,17 +18892,18 @@ treatment "GIMS_v7.7.1_2018-01-22.ztt"{
 															//Updates chart display
 															
 															iterator(Market,\NumMarkets).do{
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)<=20,2,1);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>20,5,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>50,20,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>300,50,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>600,100,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>1250,250,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>5000,1000,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>15000,5000,\ChartYLabelDistance[Market]);
-															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(contracts.maximum(Status==1&Market==:Market&Phase==2,Price),\ChartYLabelDistance[Market]));
+																MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
+															    \ChartYLabelDistance[Market]=if(MaxPrice<=20,2,1);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>20,5,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>50,20,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>300,50,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>600,100,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>1250,250,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>5000,1000,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>15000,5000,\ChartYLabelDistance[Market]);
+															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(MaxPrice*(1+\SpaceAboveMaxPrice),\ChartYLabelDistance[Market]));
 															    \ChartYTickDistance[Market]=\ChartYLabelDistance[Market]/2;
-															    }
+																}
 															
 														}
 													}
@@ -19930,17 +19933,18 @@ treatment "GIMS_v7.7.1_2018-01-22.ztt"{
 															//Updates chart display
 															
 															iterator(Market,\NumMarkets).do{
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)<=20,2,1);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>20,5,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>50,20,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>300,50,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>600,100,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>1250,250,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>5000,1000,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>15000,5000,\ChartYLabelDistance[Market]);
-															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(contracts.maximum(Status==1&Market==:Market&Phase==2,Price),\ChartYLabelDistance[Market]));
+																MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
+															    \ChartYLabelDistance[Market]=if(MaxPrice<=20,2,1);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>20,5,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>50,20,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>300,50,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>600,100,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>1250,250,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>5000,1000,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>15000,5000,\ChartYLabelDistance[Market]);
+															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(MaxPrice*(1+\SpaceAboveMaxPrice),\ChartYLabelDistance[Market]));
 															    \ChartYTickDistance[Market]=\ChartYLabelDistance[Market]/2;
-															    }
+																}
 															
 														}
 													}
@@ -20370,17 +20374,18 @@ treatment "GIMS_v7.7.1_2018-01-22.ztt"{
 															//Updates chart display
 															
 															iterator(Market,\NumMarkets).do{
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)<=20,2,1);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>20,5,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>50,20,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>300,50,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>600,100,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>1250,250,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>5000,1000,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>15000,5000,\ChartYLabelDistance[Market]);
-															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(contracts.maximum(Status==1&Market==:Market&Phase==2,Price),\ChartYLabelDistance[Market]));
+																MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
+															    \ChartYLabelDistance[Market]=if(MaxPrice<=20,2,1);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>20,5,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>50,20,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>300,50,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>600,100,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>1250,250,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>5000,1000,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>15000,5000,\ChartYLabelDistance[Market]);
+															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(MaxPrice*(1+\SpaceAboveMaxPrice),\ChartYLabelDistance[Market]));
 															    \ChartYTickDistance[Market]=\ChartYLabelDistance[Market]/2;
-															    }
+																}
 															
 														}
 													}
@@ -20812,17 +20817,18 @@ treatment "GIMS_v7.7.1_2018-01-22.ztt"{
 															//Updates chart display
 															
 															iterator(Market,\NumMarkets).do{
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)<=20,2,1);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>20,5,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>50,20,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>300,50,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>600,100,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>1250,250,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>5000,1000,\ChartYLabelDistance[Market]);
-															    \ChartYLabelDistance[Market]=if(contracts.maximum(Status==1&Market==:Market&Phase==2,Price)>15000,5000,\ChartYLabelDistance[Market]);
-															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(contracts.maximum(Status==1&Market==:Market&Phase==2,Price),\ChartYLabelDistance[Market]));
+																MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
+															    \ChartYLabelDistance[Market]=if(MaxPrice<=20,2,1);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>20,5,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>50,20,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>300,50,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>600,100,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>1250,250,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>5000,1000,\ChartYLabelDistance[Market]);
+															    \ChartYLabelDistance[Market]=if(MaxPrice>15000,5000,\ChartYLabelDistance[Market]);
+															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(MaxPrice*(1+\SpaceAboveMaxPrice),\ChartYLabelDistance[Market]));
 															    \ChartYTickDistance[Market]=\ChartYLabelDistance[Market]/2;
-															    }
+																}
 															
 														}
 													}
