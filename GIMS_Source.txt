@@ -1,4 +1,4 @@
-treatment "GIMS_v7.7.2_2018-02-27.ztt"{
+treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 	background{
 		table globals{
 		}
@@ -119,10 +119,10 @@ treatment "GIMS_v7.7.2_2018-02-27.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.7.2 #####
+				//##### GIMS Version 7.7.3 #####
 				
-				GIMSVersion="7.7.2";
-				GIMSDate="27.02.2018";
+				GIMSVersion="7.7.3";
+				GIMSDate="12.04.2018";
 				
 			}
 		}
@@ -1345,27 +1345,6 @@ treatment "GIMS_v7.7.2_2018-02-27.ztt"{
 				    TimeHoltLaury=\TimeHoltLaury;
 				    TimeHoltLauryResult=\TimeHoltLauryResult;
 				    }
-				
-				subjects.do{
-				    if(IsExperimenter==1){
-				
-				        //General settings
-				        CurrentYear=\CurrentYear;
-				        ExchangeRate=\ExchangeRate;
-				        MinPayoffCurrency=\MinPayoffCurrency;
-				        MinPayoffECU=\MinPayoffECU;
-				
-				         //Stage settings
-				        TimeContinuousDoubleAuction=\TimeContinuousDoubleAuction;
-				        TimeContinuousDoubleAuctionResults=\TimeContinuousDoubleAuctionResults;
-				        TimeCallAuction=\TimeCallAuction;
-				        TimeCallAuctionResults=\TimeCallAuctionResults;
-				        TimeFinLitResult=\TimeFinLitResult;
-				        TimeHoltLaury=\TimeHoltLaury;
-				        TimeHoltLauryResult=\TimeHoltLauryResult;
-				        }
-				    }
-				
 			}
 		}
 		tableloader{
@@ -1462,29 +1441,6 @@ treatment "GIMS_v7.7.2_2018-02-27.ztt"{
 								    Period=\Period;
 								    Event=301;
 								    }
-								
-								
-								
-							}
-						}
-						program{
-							table = globals;
-							do{
-								//Copies variables which must be entered numerically from experimenter subject's entry in subjects table to globals table
-								
-								ExchangeRate=subjects.find(IsExperimenter==1,ExchangeRate);
-								CurrentYear=subjects.find(IsExperimenter==1,CurrentYear);
-								ExchangeRate=subjects.find(IsExperimenter==1,ExchangeRate);
-								MinPayoffCurrency=subjects.find(IsExperimenter==1,MinPayoffCurrency);
-								MinPayoffECU=subjects.find(IsExperimenter==1,MinPayoffECU);
-								TimeContinuousDoubleAuction=subjects.find(IsExperimenter==1,TimeContinuousDoubleAuction);
-								TimeContinuousDoubleAuctionResults=subjects.find(IsExperimenter==1,TimeContinuousDoubleAuctionResults);
-								TimeCallAuction=subjects.find(IsExperimenter==1,TimeCallAuction);
-								TimeCallAuctionResults=subjects.find(IsExperimenter==1,TimeCallAuctionResults);
-								TimeFinLitResult=subjects.find(IsExperimenter==1,TimeFinLitResult);
-								TimeHoltLaury=subjects.find(IsExperimenter==1,TimeHoltLaury);
-								TimeHoltLauryResult=subjects.find(IsExperimenter==1,TimeHoltLauryResult);
-								
 							}
 						}
 						program{
