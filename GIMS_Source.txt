@@ -1,4 +1,4 @@
-treatment "GIMS_v7.7.3_2018-04-12.ztt"{
+treatment "GIMS_v8.0.0_2018-04-17.ztt"{
 	background{
 		table globals{
 		}
@@ -119,10 +119,10 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 		program{
 			table = globals;
 			do{
-				//##### GIMS Version 7.7.3 #####
+				//##### GIMS Version #####
 				
-				GIMSVersion="7.7.3";
-				GIMSDate="12.04.2018";
+				GIMSVersion="8.0.0";
+				GIMSDate="17.04.2018";
 				
 			}
 		}
@@ -179,7 +179,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				//### P1: General parameters ###
 				
 				Testmode1=0;   //Turns on Experimenter buttons on all screens
-				CQTestmode=1;    //Skips ControlQuestion stage
+				CQTestmode=0;    //Skips ControlQuestion stage
 				
 				PracticePeriod=0;
 				NumExperimenterSubjects=1;
@@ -255,9 +255,9 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				array BBV[NumMarkets];
 				array AssetName[NumMarkets];
 				
-				iterator(Market, \NumMarkets).do{
-				    \BBV[Market]=0;
-				    \MultiUnitTrading[Market]=1;
+				for(Market, \NumMarkets) {
+				    BBV[Market]=0;
+				    MultiUnitTrading[Market]=1;
 				    }
 				
 				//Dividends
@@ -281,13 +281,12 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				array CallAuctionSignals[\NumMarkets];
 				
 				//Fills in default values
-				iterator(Market,\NumMarkets).do{
-				    \NumTypedOffersCallAuction[Market]=0;
-				    \MarketOrderPriority[Market]=1;
-				    \AllowMarketOrders[Market]=1;
-				    \CallAuctionSignals[Market]=1;
+				for(Market,\NumMarkets){
+				    NumTypedOffersCallAuction[Market]=0;
+				    MarketOrderPriority[Market]=1;
+				    AllowMarketOrders[Market]=1;
+				    CallAuctionSignals[Market]=1;
 				    }
-				
 			}
 		}
 		program{
@@ -310,12 +309,12 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				PriceHighlightDuration=2;
 				CDATimer=TimerInterval;
 				
-				iterator(Market, \NumMarkets).do{
-				    \OfferImprovementRule[Market]=1;
-				    \EmptyBookAfterTrade[Market]=0;
-				    \PartialInvalidation[Market]=0;
-				    \OrderBookDepth[Market]=3;
-				    \PriceListDepth[Market]=4;
+				for(Market, \NumMarkets){
+				    OfferImprovementRule[Market]=1;
+				    EmptyBookAfterTrade[Market]=0;
+				    PartialInvalidation[Market]=0;
+				    OrderBookDepth[Market]=3;
+				    PriceListDepth[Market]=4;
 				    }
 				
 			}
@@ -372,6 +371,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				R=0;
 				G=0;
 				B=0;
+				Color=rgb(0,0,0);
 				
 			}
 		}
@@ -381,7 +381,9 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				//Variable initialization globals (additional variables)
 				
 				array Temp[4];
-				iterator(i,4).do {Temp[i]=\I;}
+				for(i,4){
+				    Temp[i]=\I;
+				    }
 				Done=0;
 				Blink=1;
 				BlinkOn=1;
@@ -417,14 +419,14 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				array SellMarketVol[\NumMarkets];
 				array NumVolumeMaximizingPrices[\NumMarkets];
 				
-				iterator(Market,\NumMarkets).do{
-				    \LastPrice[Market]=\I;
-				    \AuctionPrice[Market]=\I;
-				    \AuctionVolume[Market]=\I;
-				    \AuctionVolumeTotal[Market]=\I;
-				    \TradeProcessingSide[Market]=0;
-				    \PriceDeterminationRule[Market]=\I;
-				    \Dividend[Market]=\I;
+				for(Market,\NumMarkets){
+				    LastPrice[Market]=\I;
+				    AuctionPrice[Market]=\I;
+				    AuctionVolume[Market]=\I;
+				    AuctionVolumeTotal[Market]=\I;
+				    TradeProcessingSide[Market]=0;
+				    PriceDeterminationRule[Market]=\I;
+				    Dividend[Market]=\I;
 				    }
 				
 				RandomPayoffPeriod=roundup(random()*NumPeriods,1);
@@ -462,43 +464,42 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				array ChartXLabelDistance[NumMarkets];
 				SpaceAboveMaxPrice=0.3;
 				
-				iterator(Market, \NumMarkets).do{
+				for(Market, \NumMarkets){
 				    ChartYMax[Market]=\I;
 				    ChartYTickDistance[Market]=\I;
 				    ChartYLabelDistance[Market]=\I;
-				    ChartXMax[Market]=\TimeContinuousDoubleAuction;
+				    ChartXMax[Market]=TimeContinuousDoubleAuction;
 				    ChartXTickDistance[Market]=10;
-				    ChartXLabelDistance[Market]=if(\TimeContinuousDoubleAuction<=270,30,60);
+				    ChartXLabelDistance[Market]=if(TimeContinuousDoubleAuction<=270,30,60);
 				    PriceHighlightColor[Market]=9;
 				    PriceHighlightTime[Market]=\I;
 				    }
 				
 				//Colors
 				if(\Period==1){
-				    layout.new{IDNumeric=1;ID="CA_Signals_BG";R=0.88;G=1;B=0.85;}
-				    layout.new{IDNumeric=2;ID="CA_PriceList_BG";R=1;G=0.83;B=0.83;}
-				    layout.new{IDNumeric=3;ID="CA_BuyOffers_BG";R=1;G=0.9;B=0.8;}
-				    layout.new{IDNumeric=4;ID="CA_SellOffers_BG";R=1;G=0.9;B=0.8;}
-				    layout.new{IDNumeric=5;ID="CA_OrderSubmission_BG";R=1;G=1;B=0.8;}
-				    layout.new{IDNumeric=6;ID="CA_History_BG";R=0.82;G=0.85;B=1;}
-				    layout.new{IDNumeric=7;ID="CA_BG";R=1;G=1;B=1;}
-				    layout.new{IDNumeric=8;ID="CDA_Signals_BG";R=0.96;G=0.79;B=0.95;}
-				    layout.new{IDNumeric=9;ID="CDA_PriceList_BG";R=1;G=0.83;B=0.83;}
-				    layout.new{IDNumeric=10;ID="CDA_BuyOffers_BG";R=1;G=0.9;B=0.8;}
-				    layout.new{IDNumeric=11;ID="CDA_SellOffers_BG";R=1;G=0.9;B=0.8;}
-				    layout.new{IDNumeric=12;ID="CDA_OrderSubmission_BG";R=1;G=1;B=0.8;}
-				    layout.new{IDNumeric=13;ID="CDA_History_BG";R=0.82;G=0.85;B=1;}
-				    layout.new{IDNumeric=14;ID="CDA_Chart_Line";R=0;G=0;B=1;}
-				    layout.new{IDNumeric=15;ID="CDA_Chart_BG";R=1;G=1;B=1;}
-				    layout.new{IDNumeric=16;ID="CDA_BG";R=1;G=1;B=1;}
-				    layout.new{IDNumeric=17;ID="Highlighting_Scheme0";R=0.94;G=0.94;B=0.94;}
-				    layout.new{IDNumeric=18;ID="Highlighting_Scheme1_Up";R=0;G=0.79;B=0;}
-				    layout.new{IDNumeric=19;ID="Highlighting_Scheme1_Down";R=1;G=0;B=0;}
-				    layout.new{IDNumeric=20;ID="Highlighting_Scheme2_Up";R=1;G=0.5;B=0;}
-				    layout.new{IDNumeric=21;ID="Highlighting_Scheme2_Down";R=0;G=0;B=1;}
-				    layout.new{IDNumeric=22;ID="CDA_MarketOverview_BG";R=0.88;G=1;B=0.85;}
+				    layout.new{IDNumeric=1;ID="CA_Signals_BG";R=0.88;G=1;B=0.85;Color=rgb(0.88,1,0.85);}
+				    layout.new{IDNumeric=2;ID="CA_PriceList_BG";R=1;G=0.83;B=0.83;Color=rgb(1,0.83,0.83);}
+				    layout.new{IDNumeric=3;ID="CA_BuyOffers_BG";R=1;G=0.9;B=0.8;Color=rgb(1,0.9,0.8);}
+				    layout.new{IDNumeric=4;ID="CA_SellOffers_BG";R=1;G=0.9;B=0.8;Color=rgb(1,0.9,0.8);}
+				    layout.new{IDNumeric=5;ID="CA_OrderSubmission_BG";R=1;G=1;B=0.8;Color=rgb(1,1,0.8);}
+				    layout.new{IDNumeric=6;ID="CA_History_BG";R=0.82;G=0.85;B=1;Color=rgb(0.82,0.85,1);}
+				    layout.new{IDNumeric=7;ID="CA_BG";R=1;G=1;B=1;Color=rgb(1,1,1);}
+				    layout.new{IDNumeric=8;ID="CDA_Signals_BG";R=0.96;G=0.79;B=0.95;Color=rgb(0.96,0.79,0.95);}
+				    layout.new{IDNumeric=9;ID="CDA_PriceList_BG";R=1;G=0.83;B=0.83;Color=rgb(1,0.83,0.83);}
+				    layout.new{IDNumeric=10;ID="CDA_BuyOffers_BG";R=1;G=0.9;B=0.8;Color=rgb(1,0.9,0.8);}
+				    layout.new{IDNumeric=11;ID="CDA_SellOffers_BG";R=1;G=0.9;B=0.8;Color=rgb(1,0.9,0.8);}
+				    layout.new{IDNumeric=12;ID="CDA_OrderSubmission_BG";R=1;G=1;B=0.8;Color=rgb(1,1,0.8);}
+				    layout.new{IDNumeric=13;ID="CDA_History_BG";R=0.82;G=0.85;B=1;Color=rgb(0.82,0.85,1);}
+				    layout.new{IDNumeric=14;ID="CDA_Chart_Line";R=0;G=0;B=1;Color=rgb(0,0,1);}
+				    layout.new{IDNumeric=15;ID="CDA_Chart_BG";R=1;G=1;B=1;Color=rgb(1,1,1);}
+				    layout.new{IDNumeric=16;ID="CDA_BG";R=1;G=1;B=1;Color=rgb(1,1,1);}
+				    layout.new{IDNumeric=17;ID="Highlighting_Scheme0";R=0.94;G=0.94;B=0.94;Color=rgb(0.94,0.94,0.94);}
+				    layout.new{IDNumeric=18;ID="Highlighting_Scheme1_Up";R=0;G=0.79;B=0;Color=rgb(0,0.79,0);}
+				    layout.new{IDNumeric=19;ID="Highlighting_Scheme1_Down";R=1;G=0;B=0;Color=rgb(1,0,0);}
+				    layout.new{IDNumeric=20;ID="Highlighting_Scheme2_Up";R=1;G=0.5;B=0;Color=rgb(1,0.5,0);}
+				    layout.new{IDNumeric=21;ID="Highlighting_Scheme2_Down";R=0;G=0;B=1;Color=rgb(0,0,1);}
+				    layout.new{IDNumeric=22;ID="CDA_MarketOverview_BG";R=0.88;G=1;B=0.85;Color=rgb(0.88,1,0.85);}
 				    }
-				
 			}
 		}
 		program{
@@ -508,8 +509,8 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				
 				ShortingCapacityCash=0;
 				array ShortingCapacityAssets[\NumMarkets];
-				iterator(Market,\NumMarkets).do{
-				    :ShortingCapacityAssets[Market]=0;
+				for(Market,\NumMarkets){
+				    ShortingCapacityAssets[Market]=0;
 				    }
 				EarlyEndingVote=0;
 				
@@ -529,12 +530,12 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				array DisplayMarket[\NumMarkets];
 				
 				//Sets standard values
-				iterator(Market,\NumMarkets).do{
-				    if(\NumMarkets==1){:DisplayMarket[Market]=1;}
-				        elsif(CallAuction==1){:DisplayMarket[Market]=if(Market==1,2,if(Market==2,1,Market));}
-				        else {:DisplayMarket[Market]=Market;}
-				    :InitialAssets[Market]=\I;
-				    :Assets[Market]=\I;
+				for(Market,\NumMarkets){
+				    if(\NumMarkets==1){DisplayMarket[Market]=1;}
+				        elsif(\CallAuction==1){DisplayMarket[Market]=if(Market==1,2,if(Market==2,1,Market));}
+				        else {DisplayMarket[Market]=Market;}
+				    InitialAssets[Market]=\I;
+				    Assets[Market]=\I;
 				    }
 				
 				IsExperimenter=if(Subject<=\NumSubjects,0,1);
@@ -565,7 +566,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				r=\I;
 				i=\I;
 				j=\I;
-				
 			}
 		}
 		program{
@@ -575,8 +575,8 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				
 				if(Period>1&\CarryOverWealth==1) {
 				    Cash=OLDsubjects.find(same(Subject),Cash);
-				    iterator(Market,\NumMarkets).do{
-				        :Assets[Market]=OLDsubjects.find(Subject==::Subject,Assets[:Market]);
+				    for(Market,\NumMarkets){
+				        Assets[Market]=OLDsubjects.find(Subject==:Subject,Assets[:Market]);
 				        }
 				    }
 				
@@ -635,8 +635,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				Accepter=\I;
 				Phase=\I;
 				PriceListRank=\I;
-				
-				
 			}
 		}
 		program{
@@ -655,7 +653,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Variable initialization marketsummary
 				
-				iterator(Market,\NumMarkets).do{
+				for(Market,\NumMarkets){
 				    marketsummary.new{
 				        Market=:Market;
 				        Price=\I;
@@ -673,27 +671,26 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				endowments.new {
 				    Type=1;
 				    Cash=225*\NumMarkets;
-				    iterator(Market,\NumMarkets).do{
-				        :Assets[Market]=3;
+				    for(Market,\NumMarkets){
+				        Assets[Market]=3;
 				        }
 				    }
 				endowments.new {
 				    Type=2;
 				    Cash=585*\NumMarkets;
-				    iterator(Market,\NumMarkets).do{
-				        :Assets[Market]=2;
+				    for(Market,\NumMarkets){
+				        Assets[Market]=2;
 				        }
 				    }
 				endowments.new {
 				    Type=3;
 				    Cash=945*\NumMarkets;
-				    iterator(Market,\NumMarkets).do{
-				        :Assets[Market]=1;
+				    for(Market,\NumMarkets){
+				        Assets[Market]=1;
 				        }
 				    }
 				
 				EndowmentFillerType=2;
-				
 			}
 		}
 		program{
@@ -834,8 +831,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				    Signal=103.1;
 				    Market=1;
 				    }
-				
-				
 			}
 		}
 		program{
@@ -863,7 +858,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				    Subject=:Subject;
 				    Profit=\I;
 				    Cash=\I;
-				    iterator(Market,\NumMarkets).do{
+				    for(Market,\NumMarkets){
 				        Assets[Market]=\I;
 				        }
 				    }
@@ -940,7 +935,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				
 				//Assigns dividends manually
 				else {
-				    iterator(Market, \NumMarkets).do{
+				    for(Market, \NumMarkets){
 				        dividends.new {
 				            Type=1;
 				            Dividend=0;
@@ -971,13 +966,12 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				array MinDividend[NumMarkets];
 				
 				//Calculates summary variables
-				iterator(Market, \NumMarkets).do{
-				    :NumDividends[Market]=dividends.count(same(Market));
-				    :MeanDividend[Market]=dividends.sum(same(Market),Dividend)/:NumDividends[Market];
-				    :MaxDividend[Market]=dividends.maximum(same(Market),Dividend);
-				    :MinDividend[Market]=dividends.minimum(same(Market),Dividend);
+				for(Market, \NumMarkets){
+				    NumDividends[Market]=dividends.count(same(Market));
+				    MeanDividend[Market]=dividends.sum(same(Market),Dividend)/NumDividends[Market];
+				    MaxDividend[Market]=dividends.maximum(same(Market),Dividend);
+				    MinDividend[Market]=dividends.minimum(same(Market),Dividend);
 				    }
-				
 			}
 		}
 		program{
@@ -991,53 +985,52 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				//Repeats as often as there are endowment types
 				
 				while (EndowmentType<=EndowmentTypes) {
-					i=1;
-					//Repeats as often as one endowment type is assigned to a trader (e.g. 10 traders, 2 types = 5 times)
-					while (i<=EndowmentsPerType) {
-						j=roundup(random()*(NumSubjects-(EndowmentType-1)*EndowmentsPerType-(i-1)),1);
-						k=1;
-						l=0;
-						done=0;
-						while (k<=NumSubjects&done==0) {
-							if (subjects.find(Subject==:k,InitialCash)==\I) {l=l+1;}
-							if (j==l) {
-								subjects.do {
-									if (Subject==:k) {
-										InitialCash=endowments.find(Type==\EndowmentType,Cash);
-										iterator(Market,\NumMarkets).do{
-										    :InitialAssets[Market]=endowments.find(Type==\EndowmentType,Assets[:Market]);
-										    }
-										EndowmentAssigned=1;
-										\done=1;
-										}
-									}
-								}
-							k=k+1;
-							}
-						i=i+1;
-						}
-					EndowmentType=EndowmentType+1;
-					}
+				    i=1;
+				    //Repeats as often as one endowment type is assigned to a trader (e.g. 10 traders, 2 types = 5 times)
+				    while (i<=EndowmentsPerType) {
+				        j=roundup(random()*(NumSubjects-(EndowmentType-1)*EndowmentsPerType-(i-1)),1);
+				        k=1;
+				        l=0;
+				        done=0;
+				        while (k<=NumSubjects&done==0) {
+				            if (subjects.find(Subject==:k,InitialCash)==\I) {l=l+1;}
+				            if (j==l) {
+				                subjects.do {
+				                    if (Subject==:k) {
+				                        InitialCash=endowments.find(Type==\EndowmentType,Cash);
+				                        for(Market,\NumMarkets){
+				                            InitialAssets[Market]=endowments.find(Type==\EndowmentType,Assets[:Market]);
+				                            }
+				                        EndowmentAssigned=1;
+				                        \done=1;
+				                        }
+				                    }
+				                }
+				            k=k+1;
+				            }
+				        i=i+1;
+				        }
+				    EndowmentType=EndowmentType+1;
+				    }
 				
 				//Assigns the endowment corresponding to the type defined in \EndowmentFillerType
 				//to all subjects who have not yet had endowments assigned
 				subjects.do {
-					if (EndowmentAssigned==0 & IsExperimenter==0) {
-						InitialCash=endowments.find(Type==min(\EndowmentTypes,\EndowmentFillerType),Cash);
-						iterator(Market,\NumMarkets).do{
-						    :InitialAssets[Market]=endowments.find(Type==min(\EndowmentTypes,\EndowmentFillerType),Assets[:Market]);
-						    }
-						EndowmentAssigned=1;
-						}
-					}
-				
-				subjects.do{
-				    Cash=InitialCash;
-				    iterator(Market,\NumMarkets).do{
-				        :Assets[Market]=:InitialAssets[Market];
+				    if (EndowmentAssigned==0 & IsExperimenter==0) {
+				        InitialCash=endowments.find(Type==min(\EndowmentTypes,\EndowmentFillerType),Cash);
+				        for(Market,\NumMarkets){
+				            InitialAssets[Market]=endowments.find(Type==min(\EndowmentTypes,\EndowmentFillerType),Assets[:Market]);
+				            }
+				        EndowmentAssigned=1;
 				        }
 				    }
 				
+				subjects.do{
+				    Cash=InitialCash;
+				    for(Market,\NumMarkets){
+				        Assets[Market]=InitialAssets[Market];
+				        }
+				    }
 			}
 		}
 		program{
@@ -1056,8 +1049,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				OfferTime=\I;
 				StatusTime=\I;
 				MarketOrder=\I;
-				
-				
 			}
 		}
 		program{
@@ -1073,8 +1064,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				CumSellVol=0;
 				FeasibleVol=0;
 				BuySurplus=0;
-				
-				
 			}
 		}
 		program{
@@ -1091,8 +1080,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				CumSellVol=0;
 				FeasibleVol=0;
 				BuySurplus=0;
-				
-				
 			}
 		}
 		program{
@@ -1105,7 +1092,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				ID=0;
 				Text="Hallo";
 				Done=0;
-				
 			}
 		}
 		program{
@@ -1117,9 +1103,9 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				//Sets practice period endowments
 				InitialCash=5000;
 				Cash=InitialCash;
-				iterator(Market,\NumMarkets).do{
-				    :InitialAssets[Market]=100;
-				    :Assets[Market]=:InitialAssets[Market];
+				for(Market,\NumMarkets){
+				    InitialAssets[Market]=100;
+				    Assets[Market]=InitialAssets[Market];
 				     }
 				
 				//Generates practice tasks
@@ -1158,8 +1144,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				    if(Language==1){Text="* Please accept at least one sell offer.";}
 				    if(Language==2){Text="* Akzeptieren Sie mindestens ein Verkaufsgebot.";}
 				    }
-				
-				
 			}
 		}
 		program{
@@ -1476,7 +1460,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 								TimeFinLitResult=\TimeFinLitResult;
 								TimeHoltLaury=\TimeHoltLaury;
 								TimeHoltLauryResult=\TimeHoltLauryResult;
-								
 							}
 						}
 						tabledumper{
@@ -4080,10 +4063,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 									ownervariable = Subject;
 									do{
 										HLChoice=0;
-										
-										
-										
-										
 									}
 								}
 								program{
@@ -4101,10 +4080,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 										   Event=72;
 										   Data[1]=0;
 										   }
-										
-										
-										
-										
 									}
 								}
 							}
@@ -6227,12 +6202,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 							    Subject=:Subject;
 							    Event=73;
 							    }
-							
-							
-							
-							
-							
-							
 						}
 					}
 				}
@@ -6713,7 +6682,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				    //Checks whether indicative price determination has not already been turned off (that is the case when actual price determination has been run)
 				    if(\IndicativePriceInterval>0) {
 				
-				        iterator(Market,\NumMarkets).do{
+				        for(Market,\NumMarkets){
 				        
 				            //Deletes old entries in indicativepricedetermination table
 				            indicativepricedetermination.do{
@@ -13714,12 +13683,12 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Fills auctionpractice table
 				
-				iterator(Market,\NumMarkets).do{
+				for(Market,\NumMarkets){
 				    //Writes entries
 				    \Temp[1]=0;
-				    while(auctionoffers.count(Market==:Market&Offerer==::Subject&Status==0&Type==1&Price>\Temp[1])>0) {
+				    while(auctionoffers.count(Market==:Market&Offerer==:Subject&Status==0&Type==1&Price>\Temp[1])>0) {
 				        auctionoffers.do{
-				            if(Market==:Market&Offerer==::Subject&Status==0&Type==1&Price==auctionoffers.minimum(Market==:Market&Offerer==::Subject&Status==0&Type==1&Price>\Temp[1],Price)){
+				            if(Market==:Market&Offerer==:Subject&Status==0&Type==1&Price==auctionoffers.minimum(Market==:Market&Offerer==:Subject&Status==0&Type==1&Price>\Temp[1],Price)){
 				                auctionpractice.new{
 				                    Market=:Market;
 				                    DisplayMarket=if(Market==1,2,if(Market==2,1,Market));
@@ -13727,16 +13696,16 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				                    Type=:Type;
 				                    PriceLow=\Temp[1];
 				                    PriceHigh=:Price;
-				                    Volume=auctionoffers.sum(Market==:Market&Offerer==::Subject&Status==0&Type==1&Price>=:PriceHigh,Volume);
+				                    Volume=auctionoffers.sum(Market==:Market&Offerer==:Subject&Status==0&Type==1&Price>=:PriceHigh,Volume);
 				                    }
 				                \Temp[1]=Price;
 				                }
 				            }
 				        }
 				    \Temp[1]=\MaxPrice+1;
-				    while(auctionoffers.count(Market==:Market&Offerer==::Subject&Status==0&Type==-1&Price<\Temp[1])>0) {
+				    while(auctionoffers.count(Market==:Market&Offerer==:Subject&Status==0&Type==-1&Price<\Temp[1])>0) {
 				        auctionoffers.do{
-				            if(Market==:Market&Offerer==::Subject&Status==0&Type==-1&Price==auctionoffers.maximum(Market==:Market&Offerer==::Subject&Status==0&Type==-1&Price<\Temp[1],Price)){
+				            if(Market==:Market&Offerer==:Subject&Status==0&Type==-1&Price==auctionoffers.maximum(Market==:Market&Offerer==:Subject&Status==0&Type==-1&Price<\Temp[1],Price)){
 				                auctionpractice.new{
 				                    Market=:Market;
 				                    DisplayMarket=if(Market==1,2,if(Market==2,1,Market));
@@ -13751,7 +13720,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				            }
 				        }
 				    }
-				
 			}
 		}
 		program{
@@ -13762,10 +13730,10 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				
 				//### Populates pricedetermination table with unique prices, sorted ascendingly
 				
-				iterator(Market, \NumMarkets).do{
+				for(Market, \NumMarkets){
 				
 				    //Starts out at price -1
-				    \TempPrice[Market]=-1;
+				    TempPrice[Market]=-1;
 				
 				    while (auctionoffers.count(Price>\TempPrice[:Market]&Status==0&MarketOrder==0&same(Market))>0) {
 				        //Determines next price
@@ -13780,8 +13748,8 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				
 				    //### Calculates cumulative volumes and surplus
 				
-				    \BuyMarketVol[Market]=auctionoffers.sum(MarketOrder==1&Type==1&Status==0,Volume);
-				    \SellMarketVol[Market]=auctionoffers.sum(MarketOrder==1&Type==-1&Status==0,Volume);
+				    BuyMarketVol[Market]=auctionoffers.sum(MarketOrder==1&Type==1&Status==0,Volume);
+				    SellMarketVol[Market]=auctionoffers.sum(MarketOrder==1&Type==-1&Status==0,Volume);
 				
 				    pricedetermination.do{
 				        CumBuyVol=sum(:Price<=Price&same(Market),BuyVol)+\BuyMarketVol[:Market];
@@ -13799,16 +13767,13 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Calculates aggregate transaction variables
 				
-				iterator(Market, \NumMarkets).do {
+				for(Market, \NumMarkets){
 				
 				    //Calculates maximum volume that can be transacted using only limit buy and sell offers
-				    \AuctionVolume[Market]=pricedetermination.maximum(same(Market),FeasibleVol);
-				
-				    //Calculates maximum volume that can be transacted using only market buy and sell offers
-				    //AuctionVolumeMarket=min(auctionoffers.sum(MarketOrder==1&Type==1&Status==0,Volume),auctionoffers.sum(MarketOrder==1&Type==-1&Status==0,Volume));
+				    AuctionVolume[Market]=pricedetermination.maximum(same(Market),FeasibleVol);
 				
 				    //Calculates total volume that can be transacted
-				    \AuctionVolumeTotal[Market]=min(auctionoffers.sum(Status==0&Type==-1&(MarketOrder==1|Price<=\AuctionPrice[:Market])&same(Market),Volume),auctionoffers.sum(Status==0&Type==1&(MarketOrder==1|Price>=\AuctionPrice[:Market])&same(Market),Volume));
+				    AuctionVolumeTotal[Market]=min(auctionoffers.sum(Status==0&Type==-1&(MarketOrder==1|Price<=\AuctionPrice[:Market])&same(Market),Volume),auctionoffers.sum(Status==0&Type==1&(MarketOrder==1|Price>=\AuctionPrice[:Market])&same(Market),Volume));
 				    
 				    }
 				
@@ -13820,50 +13785,48 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Determines price
 				
-				iterator(Market, \NumMarkets).do{
+				for(Market, \NumMarkets){
 				
-				    \NumVolumeMaximizingPrices[Market]=pricedetermination.count(FeasibleVol==\AuctionVolume[:Market]&same(Market));
+				    NumVolumeMaximizingPrices[Market]=pricedetermination.count(FeasibleVol==\AuctionVolume[:Market]&same(Market));
 				
 				    //There is no price with positive possible trading volume
 				    if (pricedetermination.count(FeasibleVol>0&same(Market))==0) {
-				        \AuctionPrice[Market]=-1;
-				        \AuctionVolume[Market]=0;
-				        \PriceDeterminationRule[Market]=0;
+				        AuctionPrice[Market]=-1;
+				        AuctionVolume[Market]=0;
+				        PriceDeterminationRule[Market]=0;
 				        }
 				
 				    //There is a single, volume maximizing price
 				    elsif (\NumVolumeMaximizingPrices[Market]==1) {
-				        \AuctionPrice[Market]=pricedetermination.find(FeasibleVol==\AuctionVolume[:Market]&same(Market),Price);
-				        \PriceDeterminationRule[Market]=1;
+				        AuctionPrice[Market]=pricedetermination.find(FeasibleVol==\AuctionVolume[:Market]&same(Market),Price);
+				        PriceDeterminationRule[Market]=1;
 				        }
 				
 				    //There are more than one volume maximizing prices, but there is a clear minimum absolute surplus for one of them
 				    elsif (pricedetermination.count(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus)))==1) {
-				        \AuctionPrice[Market]=pricedetermination.find(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus)),Price);
-				        \PriceDeterminationRule[Market]=2;
+				        AuctionPrice[Market]=pricedetermination.find(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus)),Price);
+				        PriceDeterminationRule[Market]=2;
 				        }
 				
 				    //There are more than one volume maximizing prices, but there is a surplus of buy volume for all of them
 				    elsif (pricedetermination.count(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus>0)==pricedetermination.count(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus)))) {
-				        \AuctionPrice[Market]=pricedetermination.find(FeasibleVol==\AuctionVolume[:Market]&same(Market)&Price==pricedetermination.maximum(FeasibleVol==\AuctionVolume[:Market]&same(Market),Price),Price);
-				        \PriceDeterminationRule[Market]=3;
+				        AuctionPrice[Market]=pricedetermination.find(FeasibleVol==\AuctionVolume[:Market]&same(Market)&Price==pricedetermination.maximum(FeasibleVol==\AuctionVolume[:Market]&same(Market),Price),Price);
+				        PriceDeterminationRule[Market]=3;
 				        }
 				
 				    //There are more than one volume maximizing prices, but there is a surplus of sell volume for all of them
 				    elsif (pricedetermination.count(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus<0)==pricedetermination.count(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus)))) {
-				        \AuctionPrice[Market]=pricedetermination.find(FeasibleVol==\AuctionVolume[:Market]&same(Market)&Price==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),Price),Price);
-				        \PriceDeterminationRule[Market]=4;
+				        AuctionPrice[Market]=pricedetermination.find(FeasibleVol==\AuctionVolume[:Market]&same(Market)&Price==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),Price),Price);
+				        PriceDeterminationRule[Market]=4;
 				        }
 				
 				    //The price is set to the average volume maximizing and absolute surplus minimizing price,
 				    //rounded to the nearest tick and rounded down in case of equal distance
 				    else {
-				        \AuctionPrice[Market]=round((pricedetermination.maximum(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus>=0,Price)+pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus<=0,Price))/2-0.00000000001,\TickSize);
-				        \PriceDeterminationRule[Market]=5;
+				        AuctionPrice[Market]=round((pricedetermination.maximum(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus>=0,Price)+pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market)&abs(BuySurplus)==pricedetermination.minimum(FeasibleVol==\AuctionVolume[:Market]&same(Market),abs(BuySurplus))&BuySurplus<=0,Price))/2-0.00000000001,\TickSize);
+				        PriceDeterminationRule[Market]=5;
 				        }
 				    }
-				
-				
 			}
 		}
 		program{
@@ -13890,7 +13853,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				
 				//### Write BTE limit orders in order of price, time and ID
 				
-				iterator(Market,\NumMarkets).do{
+				for(Market,\NumMarkets){
 				    if (\PriceDeterminationRule[Market]!=0) {
 				
 				        //### BTE asks
@@ -13988,7 +13951,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Settlement 2: Filling tbs tables with market orders if \MarketOrderPriority==1
 				
-				iterator(Market,\NumMarkets).do {
+				for(Market,\NumMarkets){
 				
 				    if(\PriceDeterminationRule[Market]!=0){
 				
@@ -14070,7 +14033,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				            }
 				        }
 				    }
-				
 			}
 		}
 		program{
@@ -14079,7 +14041,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Settlement 3: Filling tbs tables with AE limit orders
 				
-				iterator(Market,\NumMarkets).do{
+				for(Market,\NumMarkets){
 				    if(\PriceDeterminationRule[Market]!=0){
 				
 				        //### Write AE limit orders in order of time and ID
@@ -14156,8 +14118,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				             }
 				        }
 				    }
-				
-				
 			}
 		}
 		program{
@@ -14166,7 +14126,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Settlement 4: Filling tbs tables with market orders if \MarketOrderPriority==0
 				
-				iterator(Market,\NumMarkets).do{
+				for(Market,\NumMarkets){
 				    if(\PriceDeterminationRule[Market]!=0){
 				
 				        //### Write market orders in order of ID
@@ -14247,7 +14207,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				            }
 				        }
 				    }
-				
 			}
 		}
 		program{
@@ -14256,7 +14215,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Settlement 5: Matches orders and fills settlement table
 				
-				iterator(Market,\NumMarkets).do{
+				for(Market,\NumMarkets){
 				    if(\PriceDeterminationRule[Market]!=0){
 				
 				        //Transacts buy (sell) offers with price strictly higher (lower) than \AuctionPrice with each other
@@ -14330,7 +14289,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				            }
 				        }
 				    }
-				
 			}
 		}
 		program{
@@ -14339,7 +14297,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Settlement 6: Updates all tables using settlement table data
 				
-				iterator(Market,\NumMarkets).do{
+				for(Market,\NumMarkets){
 				    if(PriceDeterminationRule[Market]!=0){
 				
 				        //Invalidates WTE limit orders
@@ -14464,7 +14422,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				            }
 				        }
 				    }
-				
 			}
 		}
 		program{
@@ -14491,9 +14448,9 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Dividend draw
 				
-				iterator(Market, \NumMarkets).do{
-				    \r = roundup((random()*NumDividends[Market]),1);
-				    \Dividend[Market]=dividends.find(same(Period)&Type==:r&same(Market),Dividend);
+				for(Market, \NumMarkets){
+				    r = roundup((random()*NumDividends[Market]),1);
+				    Dividend[Market]=dividends.find(same(Period)&Type==:r&same(Market),Dividend);
 				    }
 				
 			}
@@ -14504,9 +14461,9 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Updates subjects' cash and writes profit
 				
-				iterator(Market,\NumMarkets).do{
-				    :Cash=:Cash+:Assets[Market]*\Dividend[Market];
-				    :AssetValueTemp=if(Market==1,:Assets[Market]*\BBV[Market],:AssetValueTemp+:Assets[Market]*\BBV[Market]);
+				for(Market,\NumMarkets){
+				    Cash=Cash+Assets[Market]*\Dividend[Market];
+				    AssetValueTemp=if(Market==1,Assets[Market]*\BBV[Market],AssetValueTemp+Assets[Market]*\BBV[Market]);
 				    }
 				
 				//Writes profit into Profit in the last period
@@ -14523,10 +14480,10 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Writes statistics into summary table
 				
-				iterator(Market,\NumMarkets).do{
-				    :AvgPriceCA[Market]=transactions.average(same(Market)&Phase==1,Price);
-				    :NumTradesCA[Market] = transactions.count(same(Market));
-				    :VolumeCA[Market]=transactions.sum(same(Market),Volume);
+				for(Market,\NumMarkets){
+				    AvgPriceCA[Market]=transactions.average(same(Market)&Phase==1,Price);
+				    NumTradesCA[Market]=transactions.count(same(Market));
+				    VolumeCA[Market]=transactions.sum(same(Market),Volume);
 				    }
 				
 			}
@@ -14536,20 +14493,19 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Fills results table
 				
-				iterator(Market,\NumMarkets).do{
+				for(Market,\NumMarkets){
 				    results.new{
 				        Market=:Market;
 				        DisplayMarket=if(Market==1,2,if(Market==2,1,Market));    //Switches order for markets 1 and 2 for display purposes
-				        Subject=::Subject;
+				        Subject=:Subject;
 				        Price=\AuctionPrice[Market];
 				        Dividend=\Dividend[Market];
 				        Phase=1;
-				        Amount=::Assets[Market];
+				        Amount=:Assets[Market];
 				        NumBought=contracts.sum(Market==:Market&Offerer==:Subject&Type==1&Phase==1,Transacted);
 				        NumSold=contracts.sum(Market==:Market&Offerer==:Subject&Type==-1&Phase==1,Transacted);
 				        }
 				    }
-				
 			}
 		}
 		screen action{
@@ -15627,7 +15583,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				//CDA Timer task
 				later (CDATimer) repeat{
 				    //Price highlighting
-				    iterator(Market,NumMarkets).do{
+				    for(Market,NumMarkets){
 				        if(\PriceHighlightColor[Market]>0){
 				            if(\PriceHighlightTime[Market]<gettime()){
 				                \PriceHighlightColor[Market]=22;
@@ -15635,7 +15591,6 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				            }
 				        }
 				    }
-				
 			}
 		}
 		screen action{
@@ -17502,8 +17457,8 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 														do{
 															//Updates chart display
 															
-															iterator(Market,\NumMarkets).do{
-																MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
+															for(Market,\NumMarkets){
+															    MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
 															    \ChartYLabelDistance[Market]=if(MaxPrice<=20,2,1);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>20,5,\ChartYLabelDistance[Market]);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>50,20,\ChartYLabelDistance[Market]);
@@ -17514,7 +17469,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 															    \ChartYLabelDistance[Market]=if(MaxPrice>15000,5000,\ChartYLabelDistance[Market]);
 															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(MaxPrice*(1+\SpaceAboveMaxPrice),\ChartYLabelDistance[Market]));
 															    \ChartYTickDistance[Market]=\ChartYLabelDistance[Market]/2;
-																}
+															    }
 															
 														}
 													}
@@ -17941,8 +17896,8 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 														do{
 															//Updates chart display
 															
-															iterator(Market,\NumMarkets).do{
-																MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
+															for(Market,\NumMarkets){
+															    MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
 															    \ChartYLabelDistance[Market]=if(MaxPrice<=20,2,1);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>20,5,\ChartYLabelDistance[Market]);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>50,20,\ChartYLabelDistance[Market]);
@@ -17953,7 +17908,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 															    \ChartYLabelDistance[Market]=if(MaxPrice>15000,5000,\ChartYLabelDistance[Market]);
 															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(MaxPrice*(1+\SpaceAboveMaxPrice),\ChartYLabelDistance[Market]));
 															    \ChartYTickDistance[Market]=\ChartYLabelDistance[Market]/2;
-																}
+															    }
 															
 														}
 													}
@@ -18394,8 +18349,8 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 														do{
 															//Updates chart display
 															
-															iterator(Market,\NumMarkets).do{
-																MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
+															for(Market,\NumMarkets){
+															    MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
 															    \ChartYLabelDistance[Market]=if(MaxPrice<=20,2,1);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>20,5,\ChartYLabelDistance[Market]);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>50,20,\ChartYLabelDistance[Market]);
@@ -18406,7 +18361,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 															    \ChartYLabelDistance[Market]=if(MaxPrice>15000,5000,\ChartYLabelDistance[Market]);
 															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(MaxPrice*(1+\SpaceAboveMaxPrice),\ChartYLabelDistance[Market]));
 															    \ChartYTickDistance[Market]=\ChartYLabelDistance[Market]/2;
-																}
+															    }
 															
 														}
 													}
@@ -18847,8 +18802,8 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 														do{
 															//Updates chart display
 															
-															iterator(Market,\NumMarkets).do{
-																MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
+															for(Market,\NumMarkets){
+															    MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
 															    \ChartYLabelDistance[Market]=if(MaxPrice<=20,2,1);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>20,5,\ChartYLabelDistance[Market]);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>50,20,\ChartYLabelDistance[Market]);
@@ -18859,7 +18814,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 															    \ChartYLabelDistance[Market]=if(MaxPrice>15000,5000,\ChartYLabelDistance[Market]);
 															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(MaxPrice*(1+\SpaceAboveMaxPrice),\ChartYLabelDistance[Market]));
 															    \ChartYTickDistance[Market]=\ChartYLabelDistance[Market]/2;
-																}
+															    }
 															
 														}
 													}
@@ -19431,8 +19386,8 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 														do{
 															//Updates chart display
 															
-															iterator(Market,\NumMarkets).do{
-																MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
+															for(Market,\NumMarkets){
+															    MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
 															    \ChartYLabelDistance[Market]=if(MaxPrice<=20,2,1);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>20,5,\ChartYLabelDistance[Market]);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>50,20,\ChartYLabelDistance[Market]);
@@ -19443,7 +19398,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 															    \ChartYLabelDistance[Market]=if(MaxPrice>15000,5000,\ChartYLabelDistance[Market]);
 															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(MaxPrice*(1+\SpaceAboveMaxPrice),\ChartYLabelDistance[Market]));
 															    \ChartYTickDistance[Market]=\ChartYLabelDistance[Market]/2;
-																}
+															    }
 															
 														}
 													}
@@ -19888,8 +19843,8 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 														do{
 															//Updates chart display
 															
-															iterator(Market,\NumMarkets).do{
-																MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
+															for(Market,\NumMarkets){
+															    MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
 															    \ChartYLabelDistance[Market]=if(MaxPrice<=20,2,1);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>20,5,\ChartYLabelDistance[Market]);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>50,20,\ChartYLabelDistance[Market]);
@@ -19900,7 +19855,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 															    \ChartYLabelDistance[Market]=if(MaxPrice>15000,5000,\ChartYLabelDistance[Market]);
 															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(MaxPrice*(1+\SpaceAboveMaxPrice),\ChartYLabelDistance[Market]));
 															    \ChartYTickDistance[Market]=\ChartYLabelDistance[Market]/2;
-																}
+															    }
 															
 														}
 													}
@@ -20329,8 +20284,8 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 														do{
 															//Updates chart display
 															
-															iterator(Market,\NumMarkets).do{
-																MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
+															for(Market,\NumMarkets){
+															    MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
 															    \ChartYLabelDistance[Market]=if(MaxPrice<=20,2,1);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>20,5,\ChartYLabelDistance[Market]);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>50,20,\ChartYLabelDistance[Market]);
@@ -20341,7 +20296,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 															    \ChartYLabelDistance[Market]=if(MaxPrice>15000,5000,\ChartYLabelDistance[Market]);
 															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(MaxPrice*(1+\SpaceAboveMaxPrice),\ChartYLabelDistance[Market]));
 															    \ChartYTickDistance[Market]=\ChartYLabelDistance[Market]/2;
-																}
+															    }
 															
 														}
 													}
@@ -20772,8 +20727,8 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 														do{
 															//Updates chart display
 															
-															iterator(Market,\NumMarkets).do{
-																MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
+															for(Market,\NumMarkets){
+															    MaxPrice=contracts.maximum(Status==1&Market==:Market&Phase==2,Price);
 															    \ChartYLabelDistance[Market]=if(MaxPrice<=20,2,1);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>20,5,\ChartYLabelDistance[Market]);
 															    \ChartYLabelDistance[Market]=if(MaxPrice>50,20,\ChartYLabelDistance[Market]);
@@ -20784,7 +20739,7 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 															    \ChartYLabelDistance[Market]=if(MaxPrice>15000,5000,\ChartYLabelDistance[Market]);
 															    \ChartYMax[Market]=max(\ChartYMax[Market],roundup(MaxPrice*(1+\SpaceAboveMaxPrice),\ChartYLabelDistance[Market]));
 															    \ChartYTickDistance[Market]=\ChartYLabelDistance[Market]/2;
-																}
+															    }
 															
 														}
 													}
@@ -25023,9 +24978,9 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Dividend draw
 				
-				iterator(Market,\NumMarkets).do{
-				    \r = roundup((random()*\NumDividends[Market]),1);
-				    \Dividend[Market]=dividends.find(Period==\Period&Type==\r&same(Market),Dividend);
+				for(Market,\NumMarkets){
+				    r = roundup((random()*\NumDividends[Market]),1);
+				    Dividend[Market]=dividends.find(Period==\Period&Type==\r&same(Market),Dividend);
 				    }
 				
 			}
@@ -25036,9 +24991,9 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Updates subjects' cash and writes profit
 				
-				iterator(Market,\NumMarkets).do{
-				    :Cash=:Cash+:Assets[Market]*\Dividend[Market];
-				    :AssetValueTemp=if(Market==1,:Assets[Market]*\BBV[Market],:AssetValueTemp+:Assets[Market]*\BBV[Market]);
+				for(Market,\NumMarkets){
+				    Cash=Cash+Assets[Market]*\Dividend[Market];
+				    AssetValueTemp=if(Market==1,Assets[Market]*\BBV[Market],AssetValueTemp+Assets[Market]*\BBV[Market]);
 				    }
 				
 				//Writes profit into Profit in the last period
@@ -25055,17 +25010,16 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Writes statistics into summary table
 				
-				iterator(Market,\NumMarkets).do{
-				    :Dividend[Market]=\Dividend[Market];
-				    :SSWValue[Market]=(\NumPeriods - Period +1) * \MeanDividend[Market];
-				    :AvgPriceCDA[Market]=transactions.average(same(Market)&Phase==2,Price);
-				    :AvgVolPriceCDA[Market]=transactions.sum(same(Market)&Phase==2,Price*Volume)/transactions.sum(same(Market)&Phase==2,Volume);
-				    :MedianPriceCDA[Market]=transactions.median(same(Market)&Phase==2,Price);
-				    :LastPriceCDA[Market]=\LastPrice[Market];
-				    :NumTradesCDA[Market] = transactions.count(same(Market)&Phase==2);
-				    :VolumeCDA[Market]=transactions.sum(same(Market)&Phase==2,Volume);
+				for(Market,\NumMarkets){
+				    Dividend[Market]=\Dividend[Market];
+				    SSWValue[Market]=(\NumPeriods - Period +1) * \MeanDividend[Market];
+				    AvgPriceCDA[Market]=transactions.average(same(Market)&Phase==2,Price);
+				    AvgVolPriceCDA[Market]=transactions.sum(same(Market)&Phase==2,Price*Volume)/transactions.sum(same(Market)&Phase==2,Volume);
+				    MedianPriceCDA[Market]=transactions.median(same(Market)&Phase==2,Price);
+				    LastPriceCDA[Market]=\LastPrice[Market];
+				    NumTradesCDA[Market] = transactions.count(same(Market)&Phase==2);
+				    VolumeCDA[Market]=transactions.sum(same(Market)&Phase==2,Volume);
 				    }
-				
 			}
 		}
 		program{
@@ -25089,15 +25043,15 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 			do{
 				//Fills results table
 				
-				iterator(Market,\NumMarkets).do{
+				for(Market,\NumMarkets){
 				    results.new{
 				        Market=:Market;
 				        DisplayMarket=if(Market==1,2,if(Market==2,1,Market));    //Switches order for markets 1 and 2 for display purposes
-				        Subject=::Subject;
-				        Price=if(contracts.count(same(Market)&(Offerer==::Subject|Accepter==::Subject)&Phase==2&VolumeTraded>0)>0,contracts.sum(same(Market)&(Offerer==::Subject|Accepter==::Subject)&Phase==2&VolumeTraded>0,Price*VolumeTraded)/contracts.sum(same(Market)&(Offerer==::Subject|Accepter==::Subject)&Phase==2&VolumeTraded>0,VolumeTraded),-1);
+				        Subject=:Subject;
+				        Price=if(contracts.count(same(Market)&(Offerer==:Subject|Accepter==:Subject)&Phase==2&VolumeTraded>0)>0,contracts.sum(same(Market)&(Offerer==:Subject|Accepter==:Subject)&Phase==2&VolumeTraded>0,Price*VolumeTraded)/contracts.sum(same(Market)&(Offerer==:Subject|Accepter==:Subject)&Phase==2&VolumeTraded>0,VolumeTraded),-1);
 				        Dividend=\Dividend[Market];
 				        Phase=2;
-				        Amount=::Assets[Market];
+				        Amount=:Assets[Market];
 				        NumBought=contracts.sum(Market==:Market&((Offerer==:Subject&Type==1)|(Accepter==:Subject&Type==-1))&Phase==2,Transacted);
 				        NumSold=contracts.sum(Market==:Market&((Offerer==:Subject&Type==-1)|(Accepter==:Subject&Type==1))&Phase==2,Transacted);
 				        }
@@ -32435,12 +32389,11 @@ treatment "GIMS_v7.7.3_2018-04-12.ztt"{
 				    if(same(Period)&same(Subject)) {
 				        Profit=:Profit;
 				        Cash=:Cash;
-				        iterator(Market,\NumMarkets).do{
-				            :Assets[Market]=::Assets[Market];
+				        for(Market,\NumMarkets){
+				            Assets[Market]=:Assets[Market];
 				            }
 				        }
 				    }
-				
 			}
 		}
 		program{
