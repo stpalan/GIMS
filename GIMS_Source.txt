@@ -1,4 +1,4 @@
-treatment "GIMS_v8.1.0_2018-04-17.ztt"{
+treatment "GIMS_v8.2.0_2018-04-23.ztt"{
 	background{
 		table globals{
 		}
@@ -121,8 +121,8 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 			do{
 				//##### GIMS Version #####
 				
-				GIMSVersion="8.1.0";
-				GIMSDate="17.04.2018";
+				GIMSVersion="8.2.0";
+				GIMSDate="23.04.2018";
 				
 			}
 		}
@@ -188,7 +188,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 				BackupDump=1;
 				
 				//Questionnaire settings
-				CurrentYear=2017;
+				CurrentYear=2018;
 				
 				//Payoff settings
 				ExchangeRate=1;
@@ -477,28 +477,28 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 				
 				//Colors
 				if(\Period==1){
-				    layout.new{IDNumeric=1;ID="CA_Signals_BG";R=0.88;G=1;B=0.85;Color=rgb(0.88,1,0.85);}
-				    layout.new{IDNumeric=2;ID="CA_PriceList_BG";R=1;G=0.83;B=0.83;Color=rgb(1,0.83,0.83);}
-				    layout.new{IDNumeric=3;ID="CA_BuyOffers_BG";R=1;G=0.9;B=0.8;Color=rgb(1,0.9,0.8);}
-				    layout.new{IDNumeric=4;ID="CA_SellOffers_BG";R=1;G=0.9;B=0.8;Color=rgb(1,0.9,0.8);}
-				    layout.new{IDNumeric=5;ID="CA_OrderSubmission_BG";R=1;G=1;B=0.8;Color=rgb(1,1,0.8);}
-				    layout.new{IDNumeric=6;ID="CA_History_BG";R=0.82;G=0.85;B=1;Color=rgb(0.82,0.85,1);}
-				    layout.new{IDNumeric=7;ID="CA_BG";R=1;G=1;B=1;Color=rgb(1,1,1);}
-				    layout.new{IDNumeric=8;ID="CDA_Signals_BG";R=0.96;G=0.79;B=0.95;Color=rgb(0.96,0.79,0.95);}
-				    layout.new{IDNumeric=9;ID="CDA_PriceList_BG";R=1;G=0.83;B=0.83;Color=rgb(1,0.83,0.83);}
-				    layout.new{IDNumeric=10;ID="CDA_BuyOffers_BG";R=1;G=0.9;B=0.8;Color=rgb(1,0.9,0.8);}
-				    layout.new{IDNumeric=11;ID="CDA_SellOffers_BG";R=1;G=0.9;B=0.8;Color=rgb(1,0.9,0.8);}
-				    layout.new{IDNumeric=12;ID="CDA_OrderSubmission_BG";R=1;G=1;B=0.8;Color=rgb(1,1,0.8);}
-				    layout.new{IDNumeric=13;ID="CDA_History_BG";R=0.82;G=0.85;B=1;Color=rgb(0.82,0.85,1);}
-				    layout.new{IDNumeric=14;ID="CDA_Chart_Line";R=0;G=0;B=1;Color=rgb(0,0,1);}
-				    layout.new{IDNumeric=15;ID="CDA_Chart_BG";R=1;G=1;B=1;Color=rgb(1,1,1);}
-				    layout.new{IDNumeric=16;ID="CDA_BG";R=1;G=1;B=1;Color=rgb(1,1,1);}
-				    layout.new{IDNumeric=17;ID="Highlighting_Scheme0";R=0.94;G=0.94;B=0.94;Color=rgb(0.94,0.94,0.94);}
-				    layout.new{IDNumeric=18;ID="Highlighting_Scheme1_Up";R=0;G=0.79;B=0;Color=rgb(0,0.79,0);}
-				    layout.new{IDNumeric=19;ID="Highlighting_Scheme1_Down";R=1;G=0;B=0;Color=rgb(1,0,0);}
-				    layout.new{IDNumeric=20;ID="Highlighting_Scheme2_Up";R=1;G=0.5;B=0;Color=rgb(1,0.5,0);}
-				    layout.new{IDNumeric=21;ID="Highlighting_Scheme2_Down";R=0;G=0;B=1;Color=rgb(0,0,1);}
-				    layout.new{IDNumeric=22;ID="CDA_MarketOverview_BG";R=0.88;G=1;B=0.85;Color=rgb(0.88,1,0.85);}
+				    layout.new{IDNumeric=1;ID="CA_Signals_BG";Color=rgb(0.88,1,0.85);}
+				    //layout.new{IDNumeric=2;ID="CA_PriceList_BG";Color=rgb(1,0.83,0.83);}
+				    layout.new{IDNumeric=3;ID="CA_BuyOffers_BG";Color=rgb(1,0.9,0.8);}
+				    layout.new{IDNumeric=4;ID="CA_SellOffers_BG";Color=rgb(1,0.9,0.8);}
+				    layout.new{IDNumeric=5;ID="CA_OrderSubmission_BG";Color=rgb(1,1,0.8);}
+				    layout.new{IDNumeric=6;ID="CA_History_BG";Color=rgb(0.82,0.85,1);}
+				    layout.new{IDNumeric=7;ID="CA_BG";Color=rgb(1,1,1);}
+				    layout.new{IDNumeric=8;ID="CDA_Signals_BG";Color=rgb(0.96,0.79,0.95);}
+				    layout.new{IDNumeric=9;ID="CDA_PriceList_BG";Color=rgb(1,0.83,0.83);}
+				    layout.new{IDNumeric=10;ID="CDA_BuyOffers_BG";Color=rgb(1,0.9,0.8);}
+				    layout.new{IDNumeric=11;ID="CDA_SellOffers_BG";Color=rgb(1,0.9,0.8);}
+				    layout.new{IDNumeric=12;ID="CDA_OrderSubmission_BG";Color=rgb(1,1,0.8);}
+				    layout.new{IDNumeric=13;ID="CDA_History_BG";Color=rgb(0.82,0.85,1);}
+				    layout.new{IDNumeric=14;ID="CDA_Chart_Line";Color=rgb(0,0,1);}
+				    layout.new{IDNumeric=15;ID="CDA_Chart_BG";Color=rgb(1,1,1);}
+				    layout.new{IDNumeric=16;ID="CDA_BG";Color=rgb(1,1,1);}
+				    layout.new{IDNumeric=17;ID="Highlighting_Scheme0";Color=rgb(0.94,0.94,0.94);}
+				    layout.new{IDNumeric=18;ID="Highlighting_Scheme1_Up";Color=rgb(0,0.79,0);}
+				    layout.new{IDNumeric=19;ID="Highlighting_Scheme1_Down";Color=rgb(1,0,0);}
+				    layout.new{IDNumeric=20;ID="Highlighting_Scheme2_Up";Color=rgb(1,0.5,0);}
+				    layout.new{IDNumeric=21;ID="Highlighting_Scheme2_Down";Color=rgb(0,0,1);}
+				    layout.new{IDNumeric=22;ID="CDA_MarketOverview_BG";Color=rgb(0.88,1,0.85);}
 				    }
 			}
 		}
@@ -6952,7 +6952,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 							hasframe = TRUE;
 							plotbox "Background"{
 								hasframe = TRUE;
-								bgcolor = rgb(layout.find(ID=="CA_BG",R),layout.find(ID=="CA_BG",G),layout.find(ID=="CA_BG",B));
+								bgcolor = layout.find(ID=="CA_BG",Color);
 								maintainaspectratio = FALSE;
 								xaxistype = LINEAR;
 								yaxistype = LINEAR;
@@ -6978,7 +6978,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										cutleft = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CA_BuyOffers_BG",R),layout.find(ID=="CA_BuyOffers_BG",G),layout.find(ID=="CA_BuyOffers_BG",B));
+											bgcolor = layout.find(ID=="CA_BuyOffers_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -7376,7 +7376,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										cutleft = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CA_SellOffers_BG",R),layout.find(ID=="CA_SellOffers_BG",G),layout.find(ID=="CA_SellOffers_BG",B));
+											bgcolor = layout.find(ID=="CA_SellOffers_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -7774,7 +7774,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										hasframe = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CA_OrderSubmission_BG",R),layout.find(ID=="CA_OrderSubmission_BG",G),layout.find(ID=="CA_OrderSubmission_BG",B));
+											bgcolor = layout.find(ID=="CA_OrderSubmission_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -9719,7 +9719,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 									bottom = 5p;
 									plotbox "Background"{
 										hasframe = TRUE;
-										bgcolor = rgb(layout.find(ID=="CA_Signals_BG",R),layout.find(ID=="CA_Signals_BG",G),layout.find(ID=="CA_Signals_BG",B));
+										bgcolor = layout.find(ID=="CA_Signals_BG",Color);
 										maintainaspectratio = FALSE;
 										xaxistype = LINEAR;
 										yaxistype = LINEAR;
@@ -9803,7 +9803,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 											cutleft = TRUE;
 											plotbox "Background"{
 												hasframe = TRUE;
-												bgcolor = rgb(layout.find(ID=="CA_BuyOffers_BG",R),layout.find(ID=="CA_BuyOffers_BG",G),layout.find(ID=="CA_BuyOffers_BG",B));
+												bgcolor = layout.find(ID=="CA_BuyOffers_BG",Color);
 												maintainaspectratio = FALSE;
 												xaxistype = LINEAR;
 												yaxistype = LINEAR;
@@ -10201,7 +10201,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 											cutleft = TRUE;
 											plotbox "Background"{
 												hasframe = TRUE;
-												bgcolor = rgb(layout.find(ID=="CA_SellOffers_BG",R),layout.find(ID=="CA_SellOffers_BG",G),layout.find(ID=="CA_SellOffers_BG",B));
+												bgcolor = layout.find(ID=="CA_SellOffers_BG",Color);
 												maintainaspectratio = FALSE;
 												xaxistype = LINEAR;
 												yaxistype = LINEAR;
@@ -10599,7 +10599,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 											hasframe = TRUE;
 											plotbox "Background"{
 												hasframe = TRUE;
-												bgcolor = rgb(layout.find(ID=="CA_OrderSubmission_BG",R),layout.find(ID=="CA_OrderSubmission_BG",G),layout.find(ID=="CA_OrderSubmission_BG",B));
+												bgcolor = layout.find(ID=="CA_OrderSubmission_BG",Color);
 												maintainaspectratio = FALSE;
 												xaxistype = LINEAR;
 												yaxistype = LINEAR;
@@ -13082,7 +13082,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 							top = 0p;
 							plotbox "Background"{
 								hasframe = TRUE;
-								bgcolor = rgb(layout.find(ID=="CA_BG",R),layout.find(ID=="CA_BG",G),layout.find(ID=="CA_BG",B));
+								bgcolor = layout.find(ID=="CA_BG",Color);
 								maintainaspectratio = FALSE;
 								xaxistype = LINEAR;
 								yaxistype = LINEAR;
@@ -13108,7 +13108,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										cutleft = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CA_BuyOffers_BG",R),layout.find(ID=="CA_BuyOffers_BG",G),layout.find(ID=="CA_BuyOffers_BG",B));
+											bgcolor = layout.find(ID=="CA_BuyOffers_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -13263,7 +13263,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										cutleft = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CA_SellOffers_BG",R),layout.find(ID=="CA_SellOffers_BG",G),layout.find(ID=="CA_SellOffers_BG",B));
+											bgcolor = layout.find(ID=="CA_SellOffers_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -13415,7 +13415,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										hasframe = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CA_OrderSubmission_BG",R),layout.find(ID=="CA_OrderSubmission_BG",G),layout.find(ID=="CA_OrderSubmission_BG",B));
+											bgcolor = layout.find(ID=="CA_OrderSubmission_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -13476,7 +13476,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 									bottom = 5p;
 									plotbox "Background"{
 										hasframe = TRUE;
-										bgcolor = rgb(layout.find(ID=="CA_Signals_BG",R),layout.find(ID=="CA_Signals_BG",G),layout.find(ID=="CA_Signals_BG",B));
+										bgcolor = layout.find(ID=="CA_Signals_BG",Color);
 										maintainaspectratio = FALSE;
 										xaxistype = LINEAR;
 										yaxistype = LINEAR;
@@ -15843,7 +15843,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 						cutright = TRUE;
 						plotbox "Background"{
 							hasframe = TRUE;
-							bgcolor = rgb(layout.find(ID=="CDA_BG",R),layout.find(ID=="CDA_BG",G),layout.find(ID=="CDA_BG",B));
+							bgcolor = layout.find(ID=="CDA_BG",Color);
 							maintainaspectratio = FALSE;
 							xaxistype = LINEAR;
 							yaxistype = LINEAR;
@@ -15865,7 +15865,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 								cutbottom = TRUE;
 								plotbox "Background"{
 									hasframe = TRUE;
-									bgcolor = rgb(layout.find(ID=="CDA_History_BG",R),layout.find(ID=="CDA_History_BG",G),layout.find(ID=="CDA_History_BG",B));
+									bgcolor = layout.find(ID=="CDA_History_BG",Color);
 									maintainaspectratio = FALSE;
 									xaxistype = LINEAR;
 									yaxistype = LINEAR;
@@ -17148,7 +17148,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										cutleft = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_BuyOffers_BG",R),layout.find(ID=="CDA_BuyOffers_BG",G),layout.find(ID=="CDA_BuyOffers_BG",B));
+											bgcolor = layout.find(ID=="CDA_BuyOffers_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -18967,7 +18967,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										cutleft = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_SellOffers_BG",R),layout.find(ID=="CDA_SellOffers_BG",G),layout.find(ID=="CDA_SellOffers_BG",B));
+											bgcolor = layout.find(ID=="CDA_SellOffers_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -20797,7 +20797,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										hasframe = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_OrderSubmission_BG",R),layout.find(ID=="CDA_OrderSubmission_BG",G),layout.find(ID=="CDA_OrderSubmission_BG",B));
+											bgcolor = layout.find(ID=="CDA_OrderSubmission_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -21756,7 +21756,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										cutleft = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_PriceList_BG",R),layout.find(ID=="CDA_PriceList_BG",G),layout.find(ID=="CDA_PriceList_BG",B));
+											bgcolor = layout.find(ID=="CDA_PriceList_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -21819,7 +21819,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										hasframe = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_Signals_BG",R),layout.find(ID=="CDA_Signals_BG",G),layout.find(ID=="CDA_Signals_BG",B));
+											bgcolor = layout.find(ID=="CDA_Signals_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -21959,7 +21959,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										displaycondition = \NumMarkets>1;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_MarketOverview_BG",R),layout.find(ID=="CDA_MarketOverview_BG",G),layout.find(ID=="CDA_MarketOverview_BG",B));
+											bgcolor = layout.find(ID=="CDA_MarketOverview_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -22227,7 +22227,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 											left = 5p;
 											top = 27p;
 											cutleft = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_MarketOverview_BG",R),layout.find(ID=="CDA_MarketOverview_BG",G),layout.find(ID=="CDA_MarketOverview_BG",B));
+											bgcolor = layout.find(ID=="CDA_MarketOverview_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -22240,14 +22240,14 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 												y = 93;
 												width = 100;
 												height = 15;
-												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[1],R),layout.find(IDNumeric==\PriceHighlightColor[1],G),layout.find(IDNumeric==\PriceHighlightColor[1],B));
+												fillcolor = layout.find(IDNumeric==\PriceHighlightColor[1],Color);
 											}
 											plotrect "Market2"{
 												x = 50;
 												y = 72;
 												width = 100;
 												height = 15;
-												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[2],R),layout.find(IDNumeric==\PriceHighlightColor[2],G),layout.find(IDNumeric==\PriceHighlightColor[2],B));
+												fillcolor = layout.find(IDNumeric==\PriceHighlightColor[2],Color);
 											}
 											plotrect "Market3"{
 												displaycondition = \NumMarkets>=3;
@@ -22255,7 +22255,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 												y = 51;
 												width = 100;
 												height = 15;
-												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[3],R),layout.find(IDNumeric==\PriceHighlightColor[3],G),layout.find(IDNumeric==\PriceHighlightColor[3],B));
+												fillcolor = layout.find(IDNumeric==\PriceHighlightColor[3],Color);
 											}
 											plotrect "Market4"{
 												displaycondition = \NumMarkets>=4;
@@ -22263,7 +22263,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 												y = 30;
 												width = 100;
 												height = 15;
-												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[4],R),layout.find(IDNumeric==\PriceHighlightColor[4],G),layout.find(IDNumeric==\PriceHighlightColor[4],B));
+												fillcolor = layout.find(IDNumeric==\PriceHighlightColor[4],Color);
 											}
 											plotrect "Market5"{
 												displaycondition = \NumMarkets>=5;
@@ -22271,7 +22271,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 												y = 9;
 												width = 100;
 												height = 15;
-												fillcolor = rgb(layout.find(IDNumeric==\PriceHighlightColor[5],R),layout.find(IDNumeric==\PriceHighlightColor[5],G),layout.find(IDNumeric==\PriceHighlightColor[5],B));
+												fillcolor = layout.find(IDNumeric==\PriceHighlightColor[5],Color);
 											}
 										}
 										selectcontractbox "MarketOverviewEN"{
@@ -22352,7 +22352,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 						plotbox "Background"{
 							hasframe = TRUE;
 							displaycondition = \ShowChart==1&\ChartYMax[DisplayMarket[1]]!=\I;
-							bgcolor = rgb(1.00,1.00,1.00);
+							bgcolor = layout.find(ID=="CDA_Chart_BG",Color);
 							maintainaspectratio = FALSE;
 							xaxistype = LINEAR;
 							yaxistype = LINEAR;
@@ -22395,7 +22395,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 							top = 5p;
 							bottom = 5p;
 							displaycondition = \ShowChart==1&\ChartYMax[DisplayMarket[1]]!=\I&\Language==1;
-							bgcolor = rgb(1.00,1.00,1.00);
+							bgcolor = layout.find(ID=="CDA_Chart_BG",Color);
 							maintainaspectratio = FALSE;
 							xaxistype = LINEAR;
 							yaxistype = LINEAR;
@@ -22450,7 +22450,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 							top = 5p;
 							bottom = 5p;
 							displaycondition = \ShowChart==1&\ChartYMax[DisplayMarket[1]]!=\I&\Language==2;
-							bgcolor = rgb(layout.find(ID=="CDA_Chart_BG",R),layout.find(ID=="CDA_Chart_BG",G),layout.find(ID=="CDA_Chart_BG",B));
+							bgcolor = layout.find(ID=="CDA_Chart_BG",Color);
 							maintainaspectratio = FALSE;
 							xaxistype = LINEAR;
 							yaxistype = LINEAR;
@@ -22537,7 +22537,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 						cutright = TRUE;
 						plotbox "Background"{
 							hasframe = TRUE;
-							bgcolor = rgb(layout.find(ID=="CDA_BG",R),layout.find(ID=="CDA_BG",G),layout.find(ID=="CDA_BG",B));
+							bgcolor = layout.find(ID=="CDA_BG",Color);
 							maintainaspectratio = FALSE;
 							xaxistype = LINEAR;
 							yaxistype = LINEAR;
@@ -22559,7 +22559,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 								cutbottom = TRUE;
 								plotbox "Background"{
 									hasframe = TRUE;
-									bgcolor = rgb(layout.find(ID=="CDA_History_BG",R),layout.find(ID=="CDA_History_BG",G),layout.find(ID=="CDA_History_BG",B));
+									bgcolor = layout.find(ID=="CDA_History_BG",Color);
 									maintainaspectratio = FALSE;
 									xaxistype = LINEAR;
 									yaxistype = LINEAR;
@@ -23842,7 +23842,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										cutleft = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_BuyOffers_BG",R),layout.find(ID=="CDA_BuyOffers_BG",G),layout.find(ID=="CDA_BuyOffers_BG",B));
+											bgcolor = layout.find(ID=="CDA_BuyOffers_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -23977,7 +23977,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										cutleft = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_SellOffers_BG",R),layout.find(ID=="CDA_SellOffers_BG",G),layout.find(ID=="CDA_SellOffers_BG",B));
+											bgcolor = layout.find(ID=="CDA_SellOffers_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -24109,7 +24109,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										hasframe = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_OrderSubmission_BG",R),layout.find(ID=="CDA_OrderSubmission_BG",G),layout.find(ID=="CDA_OrderSubmission_BG",B));
+											bgcolor = layout.find(ID=="CDA_OrderSubmission_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -24161,7 +24161,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										cutleft = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_PriceList_BG",R),layout.find(ID=="CDA_PriceList_BG",G),layout.find(ID=="CDA_PriceList_BG",B));
+											bgcolor = layout.find(ID=="CDA_PriceList_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -24224,7 +24224,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 										hasframe = TRUE;
 										plotbox "Background"{
 											hasframe = TRUE;
-											bgcolor = rgb(layout.find(ID=="CDA_Signals_BG",R),layout.find(ID=="CDA_Signals_BG",G),layout.find(ID=="CDA_Signals_BG",B));
+											bgcolor = layout.find(ID=="CDA_Signals_BG",Color);
 											maintainaspectratio = FALSE;
 											xaxistype = LINEAR;
 											yaxistype = LINEAR;
@@ -24657,7 +24657,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 						plotbox "Background"{
 							hasframe = TRUE;
 							displaycondition = \ShowChart==1&\ChartYMax[DisplayMarket[1]]!=\I;
-							bgcolor = rgb(1.00,1.00,1.00);
+							bgcolor = layout.find(ID=="CDA_Chart_BG",Color);
 							maintainaspectratio = FALSE;
 							xaxistype = LINEAR;
 							yaxistype = LINEAR;
@@ -24700,7 +24700,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 							top = 5p;
 							bottom = 5p;
 							displaycondition = \ShowChart==1&\ChartYMax[DisplayMarket[1]]!=\I&\Language==1;
-							bgcolor = rgb(1.00,1.00,1.00);
+							bgcolor = layout.find(ID=="CDA_Chart_BG",Color);
 							maintainaspectratio = FALSE;
 							xaxistype = LINEAR;
 							yaxistype = LINEAR;
@@ -24755,7 +24755,7 @@ treatment "GIMS_v8.1.0_2018-04-17.ztt"{
 							top = 5p;
 							bottom = 5p;
 							displaycondition = \ShowChart==1&\ChartYMax[DisplayMarket[1]]!=\I&\Language==2;
-							bgcolor = rgb(layout.find(ID=="CDA_Chart_BG",R),layout.find(ID=="CDA_Chart_BG",G),layout.find(ID=="CDA_Chart_BG",B));
+							bgcolor = layout.find(ID=="CDA_Chart_BG",Color);
 							maintainaspectratio = FALSE;
 							xaxistype = LINEAR;
 							yaxistype = LINEAR;
