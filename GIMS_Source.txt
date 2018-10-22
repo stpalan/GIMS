@@ -1,4 +1,4 @@
-treatment "GIMS_v8.2.0_2018-04-23.ztt"{
+treatment "GIMS_v8.2.1_2018-10-22.ztt"{
 	background{
 		table globals{
 		}
@@ -121,8 +121,8 @@ treatment "GIMS_v8.2.0_2018-04-23.ztt"{
 			do{
 				//##### GIMS Version #####
 				
-				GIMSVersion="8.2.0";
-				GIMSDate="23.04.2018";
+				GIMSVersion="8.2.1";
+				GIMSDate="22.10.2018";
 				
 			}
 		}
