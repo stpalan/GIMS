@@ -99,7 +99,7 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 		numsubjects = 3;
 		numgroups = 1;
 		numpracticeperiods = 0;
-		numactualperiods = 2;
+		numactualperiods = 4;
 		exchangerate = 1;
 		startendowment = 0;
 		showupfee = 0;
@@ -166,8 +166,9 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 				Testmode1=0;   //Turns on Experimenter buttons on all screens
 				CQTestmode=0;
 				PEADTestmode=1;
+				TreatmentPEAD=2;
 				
-				PracticePeriod=1;
+				PracticePeriod=0;
 				NumExperimenterSubjects=1;
 				Language=2;    //1=English, 2=German
 				TimerInterval=1;
@@ -1173,11 +1174,11 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 			usesbg = TRUE;
 			withalertscreen = FALSE;
 			noalertscreen = FALSE;
-			containerbox "HeaderContainer"{
+			containerbox "HeaderContainerPseudoPeriods"{
 				hasframe = FALSE;
 				height = 45p;
 				top = 0p;
-				cuttop = TRUE;
+				displaycondition = \DoPseudoPeriods==1;
 				standardbox "Standard"{
 					hasframe = TRUE;
 					width = 200p;
@@ -1197,6 +1198,25 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 					displaycondition = \Language==2;
 					showPeriods = FALSE;
 					showNumPeriods = FALSE;
+					periodtext = "Periode";
+					periodoftext = "von";
+					practiceperiodprefix = "Probe";
+					showtime = TRUE;
+					timestr = "Verbleibende Zeit [sek]:";
+					pleasedecidetext = "Bitte treffen Sie Ihre Entscheidung!";
+				}
+			}
+			containerbox "HeaderContainerTruePeriods"{
+				hasframe = FALSE;
+				height = 45p;
+				top = 0p;
+				cuttop = TRUE;
+				displaycondition = \DoPseudoPeriods==0;
+				headerbox "HeaderDE"{
+					hasframe = TRUE;
+					displaycondition = \Language==2;
+					showPeriods = TRUE;
+					showNumPeriods = TRUE;
 					periodtext = "Periode";
 					periodoftext = "von";
 					practiceperiodprefix = "Probe";
@@ -12932,6 +12952,7 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 		}
 		program{
 			table = subjects;
+			condition = \CallAuction==1&IsExperimenter==0;
 			do{
 				//Fills results table
 				
@@ -14017,7 +14038,12 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 				            PEADSignalSize=0.5;
 				            PEADsignals.new{
 				                Set=\PEADSignalsShown;
-				                PEADSignal[1]=if(random()<0.5,-\PEADSignalSize,\PEADSignalSize);
+				                //Draws signal depending on treatment
+				                if(\TreatmentPEAD==2&PEADSignalsShown>1){
+									PEADSignal[1]=if(random()<0.75,PEADsignals.find(Set==:Set-1,PEADSignal[1]),-PEADsignals.find(Set==:Set-1,PEADSignal[1]));
+								} else {
+									PEADSignal[1]=if(random()<0.5,-\PEADSignalSize,\PEADSignalSize);
+								}
 				                PEADSignal[2]=-PEADSignal[1];
 				                PEADValue[1]=if(\PEADSignalsShown==1,\PEADStartValue,PEADsignals.find(Set==:Set-1,PEADValue[1]))+PEADSignal[1];
 				                PEADValue[2]=if(\PEADSignalsShown==1,\PEADStartValue,PEADsignals.find(Set==:Set-1,PEADValue[2]))+PEADSignal[2];
@@ -17596,7 +17622,13 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 				PEADSignalSize=0.5;
 				PEADsignals.new{
 				    Set=\PEADSignalsShown;
-				    PEADSignal[1]=if(random()<0.5,-\PEADSignalSize,\PEADSignalSize);
+				
+				    //Draws signal depending on treatment
+				    if(\TreatmentPEAD==2){
+				        PEADSignal[1]=if(random()<0.75,PEADsignals.find(Set==:Set-1,PEADSignal[1]),-PEADsignals.find(Set==:Set-1,PEADSignal[1]));
+				    } else {
+				        PEADSignal[1]=if(random()<0.5,-\PEADSignalSize,\PEADSignalSize);
+				    }
 				    PEADSignal[2]=-PEADSignal[1];
 				    PEADValue[1]=if(\PEADSignalsShown==1,\PEADStartValue,PEADsignals.find(Set==:Set-1,PEADValue[1]))+PEADSignal[1];
 				    PEADValue[2]=if(\PEADSignalsShown==1,\PEADStartValue,PEADsignals.find(Set==:Set-1,PEADValue[2]))+PEADSignal[2];
@@ -17684,13 +17716,13 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 		}
 		program{
 			table = subjects;
-			condition = IsExperimenter==0;
+			condition = IsExperimenter==0&\ContinuousDoubleAuction==1;
 			do{
 				//Fills results table
 				
-				for(Market,\NumMarkets) {
+				for(\FOR1,\NumMarkets) {
 				    results.new{
-				        Market=:Market;
+				        Market=\FOR1;
 				        DisplayMarket=if(Market==1,2,if(Market==2,1,Market));    //Switches order for markets 1 and 2 for display purposes
 				        Subject=:Subject;
 				        Price=if(contracts.count(same(Market)&(Offerer==:Subject|Accepter==:Subject)&Phase==2&VolumeTraded>0)>0,contracts.sum(same(Market)&(Offerer==:Subject|Accepter==:Subject)&Phase==2&VolumeTraded>0,Price*VolumeTraded)/contracts.sum(same(Market)&(Offerer==:Subject|Accepter==:Subject)&Phase==2&VolumeTraded>0,VolumeTraded),-1);
@@ -17705,8 +17737,8 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 				        PEADValue=PEADsignals.find(Set==5,PEADValue[:Market]);
 				        PEADValue4=PEADsignals.find(Set==4,PEADValue[:Market]);
 				        AssetValue=0;
-				        for(Market,\NumMarkets) {
-				            AssetValue=AssetValue+:Assets[Market]*PEADsignals.find(Set==5,PEADValue[:Market])*20;
+				        for(\FOR2,\NumMarkets) {
+				            AssetValue=AssetValue+:Assets[\FOR2]*PEADsignals.find(Set==5,PEADValue[\FOR2])*20;
 				            }
 				        }
 				    }
@@ -17714,6 +17746,11 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 				Profit=Cash+results.sum(same(Subject)&Phase==2,Amount*PEADValue)*20;
 				
 			}
+		}
+		tabledumper{
+			condition = Period==1;
+			outputfilename = "test2.txt";
+			tabledescriptions = "results";
 		}
 		program{
 			table = session;
@@ -17844,7 +17881,7 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 						buttonsequence = HORIZONTAL;
 						item{
 							variable = \Language;
-							format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Period <\\TruePeriod|1>}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Periode <\\TruePeriod|1>}\"";
+							format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Period <if(\\DoPseudoPeriods==1,\\TruePeriod,\\Period)|1>}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Periode <if(\\DoPseudoPeriods==1,\\TruePeriod,\\Period)|1>}\"";
 							input = FALSE;
 						}
 						item{
@@ -17894,7 +17931,7 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 						buttonsequence = HORIZONTAL;
 						item{
 							variable = \Language;
-							format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Period <\\TruePeriod|1>}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Periode <\\TruePeriod|1>}\"";
+							format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Period <if(\\DoPseudoPeriods==1,\\TruePeriod,\\Period)|1>}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Periode <if(\\DoPseudoPeriods==1,\\TruePeriod,\\Period)|1>}\"";
 							input = FALSE;
 						}
 						item{
@@ -18103,7 +18140,7 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 					buttonsequence = HORIZONTAL;
 					item{
 						variable = \Language;
-						format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Period <\\TruePeriod|1>}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Periode <\\TruePeriod|1>}\"";
+						format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Period <if(\\DoPseudoPeriods==1,\\TruePeriod,\\Period)|1>}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Periode <if(\\DoPseudoPeriods==1,\\TruePeriod,\\Period)|1>}\"";
 						input = FALSE;
 					}
 					item{
@@ -25394,6 +25431,28 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 		}
 	}
 	period "2"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "3"{
+		subject 1{
+			group = 1;
+		}
+		subject 2{
+			group = 1;
+		}
+		subject 3{
+			group = 1;
+		}
+	}
+	period "4"{
 		subject 1{
 			group = 1;
 		}
