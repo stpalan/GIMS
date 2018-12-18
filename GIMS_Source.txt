@@ -1,4 +1,4 @@
-treatment "GIMS_v8.2.1_2018-10-22.ztt"{
+treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 	background{
 		table globals{
 		}
@@ -121,8 +121,8 @@ treatment "GIMS_v8.2.1_2018-10-22.ztt"{
 			do{
 				//##### GIMS Version #####
 				
-				GIMSVersion="8.2.1";
-				GIMSDate="22.10.2018";
+				GIMSVersion="8.2.2";
+				GIMSDate="18.12.2018";
 				
 			}
 		}
@@ -14490,12 +14490,13 @@ treatment "GIMS_v8.2.1_2018-10-22.ztt"{
 		}
 		program{
 			table = subjects;
+			condition = IsExperimenter==0&\CallAuction==1;
 			do{
 				//Fills results table
 				
-				for(Market,\NumMarkets){
+				for(\i,\NumMarkets){
 				    results.new{
-				        Market=:Market;
+				        Market=\i;
 				        DisplayMarket=if(Market==1,2,if(Market==2,1,Market));    //Switches order for markets 1 and 2 for display purposes
 				        Subject=:Subject;
 				        Price=\AuctionPrice[Market];
@@ -25040,12 +25041,13 @@ treatment "GIMS_v8.2.1_2018-10-22.ztt"{
 		}
 		program{
 			table = subjects;
+			condition = IsExperimenter==0&\ContinuousDoubleAuction==1;
 			do{
 				//Fills results table
 				
-				for(Market,\NumMarkets){
+				for(\FOR1,\NumMarkets){
 				    results.new{
-				        Market=:Market;
+				        Market=\FOR1;
 				        DisplayMarket=if(Market==1,2,if(Market==2,1,Market));    //Switches order for markets 1 and 2 for display purposes
 				        Subject=:Subject;
 				        Price=if(contracts.count(same(Market)&(Offerer==:Subject|Accepter==:Subject)&Phase==2&VolumeTraded>0)>0,contracts.sum(same(Market)&(Offerer==:Subject|Accepter==:Subject)&Phase==2&VolumeTraded>0,Price*VolumeTraded)/contracts.sum(same(Market)&(Offerer==:Subject|Accepter==:Subject)&Phase==2&VolumeTraded>0,VolumeTraded),-1);
