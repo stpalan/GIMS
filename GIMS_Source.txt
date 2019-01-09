@@ -174,7 +174,7 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 				TimerInterval=1;
 				
 				//Questionnaire settings
-				CurrentYear=2016;
+				CurrentYear=2019;
 				
 				//Payoff settings
 				ExchangeRate=1/120;
@@ -1138,7 +1138,7 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 			do{
 				//======================================= PEAD Testmode
 				
-				TimeContinuousDoubleAuction=100;
+				TimeContinuousDoubleAuction=10;
 				PEADSignalInterval=round(TimeContinuousDoubleAuction/5,1);
 				
 			}
@@ -16795,13 +16795,13 @@ treatment "GIMS_v7.4.11(fix)_2018-12-18_PEAD.ztt"{
 							item{
 								label = "Aktie A";
 								variable = PEADValueA;
-								format = "0.01";
+								format = "<>!text: 1=\"<PEADValueA|0.01> (<PEADValueA*20|0.01>)\"";
 								input = FALSE;
 							}
 							item{
 								label = "Aktie B";
 								variable = PEADValueB;
-								format = "0.01";
+								format = "<>!text: 1=\"<PEADValueB|0.01> (<PEADValueB*20|0.01>)\"";
 								input = FALSE;
 							}
 						}
