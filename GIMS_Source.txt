@@ -1,4 +1,4 @@
-treatment "GIMS_v8.2.2_2018-12-18.ztt"{
+treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	background{
 		table globals{
 		}
@@ -121,8 +121,8 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 			do{
 				//##### GIMS Version #####
 				
-				GIMSVersion="8.2.2";
-				GIMSDate="18.12.2018";
+				GIMSVersion="8.3.0";
+				GIMSDate="21.01.2019";
 				
 			}
 		}
@@ -237,7 +237,8 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 			do{
 				//### P3: General market parameters ###
 				
-				NumMarkets=1;
+				NumMarkets=4;
+				ForceSingleMarket=0;
 				array MultiUnitTrading[NumMarkets];
 				PresetDividends=0;
 				PresetSignals=0;
@@ -9601,7 +9602,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 												cutbottom = TRUE;
 												containerbox "SingleMarket"{
 													hasframe = FALSE;
-													displaycondition = \NumMarkets==1;
+													displaycondition = \NumMarkets==1|\ForceSingleMarket==1;
 													standardbox "NoIndicativePrice"{
 														hasframe = FALSE;
 														displaycondition = \IndicativePriceInterval<0;
@@ -9653,7 +9654,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 												}
 												containerbox "MultiMarkets"{
 													hasframe = FALSE;
-													displaycondition = \NumMarkets>1;
+													displaycondition = \NumMarkets>1&\ForceSingleMarket==0;
 													standardbox "NoIndicativePrice"{
 														hasframe = FALSE;
 														displaycondition = \IndicativePriceInterval<0;
@@ -9710,7 +9711,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 							}
 							containerbox "TopContainer_Signals"{
 								hasframe = FALSE;
-								displaycondition = \NumMarkets==1;
+								displaycondition = \NumMarkets==1&\ForceSingleMarket==0;
 								containerbox "SignalsContainer"{
 									hasframe = TRUE;
 									left = 5p;
@@ -9785,7 +9786,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 								height = 300p;
 								top = 5p;
 								cuttop = TRUE;
-								displaycondition = \NumMarkets>1;
+								displaycondition = \NumMarkets>1&\ForceSingleMarket==0;
 								containerbox "Market"{
 									hasframe = FALSE;
 									height = 300p;
@@ -12426,7 +12427,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 													cutbottom = TRUE;
 													containerbox "SingleMarket"{
 														hasframe = FALSE;
-														displaycondition = \NumMarkets==1;
+														displaycondition = \NumMarkets==1|\ForceSingleMarket==1;
 														standardbox "NoIndicativePrice"{
 															hasframe = FALSE;
 															displaycondition = \IndicativePriceInterval<0;
@@ -12478,7 +12479,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 													}
 													containerbox "MultiMarkets"{
 														hasframe = FALSE;
-														displaycondition = \NumMarkets>1;
+														displaycondition = \NumMarkets>1&\ForceSingleMarket==0;
 														standardbox "NoIndicativePrice"{
 															hasframe = FALSE;
 															displaycondition = \IndicativePriceInterval<0;
@@ -12536,7 +12537,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 							}
 							containerbox "MiddleContainer"{
 								hasframe = FALSE;
-								displaycondition = \NumMarkets>1;
+								displaycondition = \NumMarkets>1&\ForceSingleMarket==0;
 								standardbox "Text"{
 									hasframe = FALSE;
 									buttonposition = BOTTOMRIGHT;
@@ -12568,7 +12569,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 40p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>2;
+									displaycondition = \NumMarkets>=2&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Markt 1"{
@@ -12592,7 +12593,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 40p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>2;
+									displaycondition = \NumMarkets>=2&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Markt 2"{
@@ -12616,7 +12617,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 40p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>2;
+									displaycondition = \NumMarkets>=3&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Markt 3"{
@@ -12640,7 +12641,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 40p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>=4;
+									displaycondition = \NumMarkets>=4&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Markt 4"{
@@ -12664,7 +12665,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 40p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>5;
+									displaycondition = \NumMarkets>=5&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Markt 5"{
@@ -12692,7 +12693,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 40p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>2;
+									displaycondition = \NumMarkets>=2&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Market 1"{
@@ -12716,7 +12717,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 40p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>2;
+									displaycondition = \NumMarkets>=2&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Market 2"{
@@ -12740,7 +12741,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 40p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>2;
+									displaycondition = \NumMarkets>=3&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Market 3"{
@@ -12764,7 +12765,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 40p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>=4;
+									displaycondition = \NumMarkets>=4&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Market 4"{
@@ -12788,7 +12789,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 40p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>5;
+									displaycondition = \NumMarkets>5&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Market 5"{
@@ -12822,7 +12823,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 45p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>2;
+									displaycondition = \NumMarkets>=2&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Markt 1"{
@@ -12846,7 +12847,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 45p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>2;
+									displaycondition = \NumMarkets>=2&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Markt 2"{
@@ -12870,7 +12871,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 45p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>2;
+									displaycondition = \NumMarkets>=3&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Markt 3"{
@@ -12894,7 +12895,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 45p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>=4;
+									displaycondition = \NumMarkets>=4&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Markt 4"{
@@ -12918,7 +12919,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 45p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>5;
+									displaycondition = \NumMarkets>=5&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Markt 5"{
@@ -12946,7 +12947,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 45p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>2;
+									displaycondition = \NumMarkets>=2&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Market 1"{
@@ -12970,7 +12971,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 45p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>2;
+									displaycondition = \NumMarkets>=2&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Market 2"{
@@ -12994,7 +12995,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 45p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>2;
+									displaycondition = \NumMarkets>=3&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Market 3"{
@@ -13018,7 +13019,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 45p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>=4;
+									displaycondition = \NumMarkets>=4&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Market 4"{
@@ -13042,7 +13043,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									height = 45p;
 									top = 0p;
 									cuttop = TRUE;
-									displaycondition = \NumMarkets>5;
+									displaycondition = \NumMarkets>=5&\ForceSingleMarket==0;
 									buttonposition = BOTTOMRIGHT;
 									buttonsequence = HORIZONTAL;
 									button "Market 5"{
@@ -14680,7 +14681,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 				}
 				standardbox "ContentSingleMarket"{
 					hasframe = TRUE;
-					displaycondition = \PracticePeriod==0&\NumMarkets==1;
+					displaycondition = \PracticePeriod==0&(\NumMarkets==1|\ForceSingleMarket==1);
 					buttonposition = BOTTOMRIGHT;
 					buttonsequence = HORIZONTAL;
 					item{
@@ -14737,7 +14738,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 				}
 				containerbox "ContentMultiMarket"{
 					hasframe = TRUE;
-					displaycondition = \PracticePeriod==0&\NumMarkets>1;
+					displaycondition = \PracticePeriod==0&(\NumMarkets>1&\ForceSingleMarket!=1);
 					standardbox "Text"{
 						hasframe = TRUE;
 						height = 200p;
@@ -15174,7 +15175,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 				displaycondition = IsExperimenter==0&\PracticePeriod==0;
 				standardbox "ContentSingleMarket"{
 					hasframe = TRUE;
-					displaycondition = \PracticePeriod==0&\NumMarkets==1;
+					displaycondition = \PracticePeriod==0&(\NumMarkets==1|\ForceSingleMarket==1);
 					buttonposition = BOTTOMRIGHT;
 					buttonsequence = HORIZONTAL;
 					item{
@@ -15231,7 +15232,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 				}
 				containerbox "ContentMultiMarket"{
 					hasframe = TRUE;
-					displaycondition = \PracticePeriod==0&\NumMarkets>1;
+					displaycondition = \PracticePeriod==0&(\NumMarkets>1&\ForceSingleMarket!=1);
 					standardbox "Text"{
 						hasframe = TRUE;
 						height = 200p;
@@ -21716,7 +21717,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 											standardbox "SummaryInformationMultiMarket"{
 												hasframe = TRUE;
 												bottom = 0p;
-												displaycondition = \NumMarkets>1;
+												displaycondition = \NumMarkets>1&\ForceSingleMarket==0;
 												buttonposition = BOTTOMRIGHT;
 												buttonsequence = HORIZONTAL;
 												item{
@@ -21957,7 +21958,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 									}
 									containerbox "MarketOverview"{
 										hasframe = TRUE;
-										displaycondition = \NumMarkets>1;
+										displaycondition = \NumMarkets>1&\ForceSingleMarket==0;
 										plotbox "Background"{
 											hasframe = TRUE;
 											bgcolor = layout.find(ID=="CDA_MarketOverview_BG",Color);
@@ -25214,7 +25215,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 				}
 				containerbox "ContentSingleMarket"{
 					hasframe = FALSE;
-					displaycondition = \NumMarkets==1;
+					displaycondition = \NumMarkets==1|\ForceSingleMarket==1;
 					standardbox "Content"{
 						hasframe = TRUE;
 						displaycondition = \PracticePeriod==0;
@@ -25261,7 +25262,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 				}
 				containerbox "ContentMultiMarket"{
 					hasframe = TRUE;
-					displaycondition = \NumMarkets>1;
+					displaycondition = \NumMarkets>1&\ForceSingleMarket==0;
 					standardbox "Text"{
 						hasframe = TRUE;
 						height = 200p;
@@ -25504,7 +25505,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 			noalertscreen = FALSE;
 			containerbox "ContentSingleMarket"{
 				hasframe = FALSE;
-				displaycondition = \NumMarkets==1;
+				displaycondition = \NumMarkets==1|\ForceSingleMarket==1;
 				standardbox "Content"{
 					hasframe = TRUE;
 					displaycondition = \PracticePeriod==0;
@@ -25551,7 +25552,7 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 			}
 			containerbox "ContentMultiMarket"{
 				hasframe = TRUE;
-				displaycondition = \NumMarkets>1;
+				displaycondition = \NumMarkets>1&\ForceSingleMarket==0;
 				standardbox "Text"{
 					hasframe = TRUE;
 					height = 200p;
@@ -32788,6 +32789,14 @@ treatment "GIMS_v8.2.2_2018-12-18.ztt"{
 			condition = \BackupDump==1;
 			outputfilename = "<>GIMS_P<\\Period|!text:9=\"00<Period|1>\";10=\"0<Period|1>\";99=\"0<Period|1>\";100=\"<Period|1>\";>_<gettime()|1>.zBackup";
 			tabledescriptions = "globals;subjects;summary;contracts;session;auctionoffers;auctionpractice;dividends;marketsummary;offers;practicetasks;profit;results;signals;timelog;transactions";
+		}
+		program{
+			table = subjects;
+			do{
+				//Kicks out subjects in case clock is stopped
+				
+				LeaveStage=1;
+			}
 		}
 		screen action{
 			usesbg = TRUE;
