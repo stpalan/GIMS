@@ -1,4 +1,4 @@
-treatment "GIMS_v8.3.0_2019-01-21.ztt"{
+treatment "GIMS_v8.3.1_2019-03-05.ztt"{
 	background{
 		table globals{
 		}
@@ -121,8 +121,8 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 			do{
 				//##### GIMS Version #####
 				
-				GIMSVersion="8.3.0";
-				GIMSDate="21.01.2019";
+				GIMSVersion="8.3.1";
+				GIMSDate="05.03.2019";
 				
 			}
 		}
@@ -1284,6 +1284,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "Settings"{
 		startwaitforall = TRUE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -1412,6 +1413,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 						checker{
 							condition = \SettingsEntryShow==0;
 							message = "<><\\Language|!text:1=\"Please enter a new value before continuing!\";2=\"Bitte geben Sie einen neuen Wert ein, bevor Sie fortfahren!\">";
+							yesButtonStr = "";
 							noButtonStr = "OK";
 						}
 						program{
@@ -3337,6 +3339,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "ControlQuestions"{
 		startwaitforall = TRUE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -3863,6 +3866,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "HoltLauryBefore"{
 		startwaitforall = TRUE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -3924,6 +3928,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 							checker{
 								condition = HLChoice!=\I;
 								message = "You have not yet chosen the row in which you want to switch from option A to option B.\r\n\r\nPlease choose this row and click \"Confirm\".";
+								yesButtonStr = "";
 								noButtonStr = "OK";
 							}
 							program{
@@ -3968,6 +3973,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 							checker{
 								condition = HLChoice!=\I;
 								message = "Sie haben noch nicht ausgewählt, in welcher Zeile Sie von Option A zu Option B wechseln wollen.\r\n\r\nBitte wählen Sie diese Zeile und klicken Sie \"Bestätigen\".";
+								yesButtonStr = "";
 								noButtonStr = "OK";
 							}
 							program{
@@ -6069,6 +6075,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "HoltLauryResultBefore"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = ifnoinput;
@@ -6396,6 +6403,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "CRTBefore"{
 		startwaitforall = TRUE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -6642,6 +6650,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "CallAuction"{
 		startwaitforall = TRUE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = always;
@@ -7035,11 +7044,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "You have selected an order from another trader. You can only cancel your own orders!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Somebody else was faster!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -7122,11 +7133,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Jemand anderes war schneller!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -7215,11 +7228,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "You have selected an order from another trader. You can only cancel your own orders!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Somebody else was faster!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -7311,11 +7326,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Jemand anderes war schneller!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -7439,11 +7456,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "You have selected an order from another trader. You can only cancel your own orders!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Somebody else was faster!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -7534,11 +7553,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Jemand anderes war schneller!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -7623,11 +7644,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "You have selected an order from another trader. You can only cancel your own orders!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Somebody else was faster!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -7712,11 +7735,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Jemand anderes war schneller!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -7836,11 +7861,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = 0 < (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "You do not have enough assets to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -7893,11 +7920,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = \MinPrice <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
 															message = "You do not have enough cash to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -7956,21 +7985,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "You must enter a price greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = 0 < (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "You do not have enough assets to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[1], Price);
 															message = "The price of a new sell order must be higher than the highest price you offer to buy for.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -8022,21 +8055,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "You must enter a price greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "You do not have enough cash to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[1], Price);
 															message = "The price of a new buy orders must be lower than the lowest price you offer to sell for.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -8111,11 +8148,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = 0 < (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> Verkaufsgebot(e) abgeben. Bitte stornieren Sie ein existierendes Verkaufsgebot, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -8168,11 +8207,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> Kaufgebot(e) abgeben. Bitte stornieren Sie ein existierendes Kaufgebot, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = \MinPrice <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
 															message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -8231,21 +8272,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "Sie müssen einen größeren Preis als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = 0 < (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[1], Price);
 															message = "Der Preis eines neuen Verkaufsgebots muss höher als der höchste Preis sein, zu dem Sie anbieten zu kaufen.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> Verkaufsgebot(e) abgeben. Bitte stornieren Sie ein existierendes Verkaufsgebot, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -8297,21 +8342,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "Sie müssen einen größeren Preis als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[1], Price);
 															message = "Der Preis eines neuen Kaufgebots muss geringer als der geringste Preis sein, zu dem Sie anbieten zu verkaufen.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> Kaufgebot(e) abgeben. Bitte stornieren Sie ein existierendes Kaufgebot, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -8394,16 +8443,19 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Volume!=0;
 															message = "You must enter a volume greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "You do not have enough assets to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -8455,16 +8507,19 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Volume!=0;
 															message = "You must enter a volume greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = \MinPrice * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
 															message = "You do not have enough cash to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -8522,26 +8577,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "You must enter a price greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume!=0;
 															message = "You must enter a volume greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "You do not have enough assets to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[1], Price);
 															message = "The price of a new sell order must be higher than the highest price you offer to buy for.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -8592,26 +8652,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "You must enter a price greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume!=0;
 															message = "You must enter a volume greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "You do not have enough cash to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[1], Price);
 															message = "The price of a new buy order must be lower than the lowest price you offer to sell for.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -8692,16 +8757,19 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Volume!=0;
 															message = "Sie müssen einen größeres Volumen als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> Verkaufsgebot(e) abgeben. Bitte stornieren Sie ein existierendes Verkaufsgebot, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -8752,16 +8820,19 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Volume!=0;
 															message = "Sie müssen einen größeres Volumen als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> Kaufgebot(e) abgeben. Bitte stornieren Sie ein existierendes Kaufgebot, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = \MinPrice * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
 															message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
@@ -8818,26 +8889,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "Sie müssen einen größeren Preis als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume!=0;
 															message = "Sie müssen einen größeres Volumen als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[1], Price);
 															message = "Der Preis eines neuen Verkaufsgebots muss höher als der höchste Preis sein, zu dem Sie anbieten zu kaufen.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> Verkaufsgebot(e) abgeben. Bitte stornieren Sie ein existierendes Verkaufsgebot, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -8888,26 +8964,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "Sie müssen einen größeren Preis als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume!=0;
 															message = "Sie müssen einen größeres Volumen als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[1], Price);
 															message = "Der Preis eines neuen Kaufgebots muss geringer als der geringste Preis sein, zu dem Sie anbieten zu verkaufen.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> Kaufgebot(e) abgeben. Bitte stornieren Sie ein existierendes Kaufgebot, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -8978,21 +9059,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "You must enter a price greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = 0 < (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "You do not have enough assets to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[1], Price);
 															message = "The price of a new sell order must be higher than the lowest price you offer to buy for.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -9043,21 +9128,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "You must enter a price greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "You do not have enough cash to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[1], Price);
 															message = "The price of a new buy order must be lower than the highest price you offer to sell for.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -9131,21 +9220,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "Sie müssen einen größeren Preis als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = 0 < (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[1], Price);
 															message = "Der Preis eines neuen Verkaufsgebots muss höher als der höchste Preis sein, zu dem Sie anbieten zu kaufen.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[:DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[:DisplayMarket[1]])|\NumTypedOffersCallAuction[:DisplayMarket[1]]<=0;
 															message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[:DisplayMarket[1]]|1> Verkaufsgebot(e) abgeben. Bitte stornieren Sie ein existierendes Verkaufsgebot, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -9196,21 +9289,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "Sie müssen einen größeren Preis als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[1], Price);
 															message = "Der Preis eines neuen Kaufgebots muss geringer als der geringste Preis sein, zu dem Sie anbieten zu verkaufen.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> Kaufgebot(e) abgeben. Bitte stornieren Sie ein existierendes Kaufgebot, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -9293,26 +9390,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "You must enter a price greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume!=0;
 															message = "You must enter a volume greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "You do not have enough assets to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[1], Price);
 															message = "The price of a new sell order must be higher than the highest price you offer to buy for.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -9362,26 +9464,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "You must enter a price greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume!=0;
 															message = "You must enter a volume greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "You do not have enough cash to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[1], Price);
 															message = "The price of a new buy order must be lower than the lowest price you offer to sell for.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -9463,26 +9570,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "Sie müssen einen größeren Preis als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume!=0;
 															message = "Sie müssen einen größeres Volumen als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume <= (:Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[1]&Status==0,Volume);
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[1], Price);
 															message = "Der Preis eines neuen Verkaufsgebots muss höher als der höchste Preis sein, zu dem Sie anbieten zu kaufen.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[:DisplayMarket[1]]|1> Verkaufsgebot(e) abgeben. Bitte stornieren Sie ein existierendes Verkaufsgebot, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -9533,26 +9645,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "Sie müssen einen größeren Preis als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume!=0;
 															message = "Sie müssen einen größeres Volumen als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 															message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[1], Price);
 															message = "Der Preis eines neuen Kaufgebots muss geringer als der geringste Preis sein, zu dem Sie anbieten zu verkaufen.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\NumTypedOffersCallAuction[DisplayMarket[1]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[1]])|\\NumTypedOffersCallAuction[DisplayMarket[1]]<=0;
 															message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> Kaufgebot(e) abgeben. Bitte stornieren Sie ein existierendes Kaufgebot, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -9860,11 +9977,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Offerer == :Subject;
 															message = "You have selected an order from another trader. You can only cancel your own orders!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Status==0;
 															message = "Somebody else was faster!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -9947,11 +10066,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Offerer == :Subject;
 															message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Status==0;
 															message = "Jemand anderes war schneller!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -10040,11 +10161,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Offerer == :Subject;
 															message = "You have selected an order from another trader. You can only cancel your own orders!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Status==0;
 															message = "Somebody else was faster!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -10136,11 +10259,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Offerer == :Subject;
 															message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Status==0;
 															message = "Jemand anderes war schneller!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -10264,11 +10389,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Offerer == :Subject;
 															message = "You have selected an order from another trader. You can only cancel your own orders!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Status==0;
 															message = "Somebody else was faster!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -10359,11 +10486,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Offerer == :Subject;
 															message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Status==0;
 															message = "Jemand anderes war schneller!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -10448,11 +10577,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Offerer == :Subject;
 															message = "You have selected an order from another trader. You can only cancel your own orders!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Status==0;
 															message = "Somebody else was faster!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -10537,11 +10668,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Offerer == :Subject;
 															message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Status==0;
 															message = "Jemand anderes war schneller!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -10661,11 +10794,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = 0 < (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "You do not have enough assets to submit this order!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -10718,11 +10853,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = \MinPrice <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
 																message = "You do not have enough cash to submit this order!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
@@ -10781,21 +10918,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "You must enter a price greater than zero!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = 0 < (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "You do not have enough assets to submit this order!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[2], Price);
 																message = "The price of a new sell order must be higher than the highest price you offer to buy for.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -10847,21 +10988,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "You must enter a price greater than zero!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "You do not have enough cash to submit this order!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
 																message = "The price of a new buy order must be lower than the lowest price you offer to sell for.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -10936,11 +11081,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = 0 < (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> Verkaufsgebot(e) abgeben. Bitte stornieren Sie ein existierendes Verkaufsgebot, bevor Sie ein neues abgeben.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -10993,11 +11140,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> Kaufgebot(e) abgeben. Bitte stornieren Sie ein existierendes Kaufgebot, bevor Sie ein neues abgeben.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = \MinPrice <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
 																message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
@@ -11056,21 +11205,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "Sie müssen einen größeren Preis als Null eingeben!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = 0 < (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[2], Price);
 																message = "Der Preis eines neuen Verkaufsgebots muss höher als der höchste Preis sein, zu dem Sie anbieten zu kaufen.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> Verkaufsgebot(e) abgeben. Bitte stornieren Sie ein existierendes Verkaufsgebot, bevor Sie ein neues abgeben.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -11122,21 +11275,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "Sie müssen einen größeren Preis als Null eingeben!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
 																message = "Der Preis eines neuen Kaufgebots muss geringer als der geringste Preis sein, zu dem Sie anbieten zu verkaufen.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> Kaufgebot(e) abgeben. Bitte stornieren Sie ein existierendes Kaufgebot, bevor Sie ein neues abgeben.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -11219,16 +11376,19 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Volume!=0;
 																message = "You must enter a volume greater than zero!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "You do not have enough assets to submit this order!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -11280,16 +11440,19 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Volume!=0;
 																message = "You must enter a volume greater than zero!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = \MinPrice * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
 																message = "You do not have enough cash to submit this order!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
@@ -11347,26 +11510,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "You must enter a price greater than zero!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Volume!=0;
 																message = "You must enter a volume greater than zero!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "You do not have enough assets to submit this order!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[2], Price);
 																message = "The price of a new sell order must be higher than the highest price you offer to buy for.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -11417,26 +11585,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "You must enter a price greater than zero!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Volume!=0;
 																message = "You must enter a volume greater than zero!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "You do not have enough cash to submit this order!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
 																message = "The price of a new buy order must be lower than the lowest price you offer to sell for.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -11517,16 +11690,19 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Volume!=0;
 																message = "Sie müssen einen größeres Volumen als Null eingeben!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> Verkaufsgebot(e) abgeben. Bitte stornieren Sie ein existierendes Verkaufsgebot, bevor Sie ein neues abgeben.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -11577,16 +11753,19 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Volume!=0;
 																message = "Sie müssen einen größeres Volumen als Null eingeben!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> Kaufgebot(e) abgeben. Bitte stornieren Sie ein existierendes Kaufgebot, bevor Sie ein neues abgeben.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = \MinPrice * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0,Volume*Price);
 																message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
@@ -11643,26 +11822,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "Sie müssen einen größeren Preis als Null eingeben!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Volume!=0;
 																message = "Sie müssen einen größeres Volumen als Null eingeben!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[2], Price);
 																message = "Der Preis eines neuen Verkaufsgebots muss höher als der höchste Preis sein, zu dem Sie anbieten zu kaufen.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> Verkaufsgebot(e) abgeben. Bitte stornieren Sie ein existierendes Verkaufsgebot, bevor Sie ein neues abgeben.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -11713,26 +11897,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "Sie müssen einen größeren Preis als Null eingeben!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Volume!=0;
 																message = "Sie müssen einen größeres Volumen als Null eingeben!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
 																message = "Der Preis eines neuen Kaufgebots muss geringer als der geringste Preis sein, zu dem Sie anbieten zu verkaufen.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[1]]|1> Kaufgebot(e) abgeben. Bitte stornieren Sie ein existierendes Kaufgebot, bevor Sie ein neues abgeben.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -11803,21 +11992,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "You must enter a price greater than zero!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = 0 < (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "You do not have enough assets to submit this order!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[2], Price);
 																message = "The price of a new sell order must be higher than the highest price you offer to buy for.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -11868,21 +12061,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "You must enter a price greater than zero!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "You do not have enough cash to submit this order!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
 																message = "The price of a new buy order must be lower than the lowest price you offer to sell for.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -11956,21 +12153,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "Sie müssen einen größeren Preis als Null eingeben!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = 0 < (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[2], Price);
 																message = "Der Preis eines neuen Verkaufsgebots muss höher als der höchste Preis sein, zu dem Sie anbieten zu kaufen.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[:DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[:DisplayMarket[2]])|\NumTypedOffersCallAuction[:DisplayMarket[2]]<=0;
 																message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[:DisplayMarket[2]]|1> Verkaufsgebot(e) abgeben. Bitte stornieren Sie ein existierendes Verkaufsgebot, bevor Sie ein neues abgeben.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -12021,21 +12222,25 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "Sie müssen einen größeren Preis als Null eingeben!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
 																message = "Der Preis eines neuen Kaufgebots muss geringer als der geringste Preis sein, zu dem Sie anbieten zu verkaufen.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> Kaufgebot(e) abgeben. Bitte stornieren Sie ein existierendes Kaufgebot, bevor Sie ein neues abgeben.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -12118,26 +12323,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "You must enter a price greater than zero!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Volume!=0;
 																message = "You must enter a volume greater than zero!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "You do not have enough assets to submit this order!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[2], Price);
 																message = "The price of a new sell order must be higher than the highest price you offer to buy for.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>You cannot create more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> sell order(s). Please cancel an existing sell order before submitting a new one.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -12187,26 +12397,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "You must enter a price greater than zero!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Volume!=0;
 																message = "You must enter a volume greater than zero!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "You do not have enough cash to submit this order!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
 																message = "The price of a new buy order must be lower than the lowest price you offer to sell for.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>You cannot have more than <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> buy order(s) outstanding at any time. Please cancel an existing buy order before submitting a new one.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -12288,26 +12503,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "Sie müssen einen größeren Preis als Null eingeben!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Volume!=0;
 																message = "Sie müssen einen größeres Volumen als Null eingeben!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Volume <= (:Assets[:DisplayMarket[2]]+:ShortingCapacityAssets[:DisplayMarket[2]])-auctionoffers.sum(Offerer==::Subject&Type==-1&Market==:DisplayMarket[2]&Status==0,Volume);
 																message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price>auctionoffers.maximum(Offerer==:Subject&Type==1&Status==0&Market==:DisplayMarket[2], Price);
 																message = "Der Preis eines neuen Verkaufsgebots muss höher als der höchste Preis sein, zu dem Sie anbieten zu kaufen.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==-1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[:DisplayMarket[2]]|1> Verkaufsgebot(e) abgeben. Bitte stornieren Sie ein existierendes Verkaufsgebot, bevor Sie ein neues abgeben.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -12358,26 +12578,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 															checker{
 																condition = Price!=0;
 																message = "Sie müssen einen größeren Preis als Null eingeben!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Volume!=0;
 																message = "Sie müssen einen größeres Volumen als Null eingeben!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price * Volume <= (:Cash+:ShortingCapacityCash)-auctionoffers.sum(Offerer==::Subject&Type==1&MarketOrder==0&Status==0,Volume*Price);
 																message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = Price<auctionoffers.minimum(Offerer==:Subject&Type==-1 & Status == 0& MarketOrder==0&Market==:DisplayMarket[2], Price);
 																message = "Der Preis eines neuen Kaufgebots muss geringer als der geringste Preis sein, zu dem Sie anbieten zu verkaufen.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															checker{
 																condition = (\NumTypedOffersCallAuction[DisplayMarket[2]]>0&auctionoffers.count(Type==1&Status==0&Offerer==::Subject)<\NumTypedOffersCallAuction[DisplayMarket[2]])|\\NumTypedOffersCallAuction[DisplayMarket[2]]<=0;
 																message = "<>Sie können nicht mehr als <\\NumTypedOffersCallAuction[DisplayMarket[2]]|1> Kaufgebot(e) abgeben. Bitte stornieren Sie ein existierendes Kaufgebot, bevor Sie ein neues abgeben.";
+																yesButtonStr = "";
 																noButtonStr = "OK";
 															}
 															program{
@@ -13651,6 +13876,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "CallAuctionResults"{
 		startwaitforall = TRUE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = always;
@@ -15542,6 +15768,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "ContinuousDoubleAuction"{
 		startwaitforall = TRUE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = always;
@@ -17207,26 +17434,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer != :Subject;
 														message = "You have selected your own order. You cannot buy from yourself!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Volume <= :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
 														message = "You do not have enough assets for this trade!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Somebody else was faster!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price);
 														message = "There is an offer to buy at a higher price. Please always select the best order to trade.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==1&Price==:Price,OfferTime);
 														message = "There is an offer to buy at the same price which was submitted sooner. Please always select the best order to trade.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -17530,11 +17762,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "You have selected an order from another trader. You can only cancel your own orders!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Somebody else was faster!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -17646,26 +17880,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer != :Subject;
 														message = "Sie haben Ihr eigenes Gebot markiert. Sie können nicht von sich selbst kaufen!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Volume <= :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
 														message = "Sie haben nicht genügend Aktien für diese Transaktion!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Jemand anderes war schneller!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price);
 														message = "Es gibt ein Kaufgebot mit einem höheren Preis. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==1&Price==:Price,OfferTime);
 														message = "Es gibt ein Kaufgebot mit dem gleichen Preis, das früher abgegeben wurde. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -17969,11 +18208,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Jemand anderes war schneller!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -18102,31 +18343,37 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer != :Subject;
 														message = "You have selected your own order. You cannot buy from yourself!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = SellVol>0;
 														message = "You have to state the number of assets you want to sell!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = SellVol <= :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
 														message = "You do not have enough assets for this trade!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Somebody else was faster!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price);
 														message = "There is an offer to buy at a higher price. Please always select the best order to trade.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==1&Price==:Price,OfferTime);
 														message = "There is an offer to buy at the same price which was submitted sooner. Please always select the best order to trade.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -18422,11 +18669,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "You have selected an order from another trader. You can only cancel your own orders!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Somebody else was faster!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -18555,31 +18804,37 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer != :Subject;
 														message = "Sie haben Ihr eigenes Gebot markiert. Sie können nicht von sich selbst kaufen!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = SellVol>0;
 														message = "Sie müssen angeben, wie viele Aktien Sie verkaufen wollen!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = SellVol <= :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
 														message = "Sie haben nicht genügend Aktien für diese Transaktion!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Jemand anderes war schneller!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price);
 														message = "Es gibt ein Kaufgebot mit einem höheren Preis. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.maximum(Market==::DisplayMarket[1]&Status==0&Type==1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==1&Price==:Price,OfferTime);
 														message = "Es gibt ein Kaufgebot mit dem gleichen Preis, das früher abgegeben wurde. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -18875,11 +19130,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Jemand anderes war schneller!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -19043,11 +19300,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "You have selected an order from another trader. You can only cancel your own orders!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Somebody else was faster!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -19137,31 +19396,37 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer != :Subject;
 														message = "You have selected your own order. You cannot sell to yourself!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = BuyVol>0;
 														message = "You have to state the number of assets you want to buy!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price*BuyVol <= :Cash+:ShortingCapacityCash;
 														message = "You do not have enough cash to afford this trade!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Somebody else was faster!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price);
 														message = "There is an offer to sell at a lower price. Please always select the best order to trade.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1&Price==:Price,OfferTime);
 														message = "There is an offer to sell at the same price which was submitted sooner. Please always select the best order to trade.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -19500,11 +19765,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Jemand anderes war schneller!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -19594,31 +19861,37 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer != :Subject;
 														message = "Sie haben Ihr eigenes Gebot markiert. Sie können nicht an sich selbst verkaufen!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = BuyVol>0;
 														message = "Sie müssen angeben, wie viele Aktien Sie kaufen wollen!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price*BuyVol <= :Cash+:ShortingCapacityCash;
 														message = "Sie haben nicht genügend Geld für diese Transaktion!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Jemand anderes war schneller!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price);
 														message = "Es gibt ein Verkaufsgebot mit einem geringeren Preis. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1&Price==:Price,OfferTime);
 														message = "Es gibt ein Verkaufsgebot mit dem gleichen Preis, das früher abgegeben wurde. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -19938,11 +20211,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "You have selected an order from another trader. You can only cancel your own orders!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Somebody else was faster!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -20032,26 +20307,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer != :Subject;
 														message = "You have selected your own order. You cannot sell to yourself!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price <= :Cash+:ShortingCapacityCash;
 														message = "You do not have enough cash to afford this trade!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Somebody else was faster!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price);
 														message = "There is an offer to sell at a lower price. Please always select the best order to trade.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1&Price==:Price,OfferTime);
 														message = "There is an offer to sell at the same price which was submitted sooner. Please always select the best order to trade.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -20381,11 +20661,13 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer == :Subject;
 														message = "Sie haben das Gebot eines anderen Marktteilnehmers markiert. Sie können nur Ihre eigenen Gebote stornieren!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Jemand anderes war schneller!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -20475,26 +20757,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													checker{
 														condition = Offerer != :Subject;
 														message = "Sie haben Ihr eigenes Gebot markiert. Sie können nicht an sich selbst verkaufen!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price <= :Cash+:ShortingCapacityCash;
 														message = "Sie haben nicht genügend Geld für diese Transaktion!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Status==0;
 														message = "Jemand anderes war schneller!";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price);
 														message = "Es gibt ein Verkaufsgebot mit einem geringeren Preis. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													checker{
 														condition = Price==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1,Price)&OfferTime==offers.minimum(Market==::DisplayMarket[1]&Status==0&Type==-1&Price==:Price,OfferTime);
 														message = "Es gibt ein Verkaufsgebot mit dem gleichen Preis, das früher abgegeben wurde. Bitte wählen Sie immer das beste Gebot zum Handel aus.";
+														yesButtonStr = "";
 														noButtonStr = "OK";
 													}
 													program{
@@ -20861,26 +21148,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "You must enter a price greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = 0 < :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
 															message = "You do not have enough assets to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price > offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price);
 															message = "The price of a new sell order must be higher than the highest outstanding buy order price. If you really want to sell for this price, click \"Sell\" instead!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price <= offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "A new sell order price must be smaller than or equal to the lowest existing sell order price!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==-1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>You cannot have more than <\\SpamControl|1> ask(s) outstanding at any time. Please cancel an existing ask before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -20953,26 +21245,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "You must enter a price greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price <= :Cash+:ShortingCapacityCash;
 															message = "You do not have enough cash to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price < offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price);
 															message = "The price of a new buy order must be lower than the price of the cheapest outstanding sell order. If you really want to buy for this price, click \"Buy\" instead!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price >= offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "A new buy order price must be greater than or equal to the highest existing buy order price!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>You cannot have more than <\\SpamControl|1> bid(s) outstanding at any time. Please cancel an existing bid before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -21066,26 +21363,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "Sie müssen einen größeren Preis als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = 0 < :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price > offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price);
 															message = "Der Preis eines neuen Verkaufsgebots muss höher als jener des höchsten ausstehenden Kaufgebots sein. Wenn Sie wirklich zu diesem Preis verkaufen wollen, klicken Sie stattdessen \"Verkauf\"!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price <= offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "Der Preis eines neuen Verkaufsgebots darf nicht höher als jener des günstigsten bereits bestehenden Verkaufsgebots sein!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==-1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>Sie können zu keinem Zeitpunkt mehr als <\\SpamControl|1> Verkaufsgebot(e) gleichzeitig ausstehend haben. Bitte stornieren Sie eines Ihrer bestehenden Verkaufsgebote, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -21158,26 +21460,31 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "Sie müssen einen größeren Preis als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price <= :Cash+:ShortingCapacityCash;
 															message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price < offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price);
 															message = "Der Preis eines neuen Kaufgebots muss geringer als der Preis des günstigsten ausstehenden Verkaufsgebots sein. Wenn Sie wirklich zu diesem Preis kaufen wollen, klicken Sie stattdessen \"Kauf\"!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price >= offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "Der Preis eines neuen Kaufgebots darf nicht geringer als jener des höchsten bereits bestehenden Kaufgebots sein!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>Sie können zu keinem Zeitpunkt mehr als <\\SpamControl|1> Kaufgebot(e) gleichzeitig ausstehend haben. Bitte stornieren Sie eines Ihrer bestehenden Kaufgebote, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -21281,31 +21588,37 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "You must enter a price greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume!=0;
 															message = "You must enter a volume greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume <= :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
 															message = "You do not have enough assets to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price > offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price);
 															message = "The price of a new sell order must be higher than the highest outstanding buy order price. If you really want to sell for this price, click \"Sell\" instead!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price <= offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "A new sell order price must be smaller than or equal to the lowest existing sell order price!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==-1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>You cannot have more than <\\SpamControl|1> ask(s) outstanding at any time. Please cancel an existing ask before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -21378,31 +21691,37 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "You must enter a price greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume!=0;
 															message = "You must enter a volume greater than zero!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price * Volume <= :Cash+:ShortingCapacityCash;
 															message = "You do not have enough cash to submit this order!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price < offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price);
 															message = "The price of a new buy order must be lower than the price of the cheapest outstanding sell order. If you really want to buy for this price, click \"Buy\" instead!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price >= offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "A new buy order price must be greater than or equal to the highest existing buy order price!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>You cannot have more than <\\SpamControl|1> bid(s) outstanding at any time. Please cancel an existing bid before submitting a new one.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -21505,31 +21824,37 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "Sie müssen einen größeren Preis als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume!=0;
 															message = "Sie müssen einen größeres Volumen als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume <= :Assets[:DisplayMarket[1]]+:ShortingCapacityAssets[:DisplayMarket[1]];
 															message = "Sie haben nicht genügend Aktien, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price > offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price);
 															message = "Der Preis eines neuen Verkaufsgebots muss höher als jener des höchsten ausstehenden Kaufgebots sein. Wenn Sie wirklich zu diesem Preis verkaufen wollen, klicken Sie stattdessen \"Verkauf\"!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price <= offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "Der Preis eines neuen Verkaufsgebots darf nicht höher als jener des günstigsten bereits bestehenden Verkaufsgebots sein!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==-1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>Sie können zu keinem Zeitpunkt mehr als <\\SpamControl|1> Verkaufsgebot(e) gleichzeitig ausstehend haben. Bitte stornieren Sie eines Ihrer bestehenden Verkaufsgebote, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -21602,31 +21927,37 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 														checker{
 															condition = Price!=0;
 															message = "Sie müssen einen größeren Preis als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Volume!=0;
 															message = "Sie müssen einen größeres Volumen als Null eingeben!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price * Volume <= :Cash+:ShortingCapacityCash;
 															message = "Sie haben nicht genügend Geld, um dieses Gebot abgeben zu können!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price < offers.minimum (Market==::DisplayMarket[1]&Type == -1 & Status == 0, Price);
 															message = "Der Preis eines neuen Kaufgebots muss geringer als der Preis des günstigsten ausstehenden Verkaufsgebots sein. Wenn Sie wirklich zu diesem Preis kaufen wollen, klicken Sie stattdessen \"Kauf\"!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = Price >= offers.maximum (Market==::DisplayMarket[1]&Type == 1 & Status == 0, Price) | OfferImprovementRule[:DisplayMarket[1]]==0;
 															message = "Der Preis eines neuen Kaufgebots darf nicht geringer als jener des höchsten bereits bestehenden Kaufgebots sein!";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														checker{
 															condition = (\SpamControl>0&offers.count(Market==::DisplayMarket[1]&Type==1&Status==0&Offerer==::Subject)<\SpamControl)|\SpamControl<=0;
 															message = "<>Sie können zu keinem Zeitpunkt mehr als <\\SpamControl|1> Kaufgebot(e) gleichzeitig ausstehend haben. Bitte stornieren Sie eines Ihrer bestehenden Kaufgebote, bevor Sie ein neues abgeben.";
+															yesButtonStr = "";
 															noButtonStr = "OK";
 														}
 														program{
@@ -21911,6 +22242,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													emptyallowed = FALSE;
 													allemptyallowed = FALSE;
 													condition = same(Subject)&Done==0;
+													sortfields = "";
 													tablelayout = LIST;
 													scrollatstart = FALSE;
 													scrollatEnd = TRUE;
@@ -21943,6 +22275,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 													emptyallowed = FALSE;
 													allemptyallowed = FALSE;
 													condition = same(Subject)&Done==1;
+													sortfields = "";
 													tablelayout = LIST;
 													scrollatstart = FALSE;
 													scrollatEnd = TRUE;
@@ -22287,6 +22620,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 											emptyallowed = FALSE;
 											allemptyallowed = FALSE;
 											condition = TRUE;
+											sortfields = "";
 											tablelayout = LIST;
 											scrollatstart = FALSE;
 											scrollatEnd = TRUE;
@@ -22321,6 +22655,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 											emptyallowed = FALSE;
 											allemptyallowed = FALSE;
 											condition = TRUE;
+											sortfields = "";
 											tablelayout = LIST;
 											scrollatstart = FALSE;
 											scrollatEnd = TRUE;
@@ -24592,6 +24927,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 											emptyallowed = FALSE;
 											allemptyallowed = FALSE;
 											condition = TRUE;
+											sortfields = "";
 											tablelayout = LIST;
 											scrollatstart = FALSE;
 											scrollatEnd = TRUE;
@@ -24626,6 +24962,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 											emptyallowed = FALSE;
 											allemptyallowed = FALSE;
 											condition = TRUE;
+											sortfields = "";
 											tablelayout = LIST;
 											scrollatstart = FALSE;
 											scrollatEnd = TRUE;
@@ -24954,6 +25291,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "ContinuousDoubleAuctionResults"{
 		startwaitforall = TRUE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = ifnoinput;
@@ -25688,6 +26026,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "CRTAfter"{
 		startwaitforall = TRUE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -25932,6 +26271,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "HoltLauryAfter"{
 		startwaitforall = TRUE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -25989,6 +26329,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 							checker{
 								condition = HLChoice!=\I;
 								message = "You have not yet chosen the row in which you want to switch from option A to option B.\r\n\r\nPlease choose this row and click \"Confirm\".";
+								yesButtonStr = "";
 								noButtonStr = "OK";
 							}
 							program{
@@ -26039,6 +26380,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 							checker{
 								condition = HLChoice!=\I;
 								message = "Sie haben noch nicht ausgewählt, in welcher Zeile Sie von Option A zu Option B wechseln wollen.\r\n\r\nBitte wählen Sie diese Zeile und klicken Sie \"Bestätigen\".";
+								yesButtonStr = "";
 								noButtonStr = "OK";
 							}
 							program{
@@ -28148,6 +28490,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "HoltLauryResultAfter"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = ifnoinput;
@@ -28472,6 +28815,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLitIntro"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -28693,6 +29037,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit01"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -28919,6 +29264,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit02"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -29145,6 +29491,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit03"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -29371,6 +29718,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit04"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -29597,6 +29945,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit05"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -29823,6 +30172,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit06"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -30049,6 +30399,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit07"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -30275,6 +30626,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit08"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -30501,6 +30853,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit09"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -30727,6 +31080,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit10"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -30953,6 +31307,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit11"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -31179,6 +31534,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit12"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -31405,6 +31761,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit13"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -31631,6 +31988,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit14"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -31857,6 +32215,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit15"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -32083,6 +32442,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLit16"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = never;
@@ -32309,6 +32669,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "FinLitResult"{
 		startwaitforall = FALSE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = always;
@@ -32781,6 +33142,7 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 	}
 	stage "BackupDump"{
 		startwaitforall = TRUE;
+		startConditionStr = "";
 		singleentry = FALSE;
 		singleentrycontinuation = FALSE;
 		timeouttype = always;
@@ -32818,13 +33180,17 @@ treatment "GIMS_v8.3.0_2019-01-21.ztt"{
 		}
 	}
 	period "1"{
+		prompt = "";
 		subject 1{
+			name = "";
 			group = 1;
 		}
 		subject 2{
+			name = "";
 			group = 1;
 		}
 		subject 3{
+			name = "";
 			group = 1;
 		}
 	}
