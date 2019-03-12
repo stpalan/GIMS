@@ -1,4 +1,4 @@
-treatment "GIMS_v8.3.1_2019-03-05.ztt"{
+treatment "GIMS_v8.3.2_2019-03-12.ztt"{
 	background{
 		table globals{
 		}
@@ -121,9 +121,31 @@ treatment "GIMS_v8.3.1_2019-03-05.ztt"{
 			do{
 				//##### GIMS Version #####
 				
-				GIMSVersion="8.3.1";
-				GIMSDate="05.03.2019";
+				GIMSVersion="8.3.2";
+				GIMSDate="12.03.2019";
 				
+			}
+		}
+		program{
+			table = globals;
+			do{
+				//##### GIMS License #####
+				
+				/*
+				
+				Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+				
+				    * Any publications (e.g. academic reports, papers, other disclosure of results) based, in whole or in part, on data obtained with the use of this software, or of software derived from it, will acknowledge its use by mentioning the name "GIMS - Graz-Innsbruck Market System" and an appropiate citation of the following publication (or an updated version): Palan, S., 2015. GIMS - Software for Asset Market Experiments, Journal of Behavioral and Experimental Finance 5, 1-14, DOI: 10.1016/j.jbef.2015.02.001.
+				
+				    * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+				
+				    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+				
+				    * Neither the name of GIMS nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+				
+				THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE DEVELOPER(S) OF GIMS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+				
+				*/
 			}
 		}
 		program{
@@ -17502,13 +17524,13 @@ treatment "GIMS_v8.3.1_2019-03-05.ztt"{
 															    //Updates seller
 															    if ( Subject == ::Subject ) {
 															        Cash = Cash + :Price * \TransactedVol;
-															        Assets[DisplayMarket[1]] = Assets[DisplayMarket[1]] - \TransactedVol;
+															        Assets[:Market] = Assets[:Market] - \TransactedVol;
 															        }
 															
 															    //Updates buyer
 															    if ( Subject == :Offerer ) {
 															        Cash = Cash - :Price * \TransactedVol;
-															        Assets[DisplayMarket[1]] = Assets[DisplayMarket[1]] + \TransactedVol;
+															        Assets[:Market] = Assets[:Market] + \TransactedVol;
 															        }
 															    }
 															
@@ -17948,13 +17970,13 @@ treatment "GIMS_v8.3.1_2019-03-05.ztt"{
 															    //Updates seller
 															    if ( Subject == ::Subject ) {
 															        Cash = Cash + :Price * \TransactedVol;
-															        Assets[DisplayMarket[1]] = Assets[DisplayMarket[1]] - \TransactedVol;
+															        Assets[:Market] = Assets[:Market] - \TransactedVol;
 															        }
 															
 															    //Updates buyer
 															    if ( Subject == :Offerer ) {
 															        Cash = Cash - :Price * \TransactedVol;
-															        Assets[DisplayMarket[1]] = Assets[DisplayMarket[1]] + \TransactedVol;
+															        Assets[:Market] = Assets[:Market] + \TransactedVol;
 															        }
 															    }
 															
@@ -22744,7 +22766,7 @@ treatment "GIMS_v8.3.1_2019-03-05.ztt"{
 								table = contracts;
 								condition = Market==:DisplayMarket[1]&Status==1&Phase==2;
 								sorting = Time;
-								connectioncolor = rgb(layout.find(ID=="CDA_Chart_Line",R),layout.find(ID=="CDA_Chart_Line",G),layout.find(ID=="CDA_Chart_Line",B));
+								connectioncolor = layout.find(ID=="CDA_Chart_Line",Color);
 								connectionwidth = 2;
 								filltoxaxis = FALSE;
 								connecttopreviouspoint = TRUE;
@@ -22755,7 +22777,7 @@ treatment "GIMS_v8.3.1_2019-03-05.ztt"{
 									size = 2;
 									numedges = 10;
 									startat = 0;
-									linecolor = rgb(layout.find(ID=="CDA_Chart_Line",R),layout.find(ID=="CDA_Chart_Line",G),layout.find(ID=="CDA_Chart_Line",B));
+									linecolor = layout.find(ID=="CDA_Chart_Line",Color);
 									linewidth = 2;
 								}
 							}
@@ -22799,7 +22821,7 @@ treatment "GIMS_v8.3.1_2019-03-05.ztt"{
 								table = contracts;
 								condition = Market==:DisplayMarket[1]&Status==1&Phase==2;
 								sorting = Time;
-								connectioncolor = rgb(layout.find(ID=="CDA_Chart_Line",R),layout.find(ID=="CDA_Chart_Line",G),layout.find(ID=="CDA_Chart_Line",B));
+								connectioncolor = layout.find(ID=="CDA_Chart_Line",Color);
 								connectionwidth = 2;
 								filltoxaxis = FALSE;
 								connecttopreviouspoint = TRUE;
@@ -22810,7 +22832,7 @@ treatment "GIMS_v8.3.1_2019-03-05.ztt"{
 									size = 2;
 									numedges = 10;
 									startat = 0;
-									linecolor = rgb(layout.find(ID=="CDA_Chart_Line",R),layout.find(ID=="CDA_Chart_Line",G),layout.find(ID=="CDA_Chart_Line",B));
+									linecolor = layout.find(ID=="CDA_Chart_Line",Color);
 									linewidth = 2;
 								}
 							}
