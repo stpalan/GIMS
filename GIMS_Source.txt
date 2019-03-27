@@ -1,4 +1,4 @@
-treatment "GIMS_v7.4.11(fix)_2019-02-09_PEAD.ztt"{
+treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 	background{
 		table globals{
 		}
@@ -96,7 +96,7 @@ treatment "GIMS_v7.4.11(fix)_2019-02-09_PEAD.ztt"{
 			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
-		numsubjects = 3;
+		numsubjects = 13;
 		numgroups = 1;
 		numpracticeperiods = 0;
 		numactualperiods = 4;
@@ -118,7 +118,7 @@ treatment "GIMS_v7.4.11(fix)_2019-02-09_PEAD.ztt"{
 				//##### GIMS Version 7.3.4 #####
 				
 				GIMSVersion="7.3.4";
-				GIMSDate="06.09.2016";
+				GIMSDate="27.03.2019";
 				
 			}
 		}
@@ -165,8 +165,8 @@ treatment "GIMS_v7.4.11(fix)_2019-02-09_PEAD.ztt"{
 				
 				Testmode1=0;   //Turns on Experimenter buttons on all screens
 				CQTestmode=0;
-				PEADTestmode=1;
-				TreatmentPEAD=1;
+				PEADTestmode=0;
+				TreatmentPEAD=2;
 				
 				PracticePeriod=0;
 				NumExperimenterSubjects=1;
@@ -1260,8 +1260,7 @@ treatment "GIMS_v7.4.11(fix)_2019-02-09_PEAD.ztt"{
 		program{
 			table = subjects;
 			do{
-				Participate=if(\ForcedExitExperiment+\ForcedExitPeriod>0,0,1)*\ControlQuestions*(1-\CQTestmode)*if(\DoPseudoPeriods==1&\TruePeriod==1,1,0);
-				
+				Participate=if(\ForcedExitExperiment+\ForcedExitPeriod>0,0,1)*\ControlQuestions*(1-\CQTestmode);
 			}
 		}
 		program{
@@ -1729,16 +1728,16 @@ treatment "GIMS_v7.4.11(fix)_2019-02-09_PEAD.ztt"{
 					item{
 					}
 					item{
-						label = "<>{\\rtf \\fs<\\FontSizeCQ|1> \\qc <\\Language|!text:1=\"\";2=\"Am Ende der Handelsperiode, also nach der vierten Gewinnankündigung, beträgt die Gewinnschätzung für Unternehmen B 4,00. Was können Sie über den Rückkaufwert einer B-Aktie sagen?\">}";
+						label = "<>{\\rtf \\fs<\\FontSizeCQ|1> \\qc <\\Language|!text:1=\"\";2=\"Am Ende der Handelsperiode, also nach der vierten Gewinnankündigung, beträgt die Gewinnschätzung für Unternehmen B 4,00. Bei der dritten Gewinnankündigung betrug die Gewinnschätzung für Unternehmen B noch 4,50. Was können Sie über den Rückkaufwert einer B-Aktie sagen? \">}";
 					}
 					item{
 						variable = CQ[6];
-						format = "!radio: 1=\"Er beträgt 80.\"; 2=\"Er beträgt mit gleicher Wahrscheinlichkeit 70 oder 90.\"";
+						format = "!radio: 1=\"Er beträgt 80.\"; 2=\"Er beträgt 90.\"; 3=\"Er beträgt mit 75% Wahrscheinlichkeit 70 und mit 25% Wahrscheinlichkeit 90.\"; 4=\"Er beträgt mit 25% Wahrscheinlichkeit 70 und mit 75% Wahrscheinlichkeit 90.\"";
 						input = TRUE;
 						showdefault = FALSE;
 						emptyallowed = FALSE;
 						min = 1;
-						max = 2;
+						max = 4;
 					}
 					button "OK"{
 						clearinputafterok = TRUE;
@@ -1767,7 +1766,7 @@ treatment "GIMS_v7.4.11(fix)_2019-02-09_PEAD.ztt"{
 							table = subjects;
 							do{
 								//Sets CQAnswered
-								CQAnswered=if(CQ[6]==2,CQAnswered+1,-(CQAnswered+1));
+								CQAnswered=if(CQ[6]==3,CQAnswered+1,-(CQAnswered+1));
 								
 							}
 						}
@@ -2031,7 +2030,7 @@ treatment "GIMS_v7.4.11(fix)_2019-02-09_PEAD.ztt"{
 							table = subjects;
 							do{
 								//Sets CQAnswered
-								CQAnswered=if(CQ[10]==2,CQAnswered+1,-(CQAnswered+1));
+								CQAnswered=if(CQ[10]==3,CQAnswered+1,-(CQAnswered+1));
 								
 							}
 						}
@@ -25718,6 +25717,26 @@ treatment "GIMS_v7.4.11(fix)_2019-02-09_PEAD.ztt"{
 		}
 		role "S 3"{
 		}
+		role "S 4"{
+		}
+		role "S 5"{
+		}
+		role "S 6"{
+		}
+		role "S 7"{
+		}
+		role "S 8"{
+		}
+		role "S 9"{
+		}
+		role "S 10"{
+		}
+		role "S 11"{
+		}
+		role "S 12"{
+		}
+		role "S 13"{
+		}
 	}
 	period "1"{
 		prompt = "";
@@ -25730,6 +25749,46 @@ treatment "GIMS_v7.4.11(fix)_2019-02-09_PEAD.ztt"{
 			group = 1;
 		}
 		subject 3{
+			name = "";
+			group = 1;
+		}
+		subject 4{
+			name = "";
+			group = 1;
+		}
+		subject 5{
+			name = "";
+			group = 1;
+		}
+		subject 6{
+			name = "";
+			group = 1;
+		}
+		subject 7{
+			name = "";
+			group = 1;
+		}
+		subject 8{
+			name = "";
+			group = 1;
+		}
+		subject 9{
+			name = "";
+			group = 1;
+		}
+		subject 10{
+			name = "";
+			group = 1;
+		}
+		subject 11{
+			name = "";
+			group = 1;
+		}
+		subject 12{
+			name = "";
+			group = 1;
+		}
+		subject 13{
 			name = "";
 			group = 1;
 		}
@@ -25748,6 +25807,46 @@ treatment "GIMS_v7.4.11(fix)_2019-02-09_PEAD.ztt"{
 			name = "";
 			group = 1;
 		}
+		subject 4{
+			name = "";
+			group = 1;
+		}
+		subject 5{
+			name = "";
+			group = 1;
+		}
+		subject 6{
+			name = "";
+			group = 1;
+		}
+		subject 7{
+			name = "";
+			group = 1;
+		}
+		subject 8{
+			name = "";
+			group = 1;
+		}
+		subject 9{
+			name = "";
+			group = 1;
+		}
+		subject 10{
+			name = "";
+			group = 1;
+		}
+		subject 11{
+			name = "";
+			group = 1;
+		}
+		subject 12{
+			name = "";
+			group = 1;
+		}
+		subject 13{
+			name = "";
+			group = 1;
+		}
 	}
 	period "3"{
 		prompt = "";
@@ -25763,6 +25862,46 @@ treatment "GIMS_v7.4.11(fix)_2019-02-09_PEAD.ztt"{
 			name = "";
 			group = 1;
 		}
+		subject 4{
+			name = "";
+			group = 1;
+		}
+		subject 5{
+			name = "";
+			group = 1;
+		}
+		subject 6{
+			name = "";
+			group = 1;
+		}
+		subject 7{
+			name = "";
+			group = 1;
+		}
+		subject 8{
+			name = "";
+			group = 1;
+		}
+		subject 9{
+			name = "";
+			group = 1;
+		}
+		subject 10{
+			name = "";
+			group = 1;
+		}
+		subject 11{
+			name = "";
+			group = 1;
+		}
+		subject 12{
+			name = "";
+			group = 1;
+		}
+		subject 13{
+			name = "";
+			group = 1;
+		}
 	}
 	period "4"{
 		prompt = "";
@@ -25775,6 +25914,46 @@ treatment "GIMS_v7.4.11(fix)_2019-02-09_PEAD.ztt"{
 			group = 1;
 		}
 		subject 3{
+			name = "";
+			group = 1;
+		}
+		subject 4{
+			name = "";
+			group = 1;
+		}
+		subject 5{
+			name = "";
+			group = 1;
+		}
+		subject 6{
+			name = "";
+			group = 1;
+		}
+		subject 7{
+			name = "";
+			group = 1;
+		}
+		subject 8{
+			name = "";
+			group = 1;
+		}
+		subject 9{
+			name = "";
+			group = 1;
+		}
+		subject 10{
+			name = "";
+			group = 1;
+		}
+		subject 11{
+			name = "";
+			group = 1;
+		}
+		subject 12{
+			name = "";
+			group = 1;
+		}
+		subject 13{
 			name = "";
 			group = 1;
 		}
