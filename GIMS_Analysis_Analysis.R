@@ -10,6 +10,7 @@ graphics.off() # Closes all plot windows
 #~~~ Specify full path and file name of source files ~~~#
 #SourceFiles<-c("D:/Institut/#CurrentWork/WhatIsRiskMarket/Results/161212_1032_1_R.xls","D:/Institut/#CurrentWork/WhatIsRiskMarket/Results/161212_1032_2_R.xls","D:/Institut/#CurrentWork/WhatIsRiskMarket/Results/161212_1032_3_R.xls")
 SourceFiles<-list.files("D:/Institut/#CurrentWork/PEAD/Results/FilesForAnalysis.",pattern="[0-9]{6}_[0-9]{4}.xls",full.names=T,recursive=F)
+QSourceFiles<-list.files("D:/Institut/#CurrentWork/PEAD/Results/FilesForAnalysis.",pattern="[0-9]{6}_[0-9]{4}.sbj",full.names=T,recursive=F)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 Tables<-c("globals","PEADsignals","subjects","summary","timelog","transactions", "contracts", "dividends", "endowments", "offers", "results", "marketsummary", "session", "layout", "profit")
 RemovePracticePeriodTables<-Tables[!Tables=="contracts"&!Tables=="session"] # Subset of tables which the practice period should be removed from. This includes only tables which have life < session.
@@ -17,7 +18,7 @@ ShowPlots<-T # Should plots be shown on screen or only written to disk?
 RemovePracticePeriods<-T
 PlotFileType<-"jpeg"
 
-source("d:/Institut/#CurrentWork/GIMS/GIMS_v7.4.11_Analysis_DataPreparation_2017-03-10.r") # Reads in and prepares data
+source("D:/Institut/#CurrentWork/GIMS/GitLab/GIMS/GIMS_Analysis_DataPreparation.r") # Reads in and prepares data
 
 
 
@@ -47,42 +48,42 @@ for (Session in 1:NumSessions) {
     for(Period in 1:4){
         
         # Plot if period exists and saw trade
-        if(length(Data$transactions[Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period,])>0){
+        if(length(Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Period==Period,])>0){
             
             # Calculates announcement times
                 {
                 Temp1<-Temp1+1
-                CDAStart<-Data$timelog$Time[Data$timelog$R.Session==Session&Data$timelog$R.TruePeriod==Period&Data$timelog$Event==2]
+                CDAStart<-Data$timelog$Time[Data$timelog$R.Session==Session&Data$timelog$Period==Period&Data$timelog$Event==2]
                 if(Temp1==1){
-                    Temp2<-c("R.PeriodID","R.Session","R.TruePeriod","R.Time1","R.Time2","R.Time3","R.Time4","R.Value0","R.ValueA1","R.ValueA2","R.ValueA3","R.ValueA4","R.ValueB1","R.ValueB2","R.ValueB3","R.ValueB4")
+                    Temp2<-c("R.PeriodID","R.Session","Period","R.Time1","R.Time2","R.Time3","R.Time4","R.Value0","R.ValueA1","R.ValueA2","R.ValueA3","R.ValueA4","R.ValueB1","R.ValueB2","R.ValueB3","R.ValueB4")
                     AnnouncementData<-data.frame(matrix(-77777,nrow=1,ncol=length(Temp2),dimnames=list(1,Temp2)))
                 }
                 if(Temp1>1){
                     AnnouncementData<-rbind(AnnouncementData,rep(-77777,length(Temp2)))
                 }
-                AnnouncementData[Temp1,"R.PeriodID"]<-Data$timelog$R.PeriodID[Data$timelog$R.Session==Session&Data$timelog$R.TruePeriod==Period][1]
+                AnnouncementData[Temp1,"R.PeriodID"]<-Data$timelog$R.PeriodID[Data$timelog$R.Session==Session&Data$timelog$Period==Period][1]
                 AnnouncementData[Temp1,"R.Session"]<-Session
-                AnnouncementData[Temp1,"R.TruePeriod"]<-Period
-                AnnouncementData[Temp1,"R.Time1"]<-round(Data$timelog$Time[Data$timelog$R.Session==Session&Data$timelog$R.TruePeriod==Period&Data$timelog$Event==3013]-CDAStart,3)
-                AnnouncementData[Temp1,"R.Time2"]<-round(Data$timelog$Time[Data$timelog$R.Session==Session&Data$timelog$R.TruePeriod==Period&Data$timelog$Event==3014]-CDAStart,3)
-                AnnouncementData[Temp1,"R.Time3"]<-round(Data$timelog$Time[Data$timelog$R.Session==Session&Data$timelog$R.TruePeriod==Period&Data$timelog$Event==3015]-CDAStart,3)
-                AnnouncementData[Temp1,"R.Time4"]<-round(Data$timelog$Time[Data$timelog$R.Session==Session&Data$timelog$R.TruePeriod==Period&Data$timelog$Event==3016]-CDAStart,3)
+                AnnouncementData[Temp1,"Period"]<-Period
+                AnnouncementData[Temp1,"R.Time1"]<-round(Data$timelog$Time[Data$timelog$R.Session==Session&Data$timelog$Period==Period&Data$timelog$Event==3013]-CDAStart,3)
+                AnnouncementData[Temp1,"R.Time2"]<-round(Data$timelog$Time[Data$timelog$R.Session==Session&Data$timelog$Period==Period&Data$timelog$Event==3014]-CDAStart,3)
+                AnnouncementData[Temp1,"R.Time3"]<-round(Data$timelog$Time[Data$timelog$R.Session==Session&Data$timelog$Period==Period&Data$timelog$Event==3015]-CDAStart,3)
+                AnnouncementData[Temp1,"R.Time4"]<-round(Data$timelog$Time[Data$timelog$R.Session==Session&Data$timelog$Period==Period&Data$timelog$Event==3016]-CDAStart,3)
                 AnnouncementData[Temp1,"R.Value0"]<-80
-                AnnouncementData[Temp1,"R.ValueA1"]<-Data$PEADsignals[,"PEADValue[1]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$R.TruePeriod==Period][1]*20
-                AnnouncementData[Temp1,"R.ValueA2"]<-Data$PEADsignals[,"PEADValue[1]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$R.TruePeriod==Period][2]*20
-                AnnouncementData[Temp1,"R.ValueA3"]<-Data$PEADsignals[,"PEADValue[1]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$R.TruePeriod==Period][3]*20
-                AnnouncementData[Temp1,"R.ValueA4"]<-Data$PEADsignals[,"PEADValue[1]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$R.TruePeriod==Period][4]*20
-                AnnouncementData[Temp1,"R.ValueB1"]<-Data$PEADsignals[,"PEADValue[2]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$R.TruePeriod==Period][1]*20
-                AnnouncementData[Temp1,"R.ValueB2"]<-Data$PEADsignals[,"PEADValue[2]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$R.TruePeriod==Period][2]*20
-                AnnouncementData[Temp1,"R.ValueB3"]<-Data$PEADsignals[,"PEADValue[2]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$R.TruePeriod==Period][3]*20
-                AnnouncementData[Temp1,"R.ValueB4"]<-Data$PEADsignals[,"PEADValue[2]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$R.TruePeriod==Period][4]*20
+                AnnouncementData[Temp1,"R.ValueA1"]<-Data$PEADsignals[,"PEADValue[1]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$Period==Period][1]*20
+                AnnouncementData[Temp1,"R.ValueA2"]<-Data$PEADsignals[,"PEADValue[1]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$Period==Period][2]*20
+                AnnouncementData[Temp1,"R.ValueA3"]<-Data$PEADsignals[,"PEADValue[1]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$Period==Period][3]*20
+                AnnouncementData[Temp1,"R.ValueA4"]<-Data$PEADsignals[,"PEADValue[1]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$Period==Period][4]*20
+                AnnouncementData[Temp1,"R.ValueB1"]<-Data$PEADsignals[,"PEADValue[2]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$Period==Period][1]*20
+                AnnouncementData[Temp1,"R.ValueB2"]<-Data$PEADsignals[,"PEADValue[2]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$Period==Period][2]*20
+                AnnouncementData[Temp1,"R.ValueB3"]<-Data$PEADsignals[,"PEADValue[2]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$Period==Period][3]*20
+                AnnouncementData[Temp1,"R.ValueB4"]<-Data$PEADsignals[,"PEADValue[2]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$Period==Period][4]*20
                 }
             }
             
             if(ShowPlots){dev.new("PricePlot")} else {jpeg(paste("PricePlot_S",Session,"P",Period,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)} # Opens plot device
             
-            plot(x=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==1&Data$transactions$R.TruePeriod==Period,][,"R.TradeTime"],y=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==1&Data$transactions$R.TruePeriod==Period,][,"Price"], type="l", col=4, lwd=LWD, xlim=XLIM, ylim=YLIM, xlab="Time (seconds)", ylab="Price (Taler)", main=paste("Session ",Session,", Period ",Period,sep="")) # Plots market 1
-            lines(x=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==2&Data$transactions$R.TruePeriod==Period,][,"R.TradeTime"],y=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==2&Data$transactions$R.TruePeriod==Period,][,"Price"], type="l", col=3, lwd=LWD) # Plots market 2
+            plot(x=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==1&Data$transactions$Period==Period,][,"R.TradeTime"],y=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==1&Data$transactions$Period==Period,][,"Price"], type="l", col=4, lwd=LWD, xlim=XLIM, ylim=YLIM, xlab="Time (seconds)", ylab="Price (Taler)", main=paste("Session ",Session,", Period ",Period,sep="")) # Plots market 1
+            lines(x=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==2&Data$transactions$Period==Period,][,"R.TradeTime"],y=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==2&Data$transactions$Period==Period,][,"Price"], type="l", col=3, lwd=LWD) # Plots market 2
             abline(v=AnnouncementData[Temp1,c("R.Time1","R.Time2","R.Time3","R.Time4")]) # Adds announcement times
             abline(v=XLIM,lwd=2) # Adds period start and end
             lines(x=c(XLIM[1],AnnouncementData[Temp1,"R.Time1"]),y=c(AnnouncementData[Temp1,"R.Value0"],AnnouncementData[Temp1,"R.Value0"])) # Fundamental value before first announcement
@@ -110,7 +111,7 @@ Data$transactions$BestAsk[Data$transactions$BestAsk>100000|Data$transactions$Bes
 
 ### Times of period starts and announcements
 
-Announcements<-merge(Data$PEADsignals[,c("R.PeriodID","R.TruePeriod","PEADSignal[1]","PEADSignal[2]","PEADValue[1]","PEADValue[2]")],AnnouncementData[,c("R.PeriodID","R.Session","R.Time1","R.Time2","R.Time3","R.Time4")],by="R.PeriodID") # Adds signal data to announcements
+Announcements<-merge(Data$PEADsignals[,c("R.PeriodID","Period","PEADSignal[1]","PEADSignal[2]","PEADValue[1]","PEADValue[2]")],AnnouncementData[,c("R.PeriodID","R.Session","R.Time1","R.Time2","R.Time3","R.Time4")],by="R.PeriodID") # Adds signal data to announcements
 
 Announcements[(length(Announcements[,1])+1):(length(Announcements[,1])*2),]<-Announcements # Doubles matrix as to have separate rows for markets 1 and 2
 Announcements[,"Market"]<-c(rep(1,length(Announcements[,1])/2),rep(2,length(Announcements[,1])/2)) # Fills in market number
@@ -145,8 +146,8 @@ AvgPrices<-list(Down=matrix(rep(sort(unique(Data$transactions$R.WithinPhaseTime[
 Data$transactions[,"R.NormPrice"]<-NA
 for (Transaction in 1:length(Data$transactions[,1])){
     if (Data$transactions$R.Phase[Transaction]>0){
-        MaxTimePhase0<-max(Data$transactions[Data$transactions$Market==Data$transactions$Market[Transaction]&Data$transactions$R.Session==Data$transactions$R.Session[Transaction]&Data$transactions$R.TruePeriod==Data$transactions$R.TruePeriod[Transaction]&Data$transactions$R.Phase==Data$transactions$R.Phase[Transaction]-1,][,"R.WithinPhaseTime"])
-        Data$transactions$R.NormPrice[Transaction]<-Data$transactions[Data$transactions$Market==Data$transactions$Market[Transaction]&Data$transactions$R.Session==Data$transactions$R.Session[Transaction]&Data$transactions$R.TruePeriod==Data$transactions$R.TruePeriod[Transaction]&Data$transactions$R.Phase==Data$transactions$R.Phase[Transaction]-1&Data$transactions$R.WithinPhaseTime==MaxTimePhase0,][,"Price"]
+        MaxTimePhase0<-max(Data$transactions[Data$transactions$Market==Data$transactions$Market[Transaction]&Data$transactions$R.Session==Data$transactions$R.Session[Transaction]&Data$transactions$Period==Data$transactions$Period[Transaction]&Data$transactions$R.Phase==Data$transactions$R.Phase[Transaction]-1,][,"R.WithinPhaseTime"])
+        Data$transactions$R.NormPrice[Transaction]<-Data$transactions[Data$transactions$Market==Data$transactions$Market[Transaction]&Data$transactions$R.Session==Data$transactions$R.Session[Transaction]&Data$transactions$Period==Data$transactions$Period[Transaction]&Data$transactions$R.Phase==Data$transactions$R.Phase[Transaction]-1&Data$transactions$R.WithinPhaseTime==MaxTimePhase0,][,"Price"]
     }
 }
 
@@ -161,9 +162,9 @@ for (Type in -1:1) {
             for (Period in 1:4){
                 for (Market in 1:2){
                     for (Phase in if(Type==0){0} else {1:4}){
-                        if (nrow(Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase&Data$transactions$R.WithinPhaseTime<=AvgPrices[[Type+2]][Time],])>0){ # Run if there was a trade fulfilling the criteria
+                        if (nrow(Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase&Data$transactions$R.WithinPhaseTime<=AvgPrices[[Type+2]][Time],])>0){ # Run if there was a trade fulfilling the criteria
                             TempN<-TempN+1
-                            TempSum<-TempSum+tail(Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase&Data$transactions$R.WithinPhaseTime<=AvgPrices[[Type+2]][Time],],n=1)[,"Price"]-Data$transactions$R.NormPrice[Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase][1]
+                            TempSum<-TempSum+tail(Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase&Data$transactions$R.WithinPhaseTime<=AvgPrices[[Type+2]][Time],],n=1)[,"Price"]-Data$transactions$R.NormPrice[Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase][1]
                         }
                     }
                 }
@@ -196,18 +197,18 @@ for (Type in -1:1) {
                 for (Phase in if(Type==0){0} else {1:4}){
                     #print(paste("Session",Session,"Period",Period,"Phase",Phase,"Type",Type,"Market",Market))
                     # Plot if phase exists and saw trade
-                    if(nrow(Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase,])>0){
+                    if(nrow(Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,])>0){
                         if(Temp1==0){
                             Temp1<-Temp1+1 # Increases count of lines already drawn
                             PriceNormalization<-
-                                if(Phase==0){Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase,][1,"Price"]}
-                                else {Data$transactions[Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase-1,][length(Data$transactions[Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase-1,1]),"Price"]} # Sets base price equal to first price in time series in phase 0, and equal to last price in time series in phase > 0
-                            plot(x=Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase,][,"R.WithinPhaseTime"],y=Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization, type="l", col="gray", lwd=LWD, xlim=XLIM, ylim=YLIM, xlab="Time (seconds)", ylab="Price (Taler)", main=paste("Type ",Type,sep="")) # Plots market 1
+                                if(Phase==0){Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][1,"Price"]}
+                                else {Data$transactions[Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase-1,][length(Data$transactions[Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase-1,1]),"Price"]} # Sets base price equal to first price in time series in phase 0, and equal to last price in time series in phase > 0
+                            plot(x=Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"R.WithinPhaseTime"],y=Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization, type="l", col="gray", lwd=LWD, xlim=XLIM, ylim=YLIM, xlab="Time (seconds)", ylab="Price (Taler)", main=paste("Type ",Type,sep="")) # Plots market 1
                             
 # Assembles data for power analysis separately for negative and positive earnings announcements                         
                             if (Type==-1){
                                 Temp2<-Temp2+1
-                                PowerData$Down[[Temp2]]<-as.data.frame((Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization)/PriceNormalization,ncol=1) # Adds price
+                                PowerData$Down[[Temp2]]<-as.data.frame((Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization)/PriceNormalization,ncol=1) # Adds price
                                 PowerData$Down[[Temp2]][,2]<-Period # Adds period
                                 PowerData$Down[[Temp2]][,3]<-Phase # Adds phase
                                 PowerData$Down[[Temp2]][,4]<-Market # Adds market
@@ -215,7 +216,7 @@ for (Type in -1:1) {
                             }
                             if (Type==1){
                                 Temp2<-Temp2+1
-                                PowerData$Up[[Temp2]]<-as.data.frame((Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization)/PriceNormalization,ncol=1) # Adds price
+                                PowerData$Up[[Temp2]]<-as.data.frame((Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization)/PriceNormalization,ncol=1) # Adds price
                                 PowerData$Up[[Temp2]][,2]<-Period # Adds period
                                 PowerData$Up[[Temp2]][,3]<-Phase # Adds phase
                                 PowerData$Up[[Temp2]][,4]<-Market # Adds market
@@ -225,14 +226,14 @@ for (Type in -1:1) {
                         } else {
                             Temp1<-Temp1+1 # Increases count of lines already drawn
                             PriceNormalization<-
-                                if(Phase==0){Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase,][1,"Price"]}
-                            else {Data$transactions[Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase-1,][length(Data$transactions[Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase-1,1]),"Price"]} # Sets base price equal to first price in time series in phase 0, and equal to last price in time series in phase > 0
-                            lines(x=Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase,][,"R.WithinPhaseTime"],y=Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization, type="l", col="gray", lwd=LWD) # Plots market 2+
+                                if(Phase==0){Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][1,"Price"]}
+                            else {Data$transactions[Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase-1,][length(Data$transactions[Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase-1,1]),"Price"]} # Sets base price equal to first price in time series in phase 0, and equal to last price in time series in phase > 0
+                            lines(x=Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"R.WithinPhaseTime"],y=Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization, type="l", col="gray", lwd=LWD) # Plots market 2+
                             
 # Assembles data for power analysis separately for negative and positive earnings announcements
                             if (Type==-1){
                                 Temp2<-Temp2+1
-                                PowerData$Down[[Temp2]]<-as.data.frame((Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization)/PriceNormalization,ncol=1) # Adds price
+                                PowerData$Down[[Temp2]]<-as.data.frame((Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization)/PriceNormalization,ncol=1) # Adds price
                                 PowerData$Down[[Temp2]][,2]<-Period # Adds period
                                 PowerData$Down[[Temp2]][,3]<-Phase # Addds phase
                                 PowerData$Down[[Temp2]][,4]<-Market # Adds market
@@ -240,7 +241,7 @@ for (Type in -1:1) {
                             }
                             if (Type==1){
                                 Temp2<-Temp2+1
-                                PowerData$Up[[Temp2]]<-as.data.frame((Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$R.TruePeriod==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization)/PriceNormalization,ncol=1) # Adds price
+                                PowerData$Up[[Temp2]]<-as.data.frame((Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization)/PriceNormalization,ncol=1) # Adds price
                                 PowerData$Up[[Temp2]][,2]<-Period # Adds period
                                 PowerData$Up[[Temp2]][,3]<-Phase # Adds phase
                                 PowerData$Up[[Temp2]][,4]<-Market # Adds market
@@ -275,7 +276,7 @@ PowerDataSaved<-PowerData # Just for testing
 # Sys.setenv("plotly_api_key"="RCBBKmVpdPcTe31aiMO3")
 # 
 # # Extracts asset holding data
-# AssetData<-Data$subjects[(Data$subjects$R.TruePeriod==1|Data$subjects$R.TruePeriod==2|Data$subjects$R.TruePeriod==3|Data$subjects$R.TruePeriod==4)&Data$subjects$IsExperimenter==0,c("Assets[1]","Assets[2]")]
+# AssetData<-Data$subjects[(Data$subjects$Period==1|Data$subjects$Period==2|Data$subjects$Period==3|Data$subjects$Period==4)&Data$subjects$IsExperimenter==0,c("Assets[1]","Assets[2]")]
 # colnames(AssetData)<-c("AssetA","AssetB")
 # AssetData[,"Name"]<-paste(AssetData$AssetA,rep("x",length(AssetData$AssetA)),AssetData$AssetB)
 # 
