@@ -1,4 +1,4 @@
-treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
+treatment "GIMS_v7.4.11(fix)_2019-04-03_PEAD.ztt"{
 	background{
 		table globals{
 		}
@@ -96,7 +96,7 @@ treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 			lifetime = PERIOD;
 			execute = WITHEACH;
 		}
-		numsubjects = 13;
+		numsubjects = 3;
 		numgroups = 1;
 		numpracticeperiods = 0;
 		numactualperiods = 4;
@@ -164,7 +164,7 @@ treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 				//### P1: General parameters ###
 				
 				Testmode1=0;   //Turns on Experimenter buttons on all screens
-				CQTestmode=0;
+				CQTestmode=1;
 				PEADTestmode=0;
 				TreatmentPEAD=2;
 				
@@ -177,7 +177,7 @@ treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 				CurrentYear=2019;
 				
 				//Payoff settings
-				ExchangeRate=1/150;
+				ExchangeRate=1/100;
 				Currency=1;    //1=Euro 2=US Dollars 3=Danish Kroner 4=Australian Dollars
 				
 				I=-77777;
@@ -204,7 +204,7 @@ treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 				
 				//Stage durations
 				TimeControlQuestions=-1;
-				TimeContinuousDoubleAuction=if(\PracticePeriod==1,480,900);
+				TimeContinuousDoubleAuction=if(\PracticePeriod==1,480,100);
 				TimeContinuousDoubleAuctionResults=30;
 				TimeCallAuction=-1;
 				TimeCallAuctionResults=30;
@@ -486,7 +486,7 @@ treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 			do{
 				//### P7: Subject settings ####
 				
-				ShortingCapacityCash=1440;
+				ShortingCapacityCash=900;
 				array ShortingCapacityAssets[\NumMarkets];
 				for(Market,\NumMarkets){
 				    ShortingCapacityAssets[Market]=9;
@@ -634,7 +634,7 @@ treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 				for(i,\NumMarkets){
 				    endowments.new {
 				        Type=:i;
-				        Cash=1800;
+				        Cash=900;
 				        for(Market,\NumMarkets) {
 				            Assets[Market]=(if(Market==Type,9,0));
 				            }
@@ -1106,7 +1106,7 @@ treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 				//======================================= PEAD Settings
 				
 				DoPseudoPeriods=0;
-				PEADSignalInterval=180;
+				PEADSignalInterval=round(TimeContinuousDoubleAuction/5,1);
 				PEADSignalTime=\I;
 				PEADSignalsShown=0;
 				PEADSignalSize=\I;
@@ -1138,7 +1138,7 @@ treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 			do{
 				//======================================= PEAD Testmode
 				
-				TimeContinuousDoubleAuction=50;
+				TimeContinuousDoubleAuction=100;
 				PEADSignalInterval=round(TimeContinuousDoubleAuction/5,1);
 				
 			}
@@ -18230,6 +18230,18 @@ treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 							input = FALSE;
 						}
 						item{
+							label = "<><\\Language|!text: 2=\"Ihr Vermögen zu Periodenbeginn:\">";
+							variable = 1800;
+							format = "<>!text: 1=\"<|\\PricePrecision>\"";
+							input = FALSE;
+						}
+						item{
+							label = "<><\\Language|!text: 2=\"Ihre Vermögensänderung in dieser Periode:\">";
+							variable = Cash+results.sum(same(Subject),Amount*PEADValue)*20-1800;
+							format = "<>!text: 1=\"<|\\PricePrecision>\"";
+							input = FALSE;
+						}
+						item{
 						}
 					}
 					selectcontractbox "AssetDataDE"{
@@ -25620,7 +25632,7 @@ treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 				//Payoff determination
 				
 				PayoffPeriod=roundup(random()*\NumPeriods,1);
-				PEADDisplayProfit=max(0,profit.find(same(Subject)&Period==:PayoffPeriod,Profit));
+				PEADDisplayProfit=max(0,5+profit.find(same(Subject)&Period==:PayoffPeriod,Profit));
 				if(\DoPseudoPeriods==1){
 				    if(PayoffPeriod==1){PEADDisplayProfit=max(0,session.find(same(Subject),Profit1));}
 				    if(PayoffPeriod==2){PEADDisplayProfit=max(0,session.find(same(Subject),Profit2));}
@@ -25717,26 +25729,6 @@ treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 		}
 		role "S 3"{
 		}
-		role "S 4"{
-		}
-		role "S 5"{
-		}
-		role "S 6"{
-		}
-		role "S 7"{
-		}
-		role "S 8"{
-		}
-		role "S 9"{
-		}
-		role "S 10"{
-		}
-		role "S 11"{
-		}
-		role "S 12"{
-		}
-		role "S 13"{
-		}
 	}
 	period "1"{
 		prompt = "";
@@ -25749,46 +25741,6 @@ treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 			group = 1;
 		}
 		subject 3{
-			name = "";
-			group = 1;
-		}
-		subject 4{
-			name = "";
-			group = 1;
-		}
-		subject 5{
-			name = "";
-			group = 1;
-		}
-		subject 6{
-			name = "";
-			group = 1;
-		}
-		subject 7{
-			name = "";
-			group = 1;
-		}
-		subject 8{
-			name = "";
-			group = 1;
-		}
-		subject 9{
-			name = "";
-			group = 1;
-		}
-		subject 10{
-			name = "";
-			group = 1;
-		}
-		subject 11{
-			name = "";
-			group = 1;
-		}
-		subject 12{
-			name = "";
-			group = 1;
-		}
-		subject 13{
 			name = "";
 			group = 1;
 		}
@@ -25807,46 +25759,6 @@ treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 			name = "";
 			group = 1;
 		}
-		subject 4{
-			name = "";
-			group = 1;
-		}
-		subject 5{
-			name = "";
-			group = 1;
-		}
-		subject 6{
-			name = "";
-			group = 1;
-		}
-		subject 7{
-			name = "";
-			group = 1;
-		}
-		subject 8{
-			name = "";
-			group = 1;
-		}
-		subject 9{
-			name = "";
-			group = 1;
-		}
-		subject 10{
-			name = "";
-			group = 1;
-		}
-		subject 11{
-			name = "";
-			group = 1;
-		}
-		subject 12{
-			name = "";
-			group = 1;
-		}
-		subject 13{
-			name = "";
-			group = 1;
-		}
 	}
 	period "3"{
 		prompt = "";
@@ -25862,46 +25774,6 @@ treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 			name = "";
 			group = 1;
 		}
-		subject 4{
-			name = "";
-			group = 1;
-		}
-		subject 5{
-			name = "";
-			group = 1;
-		}
-		subject 6{
-			name = "";
-			group = 1;
-		}
-		subject 7{
-			name = "";
-			group = 1;
-		}
-		subject 8{
-			name = "";
-			group = 1;
-		}
-		subject 9{
-			name = "";
-			group = 1;
-		}
-		subject 10{
-			name = "";
-			group = 1;
-		}
-		subject 11{
-			name = "";
-			group = 1;
-		}
-		subject 12{
-			name = "";
-			group = 1;
-		}
-		subject 13{
-			name = "";
-			group = 1;
-		}
 	}
 	period "4"{
 		prompt = "";
@@ -25914,46 +25786,6 @@ treatment "GIMS_v7.4.11(fix)_2019-03-26_PEAD_CORR.ztt"{
 			group = 1;
 		}
 		subject 3{
-			name = "";
-			group = 1;
-		}
-		subject 4{
-			name = "";
-			group = 1;
-		}
-		subject 5{
-			name = "";
-			group = 1;
-		}
-		subject 6{
-			name = "";
-			group = 1;
-		}
-		subject 7{
-			name = "";
-			group = 1;
-		}
-		subject 8{
-			name = "";
-			group = 1;
-		}
-		subject 9{
-			name = "";
-			group = 1;
-		}
-		subject 10{
-			name = "";
-			group = 1;
-		}
-		subject 11{
-			name = "";
-			group = 1;
-		}
-		subject 12{
-			name = "";
-			group = 1;
-		}
-		subject 13{
 			name = "";
 			group = 1;
 		}
