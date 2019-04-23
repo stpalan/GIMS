@@ -1,4 +1,4 @@
-treatment "GIMS_v7.4.11(fix)_2019-04-03_PEAD.ztt"{
+treatment "GIMS_v7.4.11(fix)_2019-04-08_PEAD.ztt"{
 	background{
 		table globals{
 		}
@@ -118,7 +118,7 @@ treatment "GIMS_v7.4.11(fix)_2019-04-03_PEAD.ztt"{
 				//##### GIMS Version 7.3.4 #####
 				
 				GIMSVersion="7.3.4";
-				GIMSDate="27.03.2019";
+				GIMSDate="08.04.2019";
 				
 			}
 		}
@@ -204,7 +204,7 @@ treatment "GIMS_v7.4.11(fix)_2019-04-03_PEAD.ztt"{
 				
 				//Stage durations
 				TimeControlQuestions=-1;
-				TimeContinuousDoubleAuction=if(\PracticePeriod==1,480,100);
+				TimeContinuousDoubleAuction=if(\PracticePeriod==1,480,10);
 				TimeContinuousDoubleAuctionResults=30;
 				TimeCallAuction=-1;
 				TimeCallAuctionResults=30;
@@ -296,7 +296,7 @@ treatment "GIMS_v7.4.11(fix)_2019-04-03_PEAD.ztt"{
 				    \OfferImprovementRule[Market]=0;
 				    \EmptyBookAfterTrade[Market]=0;
 				    \PartialInvalidation[Market]=0;
-				    \OrderBookDepth[Market]=3;
+				    \OrderBookDepth[Market]=7;
 				    \PriceListDepth[Market]=4;
 				    }
 				
@@ -631,12 +631,15 @@ treatment "GIMS_v7.4.11(fix)_2019-04-03_PEAD.ztt"{
 			do{
 				//### P8: Endowment assignment ###
 				
+				InitialCash=900;
+				InitialAssets=9;
+				
 				for(i,\NumMarkets){
 				    endowments.new {
 				        Type=:i;
-				        Cash=900;
+				        Cash=InitialCash;
 				        for(Market,\NumMarkets) {
-				            Assets[Market]=(if(Market==Type,9,0));
+				            Assets[Market]=(if(Market==Type,InitialAssets,0));
 				            }
 				        }
 				    }
@@ -1596,7 +1599,7 @@ treatment "GIMS_v7.4.11(fix)_2019-04-03_PEAD.ztt"{
 					item{
 					}
 					item{
-						label = "<>{\\rtf \\fs<\\FontSizeCQ|1> \\qc <\\Language|!text:1=\"\";2=\"Angenommen, Ihr Vermögen in Talern am Ende einer Handelsrunde beträgt 1950 und diese Handelsrunde wird für die Auszahlung ausgelost. Welchen Euro-Betrag erhalten Sie in bar ausgezahlt?\">}";
+						label = "<>{\\rtf \\fs<\\FontSizeCQ|1> \\qc <\\Language|!text:1=\"\";2=\"Angenommen, Ihr Vermögen in Talern am Ende einer Handelsrunde beträgt 1900 und diese Handelsrunde wird für die Auszahlung ausgelost. Welchen Euro-Betrag erhalten Sie in bar ausgezahlt (inklusive Grundvergütung)?\">}";
 					}
 					item{
 						variable = CQ[4];
@@ -1634,7 +1637,7 @@ treatment "GIMS_v7.4.11(fix)_2019-04-03_PEAD.ztt"{
 							table = subjects;
 							do{
 								//Sets CQAnswered
-								CQAnswered=if(CQ[4]==18,CQAnswered+1,-(CQAnswered+1));
+								CQAnswered=if(CQ[4]==24,CQAnswered+1,-(CQAnswered+1));
 								
 							}
 						}
@@ -18224,21 +18227,21 @@ treatment "GIMS_v7.4.11(fix)_2019-04-03_PEAD.ztt"{
 							input = FALSE;
 						}
 						item{
-							label = "<><\\Language|!text: 2=\"Ertrag, falls diese Periode zur Auszahlung gezogen wird (Taler):\">";
+							label = "<><\\Language|!text: 2=\"{\\rtf \\b Ertrag, falls diese Periode zur Auszahlung gezogen wird (Taler):}\">";
 							variable = Cash+results.sum(same(Subject),Amount*PEADValue)*20;
-							format = "<>!text: 1=\"<|\\PricePrecision>\"";
+							format = "<>!text: 1=\"{\\rtf \\b <|\\PricePrecision>}\"";
 							input = FALSE;
 						}
 						item{
 							label = "<><\\Language|!text: 2=\"Ihr Vermögen zu Periodenbeginn:\">";
-							variable = 1800;
+							variable = InitialCash+InitialAssets*PEADStartValue*20;
 							format = "<>!text: 1=\"<|\\PricePrecision>\"";
 							input = FALSE;
 						}
 						item{
-							label = "<><\\Language|!text: 2=\"Ihre Vermögensänderung in dieser Periode:\">";
-							variable = Cash+results.sum(same(Subject),Amount*PEADValue)*20-1800;
-							format = "<>!text: 1=\"<|\\PricePrecision>\"";
+							label = "<><\\Language|!text: 2=\"{\\rtf \\b Ihre Vermögensänderung in dieser Periode:}\">";
+							variable = Cash+results.sum(same(Subject),Amount*PEADValue)*20-InitialCash-(InitialAssets*PEADStartValue*20);
+							format = "<> !text: \r\n1=\"{\\rtf {\\colortbl;\\red0\\green166\\blue0;} \\b \\cf1 \r\n+< | \\PricePrecision >}\"; \r\n0=\"{\\rtf {\\colortbl;\\red0\\green0\\blue0;} \\b \\cf1 \r\n+/-< | \\PricePrecision >}\"; \r\n-1=\"{\\rtf {\\colortbl;\\red255\\green0\\blue0;} \\b \\cf1 \r\n< | \\PricePrecision >}\";";
 							input = FALSE;
 						}
 						item{
@@ -18445,9 +18448,21 @@ treatment "GIMS_v7.4.11(fix)_2019-04-03_PEAD.ztt"{
 						input = FALSE;
 					}
 					item{
-						label = "<><\\Language|!text: 2=\"Ertrag, falls diese Periode zur Auszahlung gezogen wird (Taler):\">";
+						label = "<><\\Language|!text: 2=\"{\\rtf \\b Ertrag, falls diese Periode zur Auszahlung gezogen wird (Taler):}\">";
 						variable = Cash+results.sum(same(Subject),Amount*PEADValue)*20;
+						format = "<>!text: 1=\"{\\rtf \\b <|\\PricePrecision>}\"";
+						input = FALSE;
+					}
+					item{
+						label = "<><\\Language|!text: 2=\"Ihr Vermögen zu Periodenbeginn:\">";
+						variable = InitialCash+InitialAssets*PEADStartValue*20;
 						format = "<>!text: 1=\"<|\\PricePrecision>\"";
+						input = FALSE;
+					}
+					item{
+						label = "<><\\Language|!text: 2=\"{\\rtf \\b Ihre Vermögensänderung in dieser Periode:}\">";
+						variable = Cash+results.sum(same(Subject),Amount*PEADValue)*20-InitialCash-(InitialAssets*PEADStartValue*20);
+						format = "<> !text: \r\n1=\"{\\rtf {\\colortbl;\\red0\\green166\\blue0;} \\b \\cf1 \r\n+< | \\PricePrecision >}\"; \r\n0=\"{\\rtf {\\colortbl;\\red0\\green0\\blue0;} \\b \\cf1 \r\n+/-< | \\PricePrecision >}\"; \r\n-1=\"{\\rtf {\\colortbl;\\red255\\green0\\blue0;} \\b \\cf1 \r\n< | \\PricePrecision >}\";";
 						input = FALSE;
 					}
 					item{
@@ -25632,7 +25647,7 @@ treatment "GIMS_v7.4.11(fix)_2019-04-03_PEAD.ztt"{
 				//Payoff determination
 				
 				PayoffPeriod=roundup(random()*\NumPeriods,1);
-				PEADDisplayProfit=max(0,5+profit.find(same(Subject)&Period==:PayoffPeriod,Profit));
+				PEADDisplayProfit=max(0,5/\ExchangeRate+profit.find(same(Subject)&Period==:PayoffPeriod,Profit));
 				if(\DoPseudoPeriods==1){
 				    if(PayoffPeriod==1){PEADDisplayProfit=max(0,session.find(same(Subject),Profit1));}
 				    if(PayoffPeriod==2){PEADDisplayProfit=max(0,session.find(same(Subject),Profit2));}
