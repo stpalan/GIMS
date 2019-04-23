@@ -1,4 +1,4 @@
-treatment "GIMS_v7.4.11(fix)_2019-04-08_PEAD.ztt"{
+treatment "GIMS_v7.4.11(fix)_2019-04-23_PEAD.ztt"{
 	background{
 		table globals{
 		}
@@ -118,7 +118,7 @@ treatment "GIMS_v7.4.11(fix)_2019-04-08_PEAD.ztt"{
 				//##### GIMS Version 7.3.4 #####
 				
 				GIMSVersion="7.3.4";
-				GIMSDate="08.04.2019";
+				GIMSDate="23.04.2019";
 				
 			}
 		}
@@ -1718,9 +1718,75 @@ treatment "GIMS_v7.4.11(fix)_2019-04-08_PEAD.ztt"{
 						}
 					}
 				}
-				standardbox "Question6"{
+				standardbox "Question6Base"{
 					hasframe = TRUE;
-					displaycondition = CQAnswered==5;
+					displaycondition = CQAnswered==5&\TreatmentPEAD==1;
+					buttonposition = BOTTOMRIGHT;
+					buttonsequence = HORIZONTAL;
+					item{
+						variable = \Language;
+						format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Control questions}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Kontrollfrage <CQAnswered+1|1>}\"";
+						input = FALSE;
+					}
+					item{
+					}
+					item{
+						label = "<>{\\rtf \\fs<\\FontSizeCQ|1> \\qc <\\Language|!text:1=\"\";2=\"Am Ende der Handelsperiode, also nach der vierten Gewinnankündigung, beträgt die Gewinnschätzung für Unternehmen B 4,00. Bei der dritten Gewinnankündigung betrug die Gewinnschätzung für Unternehmen B noch 4,50. Was können Sie über den Rückkaufwert einer B-Aktie sagen? \">}";
+					}
+					item{
+						variable = CQ[6];
+						format = "!radio: 1=\"Er beträgt 80.\"; 2=\"Er beträgt 90.\"; 3=\"Er beträgt mit 75% Wahrscheinlichkeit 70 und mit 25% Wahrscheinlichkeit 90.\"; 4=\"Er beträgt mit 25% Wahrscheinlichkeit 70 und mit 75% Wahrscheinlichkeit 90.\"";
+						input = TRUE;
+						showdefault = FALSE;
+						emptyallowed = FALSE;
+						min = 1;
+						max = 4;
+					}
+					button "OK"{
+						clearinputafterok = TRUE;
+						norecordmadeorselected = FALSE;
+						terminatestage = FALSE;
+						donotterminatestage = TRUE;
+						specialbuttoncolor = TRUE;
+						buttoncolor = 13158600;
+						program{
+							table = subjects;
+							do{
+								//Timelog
+								
+								timelog.new
+								    {
+								    ID=timelog.maximum(ID)+1;
+								    Time=gettime()-\StartTime;
+								    Period=\Period;
+								    Subject=:Subject;
+								    Event=206;
+								    }
+								
+							}
+						}
+						program{
+							table = subjects;
+							do{
+								//Sets CQAnswered
+								CQAnswered=if(CQ[6]==3,CQAnswered+1,-(CQAnswered+1));
+								
+							}
+						}
+						program{
+							table = globals;
+							do{
+								//Increments \CQDone
+								
+								\CQDone=subjects.count(CQAnswered==\NumCQ);
+								
+							}
+						}
+					}
+				}
+				standardbox "Question6Corr"{
+					hasframe = TRUE;
+					displaycondition = CQAnswered==5&\TreatmentPEAD==2;
 					buttonposition = BOTTOMRIGHT;
 					buttonsequence = HORIZONTAL;
 					item{
@@ -1982,9 +2048,75 @@ treatment "GIMS_v7.4.11(fix)_2019-04-08_PEAD.ztt"{
 						}
 					}
 				}
-				standardbox "Question10"{
+				standardbox "Question10Base"{
 					hasframe = TRUE;
-					displaycondition = CQAnswered==9;
+					displaycondition = CQAnswered==9&\TreatmentPEAD==1;
+					buttonposition = BOTTOMRIGHT;
+					buttonsequence = HORIZONTAL;
+					item{
+						variable = \Language;
+						format = "<>!text: 1=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Control questions}\" 2=\"{\\rtf \\fs<\\FontSizeHeading|1> \\qc \\b Kontrollfrage <CQAnswered+1|1>}\"";
+						input = FALSE;
+					}
+					item{
+					}
+					item{
+						label = "<>{\\rtf \\fs<\\FontSizeCQ|1> \\qc <\\Language|!text:1=\"\";2=\"Bei den ersten beiden Ankündigungen ist die Gewinnschätzung für Unternehmen A jeweils angehoben worden. Wie groß ist die Wahrscheinlichkeit dafür, dass die Gewinnschätzung für A bei der dritten Ankündigung ein weiteres Mal angehoben wird?\">}";
+					}
+					item{
+						variable = CQ[10];
+						format = "!radio: 1=\"Sie ist kleiner als 50%.\"; 2=\"Sie beträgt genau 50%.\"; 3=\"Sie ist größer als 50%.\"";
+						input = TRUE;
+						showdefault = FALSE;
+						emptyallowed = FALSE;
+						min = 1;
+						max = 3;
+					}
+					button "OK"{
+						clearinputafterok = TRUE;
+						norecordmadeorselected = FALSE;
+						terminatestage = FALSE;
+						donotterminatestage = TRUE;
+						specialbuttoncolor = TRUE;
+						buttoncolor = 13158600;
+						program{
+							table = subjects;
+							do{
+								//Timelog
+								
+								timelog.new
+								    {
+								    ID=timelog.maximum(ID)+1;
+								    Time=gettime()-\StartTime;
+								    Period=\Period;
+								    Subject=:Subject;
+								    Event=210;
+								    }
+								
+							}
+						}
+						program{
+							table = subjects;
+							do{
+								//Sets CQAnswered
+								CQAnswered=if(CQ[10]==3,CQAnswered+1,-(CQAnswered+1));
+								
+							}
+						}
+						program{
+							table = globals;
+							do{
+								//Increments \CQDone
+								
+								\CQDone=subjects.count(CQAnswered==\NumCQ);
+								
+							}
+						}
+					}
+				}
+				standardbox "Question10Corr"{
+					hasframe = TRUE;
+					displaycondition = CQAnswered==9&\TreatmentPEAD==2;
 					buttonposition = BOTTOMRIGHT;
 					buttonsequence = HORIZONTAL;
 					item{
