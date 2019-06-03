@@ -46,5 +46,8 @@ Data$subjects<-merge(Data$subjects,Q,by=c("Date","Subject"))
 # Deletes experimenter subject(s) from subjects table
 Data$subjects<-Data$subjects[Data$subjects$IsExperimenter==0,]
 
+#Merges TreatmentPEAD into transactions table
+Data$transactions<-merge(Data$transactions,Data$globals[,c("Date","TreatmentPEAD")],by=c("Date"))
+
 ##### Cleanup
 rm(i,Temp1)
