@@ -182,13 +182,14 @@ for (Type in -1:1) {
     colnames(AvgPrices[[Type+2]])<-c("R.WithinPhaseTime","R.AvgPrice","R.N") # Writes column names
 }
 
+save.image("PEAD_AfterLine180.RData")
 
 ### Plots PEAD graphs
 
 
 XLIM<-c(0,180)
 YLIM<-c(-max(Data$transactions$Price),max(Data$transactions$Price))
-YLIM<-c(-50,50)
+YLIM<-c(-10,10)
 #LWD<-2
 
 PowerData<-list(Down=list(),Up=list()) # Prepares variable to hold raw data for power analysis
@@ -196,7 +197,7 @@ PowerData<-list(Down=list(),Up=list()) # Prepares variable to hold raw data for 
 for (Type in -1:1) {
     Temp1<-0 # Sets temporary variable counting lines already drawn
     Temp2<-0 # Sets temporary variable counting PowerData lines already added
-    if(ShowPlots){dev.new("PricePlot")} else {jpeg(paste("PEADPlot_T",Type,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)} # Opens plot device
+    if(Params$ShowPlots){dev.new("PricePlot")} else {jpeg(paste("PEADPlot_T",Type,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)} # Opens plot device
     for(Market in 1:2){
         for(Session in 1:NumSessions){
             for(Period in 1:4) {
@@ -263,7 +264,7 @@ for (Type in -1:1) {
     # Plots means
     lines(x=AvgPrices[[Type+2]][,1],y=AvgPrices[[Type+2]][,2]-AvgPrices[[Type+2]][1,2], type="l", col="black", lwd=LWD+2) # Plots mean prices
     
-    if(ShowPlots){
+    if(Params$ShowPlots){
         dev.copy(jpeg,paste("PEADPlot_T",Type,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)
     }
     dev.off() # Turns off graphics device if even Distribution number
