@@ -12,8 +12,8 @@ require("zTree")
 
 ##### Data preparation
 
-RawData<-zTreeTables(SourceFiles,tables=Tables)    #Reads data
-RawQuestionnaires<-zTreeSbj(QSourceFiles)    #Reads questionnaire data
+RawData<-zTreeTables(Params$SourceFiles,tables=Tables)    #Reads data
+RawQuestionnaires<-zTreeSbj(Params$QSourceFiles)    #Reads questionnaire data
 Data<-RawData # Generates working copy
 Q<-RawQuestionnaires
 
@@ -36,7 +36,7 @@ colnames(Lookup)<-c("R.PeriodID","R.TreatmentID","R.Period","R.Treatment","R.Ses
 # Adds variables from Lookup to tables, then selects only those rows where R.PracticePeriod==0 and writes the resulting table back into the data file, omitting the R.PracticePeriod variable
 for (i in Tables) {
     Temp1<-merge(x=Data[[i]],y=subset(Lookup,select=-c(R.TreatmentID)), by.x="R.PeriodID", by.y="R.PeriodID") # Temporary variable containing table merged with Lookup, omitting variables occurring in both
-    if(i %in% RemovePracticePeriodTables&RemovePracticePeriods){Temp1<-Temp1[Temp1$R.PracticePeriod==0,]} # Removes practice period rows for tables of life period and treatment
+    if(i %in% RemovePracticePeriodTables&Params$RemovePracticePeriods){Temp1<-Temp1[Temp1$R.PracticePeriod==0,]} # Removes practice period rows for tables of life period and treatment
     Data[[i]]<-Temp1 # Writes result into Data$table
 }
 

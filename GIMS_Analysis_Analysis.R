@@ -7,25 +7,28 @@ graphics.off() # Closes all plot windows
 
 ##### Parameters
 
+Params<-list()
 #~~~ Specify full path and file name of source files ~~~#
 #SourceFiles<-c("D:/Institut/#CurrentWork/WhatIsRiskMarket/Results/161212_1032_1_R.xls","D:/Institut/#CurrentWork/WhatIsRiskMarket/Results/161212_1032_2_R.xls","D:/Institut/#CurrentWork/WhatIsRiskMarket/Results/161212_1032_3_R.xls")
-SourceFiles<-list.files("D:/Institut/#CurrentWork/PEAD/Results/FilesForAnalysis.",pattern="[0-9]{6}_[0-9]{4}.xls",full.names=T,recursive=F)
-QSourceFiles<-list.files("D:/Institut/#CurrentWork/PEAD/Results/FilesForAnalysis.",pattern="[0-9]{6}_[0-9]{4}.sbj",full.names=T,recursive=F)
+Params$SourceFiles<-list.files("D:/Institut/#CurrentWork/PEAD/Results/FilesForAnalysis.",pattern="[0-9]{6}_[0-9]{4}.xls",full.names=T,recursive=F)
+Params$QSourceFiles<-list.files("D:/Institut/#CurrentWork/PEAD/Results/FilesForAnalysis.",pattern="[0-9]{6}_[0-9]{4}.sbj",full.names=T,recursive=F)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 Tables<-c("globals","PEADsignals","subjects","summary","timelog","transactions", "contracts", "dividends", "endowments", "offers", "results", "marketsummary", "session", "layout", "profit")
 RemovePracticePeriodTables<-Tables[!Tables=="contracts"&!Tables=="session"] # Subset of tables which the practice period should be removed from. This includes only tables which have life < session.
-ShowPlots<-T # Should plots be shown on screen or only written to disk?
-RemovePracticePeriods<-T
-PlotFileType<-"jpeg"
 
-source("D:/Institut/#CurrentWork/GIMS/GitLab/GIMS/GIMS_Analysis_DataPreparation.r") # Reads in and prepares data
+Params$ShowPlots<-T #Should plots be shown on screen or only written to disk?
+Params$UpdateData<-F #Should data be newly read-in?
+Params$RemovePracticePeriods<-T
+Params$PlotFileType<-"jpeg"
+setwd("d:/institut/#CurrentWork/PEAD/Results")
 
-
+if(Params$UpdateData){
+    source("D:/Institut/#CurrentWork/GIMS/GitLab/GIMS/GIMS_Analysis_DataPreparation.r") # Reads in and prepares data
+    save.image("PEAD.Rdata")
+} else {load("PEAD.Rdata")}
 
 
 ############## PEAD ##########################
-
-setwd("d:/institut/#CurrentWork/PEAD/Results")
 
 ### Prepares transactions table
 Lookup<-merge(Lookup["R.PeriodID"],Data$globals[,c("R.PeriodID","StartTime","StartTimeCDA")])[,-1] # Generates matrix containing R.PeriodID and several variables from the globals table
@@ -39,12 +42,14 @@ NumMarkets<-Data$globals$NumMarkets[1]
 ### Plot period prices
 
 XLIM<-c(min(Data$transactions$R.TradeTime),max(Data$transactions$R.TradeTime))
-YLIM<-c(min(Data$transactions$Price),max(Data$transactions$Price))
+YLIM<-c(50,150)#c(min(Data$transactions$Price),max(Data$transactions$Price))
 LWD<-1.5
 
 Temp1<-0
 for (Session in 1:NumSessions) {
-
+    if(Params$ShowPlots){dev.new("PricePlot")} else {jpeg(paste("PricePlot_S",Session,"P",Period,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)} # Opens plot device
+    par(mfrow=c(2,2))
+    
     for(Period in 1:4){
         
         # Plot if period exists and saw trade
@@ -80,9 +85,7 @@ for (Session in 1:NumSessions) {
                 }
             }
             
-            if(ShowPlots){dev.new("PricePlot")} else {jpeg(paste("PricePlot_S",Session,"P",Period,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)} # Opens plot device
-            
-            plot(x=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==1&Data$transactions$Period==Period,][,"R.TradeTime"],y=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==1&Data$transactions$Period==Period,][,"Price"], type="l", col=4, lwd=LWD, xlim=XLIM, ylim=YLIM, xlab="Time (seconds)", ylab="Price (Taler)", main=paste("Session ",Session,", Period ",Period,sep="")) # Plots market 1
+            plot(x=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==1&Data$transactions$Period==Period,][,"R.TradeTime"],y=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==1&Data$transactions$Period==Period,][,"Price"], type="l", col=4, lwd=LWD, xlim=XLIM, ylim=YLIM, xlab="Time (seconds)", ylab="Price (Taler)", main=paste("Treatment ",Data$globals$TreatmentPEAD[Data$globals$R.Session==Session&Data$globals$Period==Period],", Session ",Session,", Period ",Period,sep="")) # Plots market 1
             lines(x=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==2&Data$transactions$Period==Period,][,"R.TradeTime"],y=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==2&Data$transactions$Period==Period,][,"Price"], type="l", col=3, lwd=LWD) # Plots market 2
             abline(v=AnnouncementData[Temp1,c("R.Time1","R.Time2","R.Time3","R.Time4")]) # Adds announcement times
             abline(v=XLIM,lwd=2) # Adds period start and end
@@ -95,11 +98,11 @@ for (Session in 1:NumSessions) {
             lines(x=c(AnnouncementData[Temp1,"R.Time2"],AnnouncementData[Temp1,"R.Time3"]),y=c(AnnouncementData[Temp1,"R.ValueB2"],AnnouncementData[Temp1,"R.ValueB2"]),col=if(AnnouncementData[Temp1,"R.ValueB2"]==80){"black"}else{3}) # Fundamental value after second announcement, asset B
             lines(x=c(AnnouncementData[Temp1,"R.Time3"],AnnouncementData[Temp1,"R.Time4"]),y=c(AnnouncementData[Temp1,"R.ValueB3"],AnnouncementData[Temp1,"R.ValueB3"]),col=if(AnnouncementData[Temp1,"R.ValueB3"]==80){"black"}else{3}) # Fundamental value after third announcement, asset B
             lines(x=c(AnnouncementData[Temp1,"R.Time4"],XLIM[2]),y=c(AnnouncementData[Temp1,"R.ValueB4"],AnnouncementData[Temp1,"R.ValueB4"]),col=if(AnnouncementData[Temp1,"R.ValueB4"]==80){"black"}else{3}) # Fundamental value after fourth announcement, asset B
-            if(ShowPlots){
-                dev.copy(jpeg,paste("PricePlot_S",Session,"P",Period,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)
-            }
-            dev.off() # Turns off graphics device
         }
+    if(Params$ShowPlots){
+        dev.copy(jpeg,paste("PricePlot_T",Data$globals$TreatmentPEAD[Data$globals$R.Session==Session&Data$globals$Period==Period],"S",Session,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)
+    }
+    dev.off() # Turns off graphics device
     }
 
 
@@ -153,9 +156,12 @@ for (Transaction in 1:length(Data$transactions[,1])){
 
 
 # For every type, loops through the unique trade times and, for each of those, calculates the average of all unique phases' latest trades
+Temp.TotalTimes<-nrow(AvgPrices$Down)+nrow(AvgPrices$Start)+nrow(AvgPrices$Up)
 for (Type in -1:1) {
     #Temp1<-matrix(c(AvgPrices[Type+2],rep(NA,length(AvgPrices[Type+2]))),ncol=2) # Prepares matrix to hold results
     for (Time in 1:length(AvgPrices[[Type+2]][,1])){
+        Temp.Time<-Time+ifelse(Type==0,nrow(AvgPrices$Down),0)+ifelse(Type==1,nrow(AvgPrices$Down)+nrow(AvgPrices$Start),0)
+        print(paste(round((Temp.Time/Temp.TotalTimes*100),2),"% --- Type ",Type,", Time ",Time,sep=""))
         TempSum<-0
         TempN<-0
         for (Session in 1:NumSessions){
@@ -289,7 +295,7 @@ PowerDataSaved<-PowerData # Just for testing
 # 
 # # Plots
 # AssetHoldings<-plot_ly(AssetDataUnique, x = ~AssetA, y = ~AssetB, type = 'scatter', mode = 'markers',marker = list(size = ~Count*10, opacity = 0.5),showlegend=F) %>%
-#     add_trace(AssetHoldings,x=c(min(AssetData[,c("AssetA","AssetB")]),max(AssetData[,c("AssetA","AssetB")])),y=c(min(AssetData[,c("AssetA","AssetB")]),max(AssetData[,c("AssetA","AssetB")])),type = 'scatter', mode = 'lines',line = list(color = '#45171D')) # Adds 45° line
+#     add_trace(AssetHoldings,x=c(min(AssetData[,c("AssetA","AssetB")]),max(AssetData[,c("AssetA","AssetB")])),y=c(min(AssetData[,c("AssetA","AssetB")]),max(AssetData[,c("AssetA","AssetB")])),type = 'scatter', mode = 'lines',line = list(color = '#45171D')) # Adds 45? line
 # AssetHoldings
 # 
 # plotly_IMAGE(AssetHoldings, width = 500, height = 500, format = "png", scale = 2,out_file = "D:/Institut/#CurrentWork/PEAD/Results/BubblePlot.png")
