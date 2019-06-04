@@ -165,32 +165,31 @@ save.image("PEAD_R02.RData")
 
 
 # For every type, loops through the unique trade times and, for each of those, calculates the average of all unique phases' latest trades
-Temp.TotalTimes<-nrow(AvgPrices$Base$Down)+nrow(AvgPrices$Base$Start)+nrow(AvgPrices$Base$Up)+nrow(AvgPrices$Correl$Down)+nrow(AvgPrices$Correl$Start)+nrow(AvgPrices$Correl$Up)
-Temp.StartClockTime<-Sys.time()
+Temp.TotalTimes<-nrow(AvgPrices$Base$Down)+nrow(AvgPrices$Base$Start)+nrow(AvgPrices$Base$Up)+nrow(AvgPrices$Correl$Down)+nrow(AvgPrices$Correl$Start)+nrow(AvgPrices$Correl$Up) #Calculates total number of steps to be taken
+Temp.StartClockTime<-Sys.time() #Saves starting system time
 for (Treat in c("Base","Correl")){
     Treat.num<-ifelse(Treat=="Base",1,2)
     for (Type in -1:1) {
-        #Temp1<-matrix(c(AvgPrices[Type+2],rep(NA,length(AvgPrices[Type+2]))),ncol=2) # Prepares matrix to hold results
         for (Time in 1:length(AvgPrices[[Treat]][[Type+2]][,1])){
-            Temp.Time<-Time+ifelse(Type==0,nrow(AvgPrices[[Treat]]$Down),0)+ifelse(Type==1,nrow(AvgPrices[[Treat]]$Down)+nrow(AvgPrices[[Treat]]$Start),0)
-            Time.Elapsed<-round(difftime(Sys.time(),Temp.StartClockTime,units="mins"),1)
-            print(paste(round((Temp.Time/Temp.TotalTimes*100),2),"% --- Time elapsed (mins): ",Time.Elapsed,", Time remaining (mins): ",round(Time.Elapsed/(Temp.Time/Temp.TotalTimes),1),sep=""))
+            Temp.Time<-Time+ifelse(Type==0,nrow(AvgPrices[[Treat]]$Down),0)+ifelse(Type==1,nrow(AvgPrices[[Treat]]$Down)+nrow(AvgPrices[[Treat]]$Start),0) #Calculates percentage of all steps performed
+            Time.Elapsed<-round(difftime(Sys.time(),Temp.StartClockTime,units="mins"),1) #Calculates time elapsed
+            print(paste(round((Temp.Time/Temp.TotalTimes*100),2),"% --- Time elapsed (mins): ",Time.Elapsed,", Time remaining (mins): ",round(Time.Elapsed/(Temp.Time/Temp.TotalTimes),1),sep="")) #Prints progress report
             TempSum<-0
             TempN<-0
             for (Session in 1:NumSessions){
                 for (Period in 1:4){
                     for (Market in 1:2){
                         for (Phase in if(Type==0){0} else {1:4}){
-                            if (nrow(Data$transactions[Data$transactions$TreatmentPEAD==Treat.num&Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase&Data$transactions$R.WithinPhaseTime<=AvgPrices[[Type+2]][Time],])>0){ # Run if there was a trade fulfilling the criteria
+                            if (nrow(Data$transactions[Data$transactions$TreatmentPEAD==Treat.num&Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase&Data$transactions$R.WithinPhaseTime<=AvgPrices[[Treat]][[Type+2]][Time],])>0){ # Run if there was a trade fulfilling the criteria
                                 TempN<-TempN+1
-                                TempSum<-TempSum+tail(Data$transactions[Data$transactions$TreatmentPEAD==Treat.num&Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase&Data$transactions$R.WithinPhaseTime<=AvgPrices[[Type+2]][Time],],n=1)[,"Price"]-ifelse(Phase==0,0,Data$transactions$R.NormPrice[Data$transactions$TreatmentPEAD==Treat.num&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase][1])
+                                TempSum<-TempSum+tail(Data$transactions[Data$transactions$TreatmentPEAD==Treat.num&Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase&Data$transactions$R.WithinPhaseTime<=AvgPrices[[Treat]][[Type+2]][Time],],n=1)[,"Price"]-ifelse(Phase==0,0,Data$transactions$R.NormPrice[Data$transactions$TreatmentPEAD==Treat.num&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase][1])
                             }
                         }
                     }
                 }
             }       
-            AvgPrices[[Type+2]][Time,2]<-TempSum/TempN
-            AvgPrices[[Type+2]][Time,3]<-TempN
+            AvgPrices[[Treat]][[Type+2]][Time,2]<-TempSum/TempN
+            AvgPrices[[Treat]][[Type+2]][Time,3]<-TempN
         }
         colnames(AvgPrices[[Treat]][[Type+2]])<-c("R.WithinPhaseTime","R.AvgPrice","R.N") # Writes column names
     }
