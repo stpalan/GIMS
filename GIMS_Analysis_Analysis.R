@@ -207,61 +207,45 @@ YLIM<-c(-max(Data$transactions$Price),max(Data$transactions$Price))
 YLIM<-c(-10,10)
 #LWD<-2
 
-for (Type in -1:1) {
-    Temp1<-0 # Sets temporary variable counting lines already drawn
-    Temp2<-0 # Sets temporary variable counting PowerData lines already added
-    if(Params$ShowPlots){dev.new("PricePlot")} else {jpeg(paste("PEADPlot_T",Type,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)} # Opens plot device
-    for(Market in 1:2){
-        for(Session in 1:NumSessions){
-            for(Period in 1:4) {
-                for (Phase in if(Type==0){0} else {1:4}){
-                    #print(paste("Session",Session,"Period",Period,"Phase",Phase,"Type",Type,"Market",Market))
-                    # Plot if phase exists and saw trade
-                    if(nrow(Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,])>0){
-                        if(Temp1==0){
-                            Temp1<-Temp1+1 # Increases count of lines already drawn
-                            PriceNormalization<-
-                                if(Phase==0){Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][1,"Price"]}
-                                else {Data$transactions[Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase-1,][length(Data$transactions[Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase-1,1]),"Price"]} # Sets base price equal to first price in time series in phase 0, and equal to last price in time series in phase > 0
-                            plot(x=Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"R.WithinPhaseTime"],y=Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization, type="l", col="gray", lwd=LWD, xlim=XLIM, ylim=YLIM, xlab="Time (seconds)", ylab="Price (Taler)", main=paste("Type ",Type,sep="")) # Plots market 1
-                        
-                        } else {
-                            Temp1<-Temp1+1 # Increases count of lines already drawn
-                            PriceNormalization<-
-                                if(Phase==0){Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][1,"Price"]}
-                            else {Data$transactions[Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase-1,][length(Data$transactions[Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase-1,1]),"Price"]} # Sets base price equal to first price in time series in phase 0, and equal to last price in time series in phase > 0
-                            lines(x=Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"R.WithinPhaseTime"],y=Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization, type="l", col="gray", lwd=LWD) # Plots market 2+
+for (Treat in 1:2){
+    for (Type in -1:1) {
+        Temp1<-0 # Sets temporary variable counting lines already drawn
+        Temp2<-0 # Sets temporary variable counting PowerData lines already added
+        if(Params$ShowPlots){dev.new("PricePlot")} else {jpeg(paste("PEADPlot_T",Type,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)} # Opens plot device
+        for(Market in 1:2){
+            for(Session in 1:NumSessions){
+                for(Period in 1:4) {
+                    for (Phase in if(Type==0){0} else {1:4}){
+                        #print(paste("Session",Session,"Period",Period,"Phase",Phase,"Type",Type,"Market",Market))
+                        # Plot if phase exists and saw trade
+                        if(nrow(Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,])>0){
+                            if(Temp1==0){
+                                Temp1<-Temp1+1 # Increases count of lines already drawn
+                                PriceNormalization<-
+                                    if(Phase==0){Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][1,"Price"]}
+                                    else {Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase-1,][length(Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase-1,1]),"Price"]} # Sets base price equal to first price in time series in phase 0, and equal to last price in time series in phase > 0
+                                plot(x=Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"R.WithinPhaseTime"],y=Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization, type="l", col="gray", lwd=LWD, xlim=XLIM, ylim=YLIM, xlab="Time (seconds)", ylab="Price (Taler)", main=paste("Treatment ",c("Base","Correlated")[Treat],", Type ",Type,sep="")) # Plots market 1
                             
-# Assembles data for power analysis separately for negative and positive earnings announcements
-                            if (Type==-1){
-                                Temp2<-Temp2+1
-                                PowerData$Down[[Temp2]]<-as.data.frame((Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization)/PriceNormalization,ncol=1) # Adds price
-                                PowerData$Down[[Temp2]][,2]<-Period # Adds period
-                                PowerData$Down[[Temp2]][,3]<-Phase # Addds phase
-                                PowerData$Down[[Temp2]][,4]<-Market # Adds market
-                                PowerData$Down[[Temp2]][,5]<-Session # Adds session
-                            }
-                            if (Type==1){
-                                Temp2<-Temp2+1
-                                PowerData$Up[[Temp2]]<-as.data.frame((Data$transactions[Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization)/PriceNormalization,ncol=1) # Adds price
-                                PowerData$Up[[Temp2]][,2]<-Period # Adds period
-                                PowerData$Up[[Temp2]][,3]<-Phase # Adds phase
-                                PowerData$Up[[Temp2]][,4]<-Market # Adds market
-                                PowerData$Up[[Temp2]][,5]<-Session # Adds session
+                            } else {
+                                Temp1<-Temp1+1 # Increases count of lines already drawn
+                                PriceNormalization<-
+                                    if(Phase==0){Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][1,"Price"]}
+                                else {Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase-1,][length(Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase-1,1]),"Price"]} # Sets base price equal to first price in time series in phase 0, and equal to last price in time series in phase > 0
+                                lines(x=Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"R.WithinPhaseTime"],y=Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization, type="l", col="gray", lwd=LWD) # Plots market 2+
                             }
                         }
                     }
                 }
             }
         }
-    }
     
-    # Plots means
-    lines(x=AvgPrices[[Type+2]][,1],y=AvgPrices[[Type+2]][,2]-AvgPrices[[Type+2]][1,2], type="l", col="black", lwd=LWD+2) # Plots mean prices
-    plot(x=AvgPrices[[Type+2]][,1],y=AvgPrices[[Type+2]][,2]-AvgPrices[[Type+2]][1,2], type="l", col="black", lwd=LWD+2) # Plots mean prices
-    
-    if(Params$ShowPlots){
-        dev.copy(jpeg,paste("PEADPlot_T",Type,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)
+        # Plots means
+        lines(x=AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][,1],y=AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][,2]-AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][1,2], type="l", col="black", lwd=LWD+2) # Plots mean prices
+        plot(x=AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][,1],y=AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][,2]-AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][1,2], type="l", col="black", lwd=LWD+2,xlab="Time (seconds)", ylab="Price (Taler)", main=paste("Treatment ",c("Base","Correlated")[Treat],", Type ",Type,sep="")) # Plots mean prices
+        
+        if(Params$ShowPlots){
+            dev.copy(jpeg,paste("PEADPlot_",c("Base","Correl")[Treat],"_T",Type,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)
+        }
+        dev.off() # Turns off graphics device if even Distribution number
     }
-    dev.off() # Turns off graphics device if even Distribution number
 }
