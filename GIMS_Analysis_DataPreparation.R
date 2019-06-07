@@ -9,6 +9,12 @@
 require("zTree")
 #source("D:/Institut/#CurrentWork/GIMS/zTree.R") # Loads R import script by Oliver Kirchkamp (https://www.kirchkamp.de//lab/zTree.html#zTreeR)
 
+# SPTools -----------------------------------------------------------------
+install.packages("devtools") #Installs necessary package
+library("devtools") #Loads necessary package
+install_github("stpalan/SPTools") #Installs necessary package
+library("SPTools") #Loads necessary package
+
 
 ##### Data preparation
 
@@ -48,6 +54,93 @@ Data$subjects<-Data$subjects[Data$subjects$IsExperimenter==0,]
 
 #Merges TreatmentPEAD into transactions table
 Data$transactions<-merge(Data$transactions,Data$globals[,c("Date","TreatmentPEAD","Period")],by=c("Date","Period"))
+
+#Reconstructs order book
+
+library(foreach)
+library(doParallel)
+# NumCores<-6
+registerDoParallel()
+# 
+# for(fRow in 1:2) {
+#     print(
+#         foreach(fCol=1:20,.combine=c) %dopar% {
+#             fCol*2
+#         })
+# }
+
+OB<-list() #Prepares order book list object
+
+#Saves timings of offers and transactions
+OB$Timings<-data.frame(
+    R.Session=integer(),
+    Period=integer(),
+    Market=integer(),
+    Time=numeric(),
+    ID.Offer=integer(),
+    ID.Transaction=integer(),
+    stringsAsFactors=F
+)
+for (fS in unique(SPNum(Data$transactions$R.Session))){
+    for (fP in unique(Data$transactions$Period[SPNum(Data$transactions$R.Session)==fS])){
+        I<-Data$globals$I[SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP] #Checks value of globals.I variable in z-Tree output
+        for (fM in (1:Data$globals$NumMarkets[SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP])){
+            
+            #Extracts timings and IDs from Data$offers
+            Temp<-as.data.frame(matrix(c(
+                #Writes times offers were created
+                Data$offers$OfferTime[SPNum(Data$offers$R.Session)==fS&Data$offers$Period==fP&Data$offers$Market==fM],
+                #Writes times at which final offer status was set, if this status was not a transaction (since transaction times are added separately below)
+                Data$offers$StatusTime[SPNum(Data$offers$R.Session)==fS&Data$offers$Period==fP&Data$offers$Market==fM&Data$offers$StatusTime!=I&Data$offers$Status!=1],
+                #Writes offer IDs for offer creation times
+                Data$offers$ID[SPNum(Data$offers$R.Session)==fS&Data$offers$Period==fP&Data$offers$Market==fM],
+                #Writes offer IDs for status times, if this status was not a transaction (since transaction times are added separately below)
+                Data$offers$ID[SPNum(Data$offers$R.Session)==fS&Data$offers$Period==fP&Data$offers$Market==fM&Data$offers$StatusTime!=I&Data$offers$Status!=1]
+                )
+                ,ncol=2))
+            colnames(Temp)<-c("Time","ID.Offer")
+            Temp$R.Session<-fS
+            Temp$Period<-fP
+            Temp$Market<-fM
+            Temp$ID.Transaction<-NA
+            OB[["Timings"]]<-rbind(OB[["Timings"]],Temp)
+            
+            #Exctracts timings and IDs from Data$transactions
+            Temp<-as.data.frame(matrix(c(
+                #Writes times transactions occurred
+                Data$transactions$Time[SPNum(Data$transactions$R.Session)==fS&Data$transactions$Period==fP&Data$transactions$Market==fM],
+                #Writes transaction IDs
+                Data$transactions$AcceptanceID[SPNum(Data$transactions$R.Session)==fS&Data$transactions$Period==fP&Data$transactions$Market==fM],
+                #Writes offer IDs
+                Data$transactions$OfferID[SPNum(Data$transactions$R.Session)==fS&Data$transactions$Period==fP&Data$transactions$Market==fM]
+            )
+            ,ncol=3))
+            colnames(Temp)<-c("Time","ID.Transaction","ID.Offer")
+            Temp$R.Session<-fS
+            Temp$Period<-fP
+            Temp$Market<-fM
+            OB[["Timings"]]<-rbind(OB[["Timings"]],Temp)
+        }
+
+    }
+}
+
+OB$Timings<-OB$Timings[order(OB$Timings$R.Session,OB$Timings$Period,OB$Timings$Market,OB$Timings$Time,OB$Timings$ID.Offer),] #Sorts
+OB$Timings$ID<-1:nrow(OB$Timings)
+
+#Saves complete order books
+OB[["Book"]]<-list()
+
+for (fS in unique(SPNum(Data$transactions$R.Session))){
+    OB$Book[[paste("S",fS,sep="")]]<-list() #Generates session list object
+    for (fP in unique(Data$transactions$Period[SPNum(Data$transactions$R.Session)==fS])){
+        OB$Book[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]]<-list() #Generates period list object
+        for (fM in (1:Data$globals$NumMarkets[SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP])){
+            OB$Book[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]]<-list() #Generates market list object
+            
+        }
+    }
+}
 
 ##### Cleanup
 rm(i,Temp1)

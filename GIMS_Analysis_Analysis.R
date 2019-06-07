@@ -221,7 +221,7 @@ for (Treat in 1:2){
     for (Type in -1:1) {
         Temp1<-0 # Sets temporary variable counting lines already drawn
         Temp2<-0 # Sets temporary variable counting PowerData lines already added
-        if(Params$ShowPlots){dev.new("PricePlot")} else {jpeg(paste("PEADPlot_T",Type,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)} # Opens plot device
+        if(T){dev.new("PricePlot")} else {jpeg(paste("PEADPlot_T",Type,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)} # Opens plot device
         for(Market in 1:2){
             for(Session in 1:NumSessions){
                 for(Period in 1:4) {
@@ -253,9 +253,9 @@ for (Treat in 1:2){
         lines(x=AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][,1],y=AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][,2]-AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][1,2], type="l", col="black", lwd=LWD+2) # Plots mean prices
         plot(x=AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][,1],y=AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][,2]-AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][1,2], type="l", col="black", lwd=LWD+2,xlab="Time (seconds)", ylab="Price (Taler)", main=paste("Treatment ",c("Base","Correlated")[Treat],", Type ",Type,sep="")) # Plots mean prices
         
-        if(Params$ShowPlots){
+        #if(Params$ShowPlots){
             dev.copy(jpeg,paste("PEADPlot_",c("Base","Correl")[Treat],"_T",Type,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)
-        }
+        #}
         dev.off() # Turns off graphics device if even Distribution number
     }
 }
