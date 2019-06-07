@@ -160,18 +160,27 @@ for (Transaction in 1:length(Data$transactions[,1])){
 }
 
 #R02
-save.image("PEAD_R02.RData")
-#load("PEAD_R02.RData")
+save.image("d:/institut/#currentwork/pead/results/PEAD_R02.RData")
+#load("d:/institut/#currentwork/pead/results/PEAD_R02.RData")
 
 
 # For every type, loops through the unique trade times and, for each of those, calculates the average of all unique phases' latest trades
 Temp.TotalTimes<-nrow(AvgPrices$Base$Down)+nrow(AvgPrices$Base$Start)+nrow(AvgPrices$Base$Up)+nrow(AvgPrices$Correl$Down)+nrow(AvgPrices$Correl$Start)+nrow(AvgPrices$Correl$Up) #Calculates total number of steps to be taken
+
+AvgPricesMkt<-as.data.frame(AvgPrices$Base$Down)
+AvgPricesMkt$Type<-(-1)
+AvgPricesMkt<-rbind(AvgPricesMkt,cbind(AvgPrices$Base$Start,Type=rep(0,nrow(AvgPrices$Base$Start))))
+AvgPricesMkt<-rbind(AvgPricesMkt,cbind(AvgPrices$Base$Up,Type=rep(1,nrow(AvgPrices$Base$Up))))
+AvgPricesMkt$Treat<-1
+AvgPricesMkt<-rbind(AvgPricesMkt,cbind(AvgPrices$Correl,rep(NA,nrow(AvgPrices$Correl))))
+AvgPricesMkt$Treat[is.na(AvgPricesMkt$Treat)]<-2
+
 Temp.StartClockTime<-Sys.time() #Saves starting system time
 for (Treat in c("Base","Correl")){
     Treat.num<-ifelse(Treat=="Base",1,2)
     for (Type in -1:1) {
         for (Time in 1:length(AvgPrices[[Treat]][[Type+2]][,1])){
-            Temp.Time<-Time+ifelse(Type==0,nrow(AvgPrices[[Treat]]$Down),0)+ifelse(Type==1,nrow(AvgPrices[[Treat]]$Down)+nrow(AvgPrices[[Treat]]$Start),0) #Calculates percentage of all steps performed
+            Temp.Time<-Time+ifelse(Type==0,nrow(AvgPrices[[Treat]]$Down),0)+ifelse(Type==1,nrow(AvgPrices[[Treat]]$Down)+nrow(AvgPrices[[Treat]]$Start),0)+ifelse(Treat=="Correl",nrow(AvgPrices$Base$Down)+nrow(AvgPrices$Base$Start)+nrow(AvgPrices$Base$Up),0) #Calculates percentage of all steps performed
             Time.Elapsed<-round(difftime(Sys.time(),Temp.StartClockTime,units="mins"),1) #Calculates time elapsed
             print(paste(round((Temp.Time/Temp.TotalTimes*100),2),"% --- Time elapsed (mins): ",Time.Elapsed,", Time remaining (mins): ",round(Time.Elapsed/(Temp.Time/Temp.TotalTimes),1),sep="")) #Prints progress report
             TempSum<-0
@@ -196,8 +205,9 @@ for (Treat in c("Base","Correl")){
 }
 
 #R01
-save.image("PEAD_R01.RData")
-#load("PEAD_R01.RData")
+save.image("d:/institut/#currentwork/pead/results/PEAD_R01.RData")
+save.image(paste("d:/institut/#currentwork/pead/results/PEAD_R01.RData_",substr(Sys.time(),1,10),"_",substr(Sys.time(),12,13),substr(Sys.time(),15,16),sep=""))
+#load("d:/institut/#currentwork/pead/results/PEAD_R01.RData")
 
 ### Plots PEAD graphs
 
