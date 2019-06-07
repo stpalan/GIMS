@@ -126,18 +126,52 @@ for (fS in unique(SPNum(Data$transactions$R.Session))){
 }
 
 OB$Timings<-OB$Timings[order(OB$Timings$R.Session,OB$Timings$Period,OB$Timings$Market,OB$Timings$Time,OB$Timings$ID.Offer),] #Sorts
-OB$Timings$ID<-1:nrow(OB$Timings)
+OB$Timings$ID<-1:nrow(OB$Timings) #Generates a unique ID for each record in the table
+OB$Timings$ID.inMarket<-as.data.frame(OB$Timings %>% group_by(OB$Timings$R.Session,OB$Timings$Period,OB$Timings$Market) %>% mutate(ID.inMarket = row_number()))$ID.inMarket #Generates an ID for events within a given market
 
 #Saves complete order books
-OB[["Book"]]<-list()
 
-for (fS in unique(SPNum(Data$transactions$R.Session))){
-    OB$Book[[paste("S",fS,sep="")]]<-list() #Generates session list object
+#Loops through all events and re-creates (step-by-step)
+OB[["Book"]]<-list()
+OB[["Portfolios"]]<-list()
+
+for (fS in 1){#unique(SPNum(Data$transactions$R.Session))){
+    OB$Books[[paste("S",fS,sep="")]]<-list() #Generates session list object
+    OB$Portfolios[[paste("S",fS,sep="")]]<-list() #Generates session list object
     for (fP in unique(Data$transactions$Period[SPNum(Data$transactions$R.Session)==fS])){
-        OB$Book[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]]<-list() #Generates period list object
+        OB$Books[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]]<-list() #Generates period list object
+        OB$Portfolios[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]]<-list() #Generates period list object
         for (fM in (1:Data$globals$NumMarkets[SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP])){
-            OB$Book[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]]<-list() #Generates market list object
-            
+            OB$Books[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]]<-list() #Generates market list object
+            OB$Portfolios[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]]<-list() #Generates market list object
+            for(fT in unique(OB$Timings$Time[OB$Timings$R.Session==fS&OB$Timings$Period==fP&OB$Timings$Market==fM])){ #Loops through all unique event times
+                for (fID in OB$Timings$ID[OB$Timings$R.Session==fS&OB$Timings$Period==fP&OB$Timings$Market==fM&OB$Timings$Time==fT]){ #Loop through all IDs happening at the same time
+                    if(fID==1){ #If this is the first event in this market, create empty order book
+                        Temp<-data.frame(
+                            ID.Offer=integer(),
+                            ID.inMarket=integer(),
+                            Type=integer(),
+                            Price=numeric(),
+                            Volume=integer()
+                        )
+                    } else { #else, copy order book from last event time
+                        Temp<-OB$Books[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]][[paste("ID.inMarket",OB$Timings$ID.inMarket[OB$Timings$ID==fID-1],sep="")]]
+                    }
+                    Temp.ID.Offer<-OB$Timings$ID.Offer[OB$Timings$ID==fID]
+                    Temp.Offer<-Data$offers[SPNum(Data$offers$R.Session)==fS&Data$offers$Period==fP&Data$offers$Market==fM&Data$offers$ID==Temp.ID.Offer,]
+                    if(Temp.Offer$OfferTime==fT){ #Offer was created
+                        Temp[nrow(Temp)+1,]<-list( #Adds offer
+                            ID.Offer=Temp.ID.Offer,
+                            ID.inMarket=OB$Timings$ID.inMarket[OB$Timings$ID==fID],
+                            Type=Temp.Offer$Type,
+                            Price=Temp.Offer$Price,
+                            Volume=Temp.Offer$Volume)
+                    } else { #Offer status changed means offer is no longer valid (because it was transacted, cancelled, invalidated ...)
+                            Temp<-Temp[Temp$ID.Offer!=Temp.ID.Offer,] #Deletes offer
+                    }
+                }
+            }
+            OB$Books[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]]$Book<-Temp
         }
     }
 }
