@@ -166,6 +166,11 @@ for (fS in 1){#unique(SPNum(Data$transactions$R.Session))){
                             Price=numeric(),
                             Volume=integer()
                         )
+                        Temp.Subjects<-data.frame(ID=1:length(Data$subjects$Subject[SPNum(Data$subjects$R.Session)==fS&Data$subjects$Period==fP]))
+                        Temp.Subjects$Cash<-Data$subjects$InitialCash[SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP]
+                        for(f.M in 1:Data$globals$NumMarkets[SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP]){ #Generates variables for number of assets held in the different markets
+                            Temp.Subjects[,paste("Assets",f.M,sep="")]<-Data$subjects[,paste("InitialAssets[",f.M,"]",sep="")][SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP]
+                        }
                     }
 
                     Temp.ID.Offer<-OB$Timings$ID.Offer[OB$Timings$ID==fID] #Exctract offer ID of current offer
