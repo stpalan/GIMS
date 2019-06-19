@@ -143,22 +143,23 @@ OB$Timings$ID.inMarket<-as.data.frame(OB$Timings %>% group_by(OB$Timings$R.Sessi
 
 #Loops through all events and re-creates (step-by-step)
 OB[["Books"]]<-list()
-OB[["Portfolios"]]<-list()
+OB[["Subjects"]]<-list()
 
-for (fS in 1){#unique(SPNum(Data$transactions$R.Session))){
+for (fS in unique(SPNum(Data$transactions$R.Session))){
     OB$Books[[paste("S",fS,sep="")]]<-list() #Generates session list object
-    OB$Portfolios[[paste("S",fS,sep="")]]<-list() #Generates session list object
+    OB$Subjects[[paste("S",fS,sep="")]]<-list() #Generates session list object
     for (fP in unique(Data$transactions$Period[SPNum(Data$transactions$R.Session)==fS])){
         OB$Books[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]]<-list() #Generates period list object
-        OB$Portfolios[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]]<-list() #Generates period list object
-        for (fM in 1){#(1:Data$globals$NumMarkets[SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP])){
+        OB$Subjects[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]]<-list() #Generates period list object
+        for (fM in (1:Data$globals$NumMarkets[SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP])){
             OB$Books[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]]<-list() #Generates market list object
-            OB$Portfolios[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]]<-list() #Generates market list object
+            OB$Subjects[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]]<-list() #Generates market list object
             for(fT in UTime(unique(OB$Timings$Time[OB$Timings$R.Session==fS&OB$Timings$Period==fP&OB$Timings$Market==fM]))){ #Loops through all unique event times (formatting time consistently throughout)
                 OB$Books[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]][[paste("T",fT,sep="")]]<-list() #Generates time list object
-                OB$Portfolios[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]][[paste("T",fT,sep="")]]<-list() #Generates time list object
+                OB$Subjects[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]][[paste("T",fT,sep="")]]<-list() #Generates time list object
                 for (fID in OB$Timings$ID[OB$Timings$R.Session==fS&OB$Timings$Period==fP&OB$Timings$Market==fM&OB$Timings$Time==fT]){ #Loop through all IDs happening at the same time
                     if(fT==UTime(unique(OB$Timings$Time[OB$Timings$R.Session==fS&OB$Timings$Period==fP&OB$Timings$Market==fM])[1])){ #If this is the first event in this market, fill Templ with empty order book template
+                        #Prepares temporary dataframe for order book data
                         Temp<-data.frame(
                             ID.Offer=integer(),
                             ID.inMarket=integer(),
@@ -166,6 +167,8 @@ for (fS in 1){#unique(SPNum(Data$transactions$R.Session))){
                             Price=numeric(),
                             Volume=integer()
                         )
+
+                        #Prepares temporary dataframe for subjects data
                         Temp.Subjects<-data.frame(ID=1:length(Data$subjects$Subject[SPNum(Data$subjects$R.Session)==fS&Data$subjects$Period==fP]))
                         Temp.Subjects$Cash<-Data$subjects$InitialCash[SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP]
                         for(f.M in 1:Data$globals$NumMarkets[SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP]){ #Generates variables for number of assets held in the different markets
@@ -184,9 +187,17 @@ for (fS in 1){#unique(SPNum(Data$transactions$R.Session))){
                             Volume=Temp.Offer$Volume)
                     } else { #Offer status changed means offer is no longer valid (because it was transacted, cancelled, invalidated ...)
                             Temp<-Temp[Temp$ID.Offer!=Temp.ID.Offer,] #Deletes offer
+                            if(Temp.Offer$Status==1){ #Processes change in subjects' holdings if offer was traded
+                                Temp.Transaction<-Data$transactions[SPNum(Data$transactions$R.Session)==fS&Data$transactions$Period==fP&Data$transactions$Market==fM&Data$transactions$OfferID==Temp.Offer$ID,] #Finds transaction
+                                Temp.Subjects[Temp.Subjects$ID==Temp.Offer$Offerer,paste("Assets",Temp.Offer$Market,sep="")]<-Temp.Subjects[Temp.Subjects$ID==Temp.Offer$Offerer,paste("Assets",Temp.Offer$Market,sep="")]+Temp.Offer$Type*Temp.Transaction$Volume #Reflects change in number of assets for offerer
+                                Temp.Subjects[Temp.Subjects$ID==Temp.Transaction$AccepterID,paste("Assets",Temp.Offer$Market,sep="")]<-Temp.Subjects[Temp.Subjects$ID==Temp.Transaction$AccepterID,paste("Assets",Temp.Offer$Market,sep="")]-Temp.Offer$Type*Temp.Transaction$Volume #Reflects change in number of assets for accepter
+                                Temp.Subjects[Temp.Subjects$ID==Temp.Offer$Offerer,"Cash"]<-Temp.Subjects[Temp.Subjects$ID==Temp.Offer$Offerer,"Cash"]-Temp.Offer$Type*Temp.Transaction$Volume*Temp.Transaction$Price #Reflects change in cash for offerer
+                                Temp.Subjects[Temp.Subjects$ID==Temp.Transaction$AccepterID,"Cash"]<-Temp.Subjects[Temp.Subjects$ID==Temp.Transaction$AccepterID,"Cash"]+Temp.Offer$Type*Temp.Transaction$Volume*Temp.Transaction$Price #Reflects change in cash for accepter
+                            }
                     }
                 }
                 OB$Books[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]][[paste("T",fT,sep="")]]$Book<-Temp #Writes order book to OB
+                OB$Subjects[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]][[paste("T",fT,sep="")]]<-Temp.Subjects #Writes order book to OB
 
                 Temp.Summary<-data.frame(Time=fT) #Prepares temporary summary variable
                 Temp.Summary<-within(Temp.Summary,{ #Fills in summary data
