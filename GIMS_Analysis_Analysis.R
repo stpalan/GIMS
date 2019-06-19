@@ -17,7 +17,7 @@ Tables<-c("globals","PEADsignals","subjects","summary","timelog","transactions",
 RemovePracticePeriodTables<-Tables[!Tables=="contracts"&!Tables=="session"] # Subset of tables which the practice period should be removed from. This includes only tables which have life < session.
 
 Params$ShowPlots<-F #Should plots be shown on screen or only written to disk?
-Params$UpdateData<-F #Should data be newly read-in?
+Params$UpdateData<-T #Should data be newly read-in?
 Params$RemovePracticePeriods<-T
 Params$PlotFileType<-"jpeg"
 setwd("d:/institut/#CurrentWork/PEAD/Results")
@@ -49,12 +49,12 @@ Temp1<-0
 for (Session in 1:NumSessions) {
     if(Params$ShowPlots){dev.new("PricePlot")} else {jpeg(paste("PricePlot_S",Session,"P",Period,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)} # Opens plot device
     par(mfrow=c(2,2))
-    
+
     for(Period in 1:4){
-        
+
         # Plot if period exists and saw trade
         if(length(Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Period==Period,])>0){
-            
+
             # Calculates announcement times
                 {
                 Temp1<-Temp1+1
@@ -84,7 +84,7 @@ for (Session in 1:NumSessions) {
                 AnnouncementData[Temp1,"R.ValueB4"]<-Data$PEADsignals[,"PEADValue[2]"][Data$PEADsignals$R.Session==Session&Data$PEADsignals$Period==Period][4]*20
                 }
             }
-            
+
             plot(x=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==1&Data$transactions$Period==Period,][,"R.TradeTime"],y=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==1&Data$transactions$Period==Period,][,"Price"], type="l", col=4, lwd=LWD, xlim=XLIM, ylim=YLIM, xlab="Time (seconds)", ylab="Price (Taler)", main=paste("Treatment ",Data$globals$TreatmentPEAD[Data$globals$R.Session==Session&Data$globals$Period==Period],", Session ",Session,", Period ",Period,sep="")) # Plots market 1
             lines(x=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==2&Data$transactions$Period==Period,][,"R.TradeTime"],y=Data$transactions[Data$transactions$R.Session==Session&Data$transactions$Market==2&Data$transactions$Period==Period,][,"Price"], type="l", col=3, lwd=LWD) # Plots market 2
             abline(v=AnnouncementData[Temp1,c("R.Time1","R.Time2","R.Time3","R.Time4")]) # Adds announcement times
@@ -147,7 +147,7 @@ AvgPrices<-list(Base=list(),Correl=list())
 AvgPrices$Base<-list(Down=matrix(rep(sort(unique(Data$transactions$R.WithinPhaseTime[Data$transactions$R.Type==-1&Data$transactions$TreatmentPEAD==1])),TempDesiredColumns),ncol=TempDesiredColumns),Start=matrix(rep(sort(unique(Data$transactions$R.WithinPhaseTime[Data$transactions$R.Type==0&Data$transactions$TreatmentPEAD==1])),TempDesiredColumns),ncol=TempDesiredColumns),Up=matrix(rep(sort(unique(Data$transactions$R.WithinPhaseTime[Data$transactions$R.Type==1&Data$transactions$TreatmentPEAD==1])),TempDesiredColumns),ncol=TempDesiredColumns)) # Fills in unique trade times per type. Second column is only placeholder for price data.
 AvgPrices$Correl<-list(Down=matrix(rep(sort(unique(Data$transactions$R.WithinPhaseTime[Data$transactions$R.Type==-1&Data$transactions$TreatmentPEAD==2])),TempDesiredColumns),ncol=TempDesiredColumns),Start=matrix(rep(sort(unique(Data$transactions$R.WithinPhaseTime[Data$transactions$R.Type==0&Data$transactions$TreatmentPEAD==2])),TempDesiredColumns),ncol=TempDesiredColumns),Up=matrix(rep(sort(unique(Data$transactions$R.WithinPhaseTime[Data$transactions$R.Type==1&Data$transactions$TreatmentPEAD==2])),TempDesiredColumns),ncol=TempDesiredColumns)) # Fills in unique trade times per type. Second column is only placeholder for price data.
 
-# Writes column R.NormPrice which contains NA in R.Phase 0 and the last price in the same unique trading session/market/period's previous R.Phase 
+# Writes column R.NormPrice which contains NA in R.Phase 0 and the last price in the same unique trading session/market/period's previous R.Phase
 Data$transactions[,"R.NormPrice"]<-NA
 for (Transaction in 1:length(Data$transactions[,1])){
     if (Data$transactions$R.Phase[Transaction]>0){
@@ -196,7 +196,7 @@ for (Treat in c("Base","Correl")){
                         }
                     }
                 }
-            }       
+            }
             AvgPrices[[Treat]][[Type+2]][Time,2]<-TempSum/TempN
             AvgPrices[[Treat]][[Type+2]][Time,3]<-TempN
         }
@@ -235,7 +235,7 @@ for (Treat in 1:2){
                                     if(Phase==0){Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][1,"Price"]}
                                     else {Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase-1,][length(Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase-1,1]),"Price"]} # Sets base price equal to first price in time series in phase 0, and equal to last price in time series in phase > 0
                                 plot(x=Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"R.WithinPhaseTime"],y=Data$transactions[Data$transactions$TreatmentPEAD==Treat&Data$transactions$R.Type==Type&Data$transactions$Market==Market&Data$transactions$R.Session==Session&Data$transactions$Period==Period&Data$transactions$R.Phase==Phase,][,"Price"]-PriceNormalization, type="l", col="gray", lwd=LWD, xlim=XLIM, ylim=YLIM, xlab="Time (seconds)", ylab="Price (Taler)", main=paste("Treatment ",c("Base","Correlated")[Treat],", Type ",Type,sep="")) # Plots market 1
-                            
+
                             } else {
                                 Temp1<-Temp1+1 # Increases count of lines already drawn
                                 PriceNormalization<-
@@ -248,11 +248,11 @@ for (Treat in 1:2){
                 }
             }
         }
-    
+
         # Plots means
         lines(x=AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][,1],y=AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][,2]-AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][1,2], type="l", col="black", lwd=LWD+2) # Plots mean prices
         plot(x=AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][,1],y=AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][,2]-AvgPrices[[c("Base","Correl")[Treat]]][[Type+2]][1,2], type="l", col="black", lwd=LWD+2,xlab="Time (seconds)", ylab="Price (Taler)", main=paste("Treatment ",c("Base","Correlated")[Treat],", Type ",Type,sep="")) # Plots mean prices
-        
+
         #if(Params$ShowPlots){
             dev.copy(jpeg,paste("PEADPlot_",c("Base","Correl")[Treat],"_T",Type,".jpeg",sep=""), bg="white", width=2000, height=2000, res=300)
         #}

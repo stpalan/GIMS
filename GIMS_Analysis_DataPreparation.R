@@ -4,9 +4,9 @@
 
 ##### Preparing workspace and necessary packages
 
-#install.packages("zTree")
-#library("zTree")
-require("zTree","dplyr")
+#install.packages("zTree","dplyr")
+library("zTree")
+library("dplyr")
 #source("D:/Institut/#CurrentWork/GIMS/zTree.R") # Loads R import script by Oliver Kirchkamp (https://www.kirchkamp.de//lab/zTree.html#zTreeR)
 
 # SPTools -----------------------------------------------------------------
@@ -57,10 +57,10 @@ Data$transactions<-merge(Data$transactions,Data$globals[,c("Date","TreatmentPEAD
 
 #Reconstructs order book
 
-library(foreach)
-library(doParallel)
+#library(foreach)
+#library(doParallel)
 # NumCores<-6
-registerDoParallel()
+#registerDoParallel()
 #
 # for(fRow in 1:2) {
 #     print(
@@ -170,9 +170,9 @@ for (fS in unique(SPNum(Data$transactions$R.Session))){
 
                         #Prepares temporary dataframe for subjects data
                         Temp.Subjects<-data.frame(ID=1:length(Data$subjects$Subject[SPNum(Data$subjects$R.Session)==fS&Data$subjects$Period==fP]))
-                        Temp.Subjects$Cash<-Data$subjects$InitialCash[SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP]
+                        Temp.Subjects$Cash<-Data$subjects$InitialCash[SPNum(Data$subjects$R.Session)==fS&Data$subjects$Period==fP]
                         for(f.M in 1:Data$globals$NumMarkets[SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP]){ #Generates variables for number of assets held in the different markets
-                            Temp.Subjects[,paste("Assets",f.M,sep="")]<-Data$subjects[,paste("InitialAssets[",f.M,"]",sep="")][SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP]
+                            Temp.Subjects[,paste("Assets",f.M,sep="")]<-Data$subjects[,paste("InitialAssets[",f.M,"]",sep="")][SPNum(Data$subjects$R.Session)==fS&Data$subjects$Period==fP]
                         }
                     }
 
