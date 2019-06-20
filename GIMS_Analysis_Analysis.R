@@ -17,7 +17,7 @@ Tables<-c("globals","PEADsignals","subjects","summary","timelog","transactions",
 RemovePracticePeriodTables<-Tables[!Tables=="contracts"&!Tables=="session"] # Subset of tables which the practice period should be removed from. This includes only tables which have life < session.
 
 Params$ShowPlots<-F #Should plots be shown on screen or only written to disk?
-Params$UpdateData<-T #Should data be newly read-in?
+Params$UpdateData<-F #Should data be newly read-in?
 Params$RemovePracticePeriods<-T
 Params$PlotFileType<-"jpeg"
 setwd("d:/institut/#CurrentWork/PEAD/Results")
