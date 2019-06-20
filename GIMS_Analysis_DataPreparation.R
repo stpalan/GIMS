@@ -149,14 +149,14 @@ for (fS in unique(SPNum(Data$transactions$R.Session))){
     OB$Books[[paste("S",fS,sep="")]]<-list() #Generates session list object
     OB$Subjects[[paste("S",fS,sep="")]]<-list() #Generates session list object
     for (fP in unique(Data$transactions$Period[SPNum(Data$transactions$R.Session)==fS])){
-        OB$Books[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]]<-list() #Generates period list object
-        OB$Subjects[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]]<-list() #Generates period list object
+        OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]]<-list() #Generates period list object
+        OB$Subjects[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]]<-list() #Generates period list object
         for (fM in (1:Data$globals$NumMarkets[SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP])){
-            OB$Books[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]]<-list() #Generates market list object
-            OB$Subjects[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]]<-list() #Generates market list object
+            OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][[paste("M",fM,sep="")]]<-list() #Generates market list object
+            OB$Subjects[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][[paste("M",fM,sep="")]]<-list() #Generates market list object
             for(fT in UTime(unique(OB$Timings$Time[OB$Timings$R.Session==fS&OB$Timings$Period==fP&OB$Timings$Market==fM]))){ #Loops through all unique event times (formatting time consistently throughout)
-                OB$Books[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]][[paste("T",fT,sep="")]]<-list() #Generates time list object
-                OB$Subjects[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]][[paste("T",fT,sep="")]]<-list() #Generates time list object
+                OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][[paste("M",fM,sep="")]][[paste("T",fT,sep="")]]<-list() #Generates time list object
+                OB$Subjects[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][[paste("M",fM,sep="")]][[paste("T",fT,sep="")]]<-list() #Generates time list object
                 for (fID in OB$Timings$ID[OB$Timings$R.Session==fS&OB$Timings$Period==fP&OB$Timings$Market==fM&OB$Timings$Time==fT]){ #Loop through all IDs happening at the same time
                     if(fT==UTime(unique(OB$Timings$Time[OB$Timings$R.Session==fS&OB$Timings$Period==fP&OB$Timings$Market==fM])[1])){ #If this is the first event in this market, fill Templ with empty order book template
                         #Prepares temporary dataframe for order book data
@@ -170,10 +170,10 @@ for (fS in unique(SPNum(Data$transactions$R.Session))){
 
                         #Prepares temporary dataframe for subjects data
                         Temp.Subjects<-data.frame(ID=1:length(Data$subjects$Subject[SPNum(Data$subjects$R.Session)==fS&Data$subjects$Period==fP]))
-                        Temp.Subjects$Cash<-Data$subjects$InitialCash[SPNum(Data$subjects$R.Session)==fS&Data$subjects$Period==fP]
-                        for(f.M in 1:Data$globals$NumMarkets[SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP]){ #Generates variables for number of assets held in the different markets
-                            Temp.Subjects[,paste("Assets",f.M,sep="")]<-Data$subjects[,paste("InitialAssets[",f.M,"]",sep="")][SPNum(Data$subjects$R.Session)==fS&Data$subjects$Period==fP]
-                        }
+                        Temp.Subjects$Cash<-Data$subjects$InitialCash[SPNum(Data$subjects$R.Session)==fS&Data$subjects$Period==fP][order(Data$subjects$Subject[SPNum(Data$subjects$R.Session)==fS&Data$subjects$Period==fP])]
+                        #for(f.M in 1:Data$globals$NumMarkets[SPNum(Data$globals$R.Session)==fS&Data$globals$Period==fP]){ #Generates variables for number of assets held in the different markets
+                            Temp.Subjects$Assets<-Data$subjects[,paste("InitialAssets[",fM,"]",sep="")][SPNum(Data$subjects$R.Session)==fS&Data$subjects$Period==fP][order(Data$subjects$Subject[SPNum(Data$subjects$R.Session)==fS&Data$subjects$Period==fP])]
+                        #}
                     }
 
                     Temp.ID.Offer<-OB$Timings$ID.Offer[OB$Timings$ID==fID] #Exctract offer ID of current offer
@@ -189,15 +189,15 @@ for (fS in unique(SPNum(Data$transactions$R.Session))){
                             Temp<-Temp[Temp$ID.Offer!=Temp.ID.Offer,] #Deletes offer
                             if(Temp.Offer$Status==1){ #Processes change in subjects' holdings if offer was traded
                                 Temp.Transaction<-Data$transactions[SPNum(Data$transactions$R.Session)==fS&Data$transactions$Period==fP&Data$transactions$Market==fM&Data$transactions$OfferID==Temp.Offer$ID,] #Finds transaction
-                                Temp.Subjects[Temp.Subjects$ID==Temp.Offer$Offerer,paste("Assets",Temp.Offer$Market,sep="")]<-Temp.Subjects[Temp.Subjects$ID==Temp.Offer$Offerer,paste("Assets",Temp.Offer$Market,sep="")]+Temp.Offer$Type*Temp.Transaction$Volume #Reflects change in number of assets for offerer
-                                Temp.Subjects[Temp.Subjects$ID==Temp.Transaction$AccepterID,paste("Assets",Temp.Offer$Market,sep="")]<-Temp.Subjects[Temp.Subjects$ID==Temp.Transaction$AccepterID,paste("Assets",Temp.Offer$Market,sep="")]-Temp.Offer$Type*Temp.Transaction$Volume #Reflects change in number of assets for accepter
+                                Temp.Subjects$Assets[Temp.Subjects$ID==Temp.Offer$Offerer]<-Temp.Subjects$Assets[Temp.Subjects$ID==Temp.Offer$Offerer]+Temp.Offer$Type*Temp.Transaction$Volume #Reflects change in number of assets for offerer
+                                Temp.Subjects$Assets[Temp.Subjects$ID==Temp.Transaction$AccepterID]<-Temp.Subjects$Assets[Temp.Subjects$ID==Temp.Transaction$AccepterID]-Temp.Offer$Type*Temp.Transaction$Volume #Reflects change in number of assets for accepter
                                 Temp.Subjects[Temp.Subjects$ID==Temp.Offer$Offerer,"Cash"]<-Temp.Subjects[Temp.Subjects$ID==Temp.Offer$Offerer,"Cash"]-Temp.Offer$Type*Temp.Transaction$Volume*Temp.Transaction$Price #Reflects change in cash for offerer
                                 Temp.Subjects[Temp.Subjects$ID==Temp.Transaction$AccepterID,"Cash"]<-Temp.Subjects[Temp.Subjects$ID==Temp.Transaction$AccepterID,"Cash"]+Temp.Offer$Type*Temp.Transaction$Volume*Temp.Transaction$Price #Reflects change in cash for accepter
                             }
                     }
                 }
-                OB$Books[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]][[paste("T",fT,sep="")]]$Book<-Temp #Writes order book to OB
-                OB$Subjects[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]][[paste("T",fT,sep="")]]<-Temp.Subjects #Writes order book to OB
+                OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][[paste("M",fM,sep="")]][[paste("T",fT,sep="")]]$Book<-Temp #Writes order book to OB
+                OB$Subjects[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][[paste("M",fM,sep="")]][[paste("T",fT,sep="")]]<-Temp.Subjects #Writes order book to OB
 
                 Temp.Summary<-data.frame(Time=fT) #Prepares temporary summary variable
                 Temp.Summary<-within(Temp.Summary,{ #Fills in summary data
@@ -210,7 +210,7 @@ for (fS in unique(SPNum(Data$transactions$R.Session))){
                     Spread.pct<-ifelse(is.na(Spread.ECU),NA,Spread.ECU/Midpoint)
                 })
 
-                OB$Books[[paste("S",fS,sep="")]][[paste("P",fS,sep="")]][[paste("M",fM,sep="")]][[paste("T",fT,sep="")]]$Summary<-Temp.Summary #Writes summary to OB
+                OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][[paste("M",fM,sep="")]][[paste("T",fT,sep="")]]$Summary<-Temp.Summary #Writes summary to OB
             }
         }
     }
@@ -218,3 +218,17 @@ for (fS in unique(SPNum(Data$transactions$R.Session))){
 
 ##### Cleanup
 rm(i,Temp1)
+
+Temp<-0
+##### Testing
+for (fS in names(OB$Subjects)){
+    for (fP in names(OB$Subjects[[fS]])){
+        for (fM in names(OB$Subjects[[fS]][[fP]])){
+            for(fT in names(OB$Subjects[[fS]][[fP]][[fM]])){
+                Temp<-min(c(Temp,OB$Subjects[[fS]][[fP]][[fM]][[fT]]$Assets))
+                if(Temp<(-9)){stop()}
+            }
+        }
+    }
+}
+Temp
