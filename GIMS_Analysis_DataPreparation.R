@@ -206,6 +206,7 @@ for (fS in unique(SPNum(Data$transactions$R.Session))){
                     Bid.depth<-sum(Temp$Volume[Temp$Type==1&Temp$Price==Bid.best])
                     Ask.depth<-sum(Temp$Volume[Temp$Type==-1&Temp$Price==Ask.best])
                     Midpoint<-(Bid.best+Ask.best)/2
+                    Midpoint.1<-ifelse(is.na(Midpoint),ifelse(is.na(Bid.best),Ask.best,Bid.best),Midpoint) #Alternative midpoint definition which, in case one side of the order book is empty, uses best offer on available side as midpoint
                     Spread.ECU<-Ask.best-Bid.best
                     Spread.pct<-ifelse(is.na(Spread.ECU),NA,Spread.ECU/Midpoint)
                 })
@@ -231,4 +232,3 @@ for (fS in names(OB$Subjects)){
         }
     }
 }
-Temp
