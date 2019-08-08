@@ -222,6 +222,50 @@ for (fS in unique(SPNum(Data$transactions$R.Session))){
   }
 }
 
+#Generate Arbitrage data
+for (fS in unique(SPNum(Data$transactions$R.Session))){
+  for (fP in unique(Data$transactions$Period[SPNum(Data$transactions$R.Session)==fS])){
+    for(fT in UTime(unique(OB$Timings$Time[OB$Timings$R.Session==fS&OB$Timings$Period==fP]))[order(as.numeric(UTime(unique(OB$Timings$Time[OB$Timings$R.Session==fS&OB$Timings$Period==fP]))))]){ #Loops through all unique event times in order (formatting time consistently throughout)
+      #Extract, for each market, the name of the last order book element before or at the time of fT (current for loop value)
+      Temp.M1time<-paste("T",tail(substr(names(OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][["M1"]]),start=2,stop=10)[as.numeric(substr(names(OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][["M1"]]),start=2,stop=10))<=as.numeric(fT)],n=1),sep="")
+      Temp.M2time<-paste("T",tail(substr(names(OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][["M2"]]),start=2,stop=10)[as.numeric(substr(names(OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][["M2"]]),start=2,stop=10))<=as.numeric(fT)],n=1),sep="")
+      
+      #Calculates sum of midpoints, best asks and bids in both markets
+      Temp.Midpoint.sum=
+        OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][["M1"]][[Temp.M1time]][["Summary"]]$Midpoint+
+        OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][["M2"]][[Temp.M2time]][["Summary"]]$Midpoint
+      Temp.Bid.best.sum=
+        OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][["M1"]][[Temp.M1time]][["Summary"]]$Bid.best+
+        OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][["M2"]][[Temp.M2time]][["Summary"]]$Bid.best
+      Temp.Ask.best.sum=
+        OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][["M1"]][[Temp.M1time]][["Summary"]]$Ask.best+
+        OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][["M2"]][[Temp.M2time]][["Summary"]]$Ask.best
+      
+      #Writes them to OB if at least one of them exists
+      if(!length(Temp.Midpoint.sum)==0){ #Tests if one of the markets does not have any event yet
+        #if(!(is.na(Temp.Midpoint.sum)&is.na(Temp.Bid.best.sum)&is.na(Temp.Ask.best.sum))){ #Tests if at least one value has been filled
+          OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][[paste("A",fT,sep="")]]<-data.frame( #Writes object
+            list(
+              Midpoint.sum=Temp.Midpoint.sum,
+              Bid.best.sum=Temp.Bid.best.sum,
+              Ask.best.sum=Temp.Ask.best.sum
+            )
+          )
+        #}
+      } else {
+      OB$Books[[paste("S",fS,sep="")]][[paste("P",fP,sep="")]][[paste("A",fT,sep="")]]<-data.frame( #Writes object
+        list(
+          Midpoint.sum=NA,
+          Bid.best.sum=NA,
+          Ask.best.sum=NA
+        )
+      )
+      }
+    }
+  }
+}
+
+
 ##### Cleanup
 rm(i,Temp1)
 
