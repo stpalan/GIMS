@@ -1,5 +1,5 @@
 ##################################################
-# GIMS Output Analysis Script v0.1 DataPreparation
+# GIMS Output Analysis Script v0.2 DataPreparation
 ##################################################
 
 ##### Preparing workspace and necessary packages
@@ -42,9 +42,19 @@ Data$subjects<-Data$subjects[Data$subjects$IsExperimenter==0,]
 Q<-Q[Q$Subject!=max(Q$Subject),]
 Q[,"R.Session"]<-rep(1:(nrow(Q)/max(Q$Subject)),each=max(Q$Subject))
 
+# Creates NAs
+for (Table in Tables){
+    Data[[Table]][Data[[Table]]==-77777] <- NA
+}
+
 # Merges questionnaires into subjects table
 Data$subjects<-merge(Data$subjects,Q,by=c("R.Session","Subject"))
 
+#Calculates parameters
+NumPeriods<-max(Data$globals$Period)
+NumSessions<-max(as.numeric(Data$globals$R.Session))
+NumSubjects<-max(Data$subjects$Subject)
 
 ##### Cleanup
+rm(i,Temp1)
 rm(i,Temp1)

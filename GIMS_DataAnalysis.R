@@ -1,5 +1,5 @@
 ###########################################
-# GIMS Output Analysis Script v0.1 Analysis
+# GIMS Output Analysis Script v0.2 Analysis
 ###########################################
 
 rm(list=ls())    #Clears memory
