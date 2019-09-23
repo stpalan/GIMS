@@ -1,6 +1,19 @@
-questionnaires "GIMS_Questionnaire_DE_v2.3.ztq"{
+questionnaires "GIMS_Questionnaire_DE_v2.4.ztq"{
 	adress "Adresse"{
+		title = "";
+		firstnametext = "";
+		lastnametext = "";
+		streettext = "";
+		zipcodetext = "";
+		locationtext = "";
+		teltext = "";
+		emailtext = "";
+		furtherexpquestiontext = "";
+		furtherexpyestext = "";
+		furtherexpnotext = "";
 		buttontext = "Weiter";
+		helplabel = "";
+		helptext = "";
 	}
 	questionnaire "Präambel"{
 		title = "Fragebogen";
@@ -25,6 +38,7 @@ questionnaires "GIMS_Questionnaire_DE_v2.3.ztq"{
 			numtextlines = 1;
 		}
 		item{
+			label = "";
 			type = text;
 			input = TRUE;
 			longformat = FALSE;
@@ -50,6 +64,7 @@ questionnaires "GIMS_Questionnaire_DE_v2.3.ztq"{
 			labelsize = 61%;
 		}
 		item{
+			label = "";
 			type = radiolineheader;
 			input = TRUE;
 			longformat = FALSE;
@@ -76,6 +91,7 @@ questionnaires "GIMS_Questionnaire_DE_v2.3.ztq"{
 			}
 		}
 		item{
+			label = "";
 			type = radiolineheader;
 			input = TRUE;
 			longformat = FALSE;
@@ -128,6 +144,7 @@ questionnaires "GIMS_Questionnaire_DE_v2.3.ztq"{
 			numtextlines = 1;
 		}
 		item{
+			label = "";
 			type = radiolineheader;
 			input = TRUE;
 			longformat = FALSE;
@@ -140,6 +157,7 @@ questionnaires "GIMS_Questionnaire_DE_v2.3.ztq"{
 			}
 		}
 		item{
+			label = "";
 			type = radiolineheader;
 			input = TRUE;
 			longformat = FALSE;
@@ -222,6 +240,48 @@ questionnaires "GIMS_Questionnaire_DE_v2.3.ztq"{
 			max = 10;
 			inc = 1;
 			numtextlines = 1;
+		}
+		button{
+			name = "Weiter";
+		}
+	}
+	questionnaire "Verlustaversionsfrage"{
+		title = "Hintergrundangaben";
+		do{
+			Participate=1-IsExperimenter;
+		}
+		ruler{
+			leftborder = 9%;
+			rightborder = 9%;
+			space = 7p;
+			labelsize = 61%;
+		}
+		item{
+			label = "";
+			type = radiolineheader;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 1;
+			inc = 1;
+			numtextlines = 1;
+			texts{"gegen Verluste abzusichern";"Partizipation an hohen Renditen";
+			}
+		}
+		item{
+			label = "Bei Finanzentscheiden sind sowohl Gewinne als auch Verluste möglich. Welchen Einfluss haben mögliche Verluste im Vergleich zu den möglichen Gewinnen für Sie? Das Wichtigste ist ...";
+			variable = Loss;
+			type = radioline;
+			input = TRUE;
+			longformat = FALSE;
+			emptyallowed = FALSE;
+			min = 0;
+			max = 10;
+			inc = 1;
+			numtextlines = 1;
+			texts{"Never";"A few times";"Occasionally";"Often";"Every chance I get";
+			}
 		}
 		button{
 			name = "Weiter";
@@ -466,6 +526,7 @@ questionnaires "GIMS_Questionnaire_DE_v2.3.ztq"{
 			}
 		}
 		item{
+			label = "";
 			type = text;
 			input = TRUE;
 			longformat = FALSE;
@@ -505,6 +566,7 @@ questionnaires "GIMS_Questionnaire_DE_v2.3.ztq"{
 			labelsize = 61%;
 		}
 		item{
+			label = "";
 			type = text;
 			input = TRUE;
 			longformat = FALSE;
@@ -515,6 +577,7 @@ questionnaires "GIMS_Questionnaire_DE_v2.3.ztq"{
 			numtextlines = 1;
 		}
 		item{
+			label = "";
 			type = text;
 			input = TRUE;
 			longformat = FALSE;
@@ -537,6 +600,7 @@ questionnaires "GIMS_Questionnaire_DE_v2.3.ztq"{
 			numtextlines = 1;
 		}
 		item{
+			label = "";
 			type = text;
 			input = TRUE;
 			longformat = FALSE;
