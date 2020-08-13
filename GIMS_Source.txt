@@ -1,4 +1,4 @@
-treatment "GIMS_v8.4.0_2019-12-16.ztt"{
+treatment "GIMS_v8.4.1_2020-08-13.ztt"{
 	background{
 		table globals{
 		}
@@ -121,8 +121,8 @@ treatment "GIMS_v8.4.0_2019-12-16.ztt"{
 			do{
 				//##### GIMS Version #####
 				
-				GIMSVersion="8.4.0";
-				GIMSDate="16.12.2019";
+				GIMSVersion="8.4.1";
+				GIMSDate="13.08.2020";
 				
 			}
 		}
@@ -17565,7 +17565,7 @@ treatment "GIMS_v8.4.0_2019-12-16.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestBid=Price;
-															    BestAsk=if(offers.count(Status==0&Type==-1)>0,offers.minimum(Status==0&Type==-1,Price),\I);
+															    BestAsk=if(same(Market)&offers.count(Status==0&Type==-1)>0,offers.minimum(same(Market)&Status==0&Type==-1,Price),\I);
 															    }
 															
 															//Price highlighting
@@ -18050,7 +18050,7 @@ treatment "GIMS_v8.4.0_2019-12-16.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestBid=Price;
-															    BestAsk=if(offers.count(Status==0&Type==-1)>0,offers.minimum(Status==0&Type==-1,Price),\I);
+															    BestAsk=if(offers.count(same(Market)&Status==0&Type==-1)>0,offers.minimum(same(Market)&Status==0&Type==-1,Price),\I);
 															    }
 															
 															//Price highlighting
@@ -18549,7 +18549,7 @@ treatment "GIMS_v8.4.0_2019-12-16.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestBid=Price;
-															    BestAsk=if(offers.count(Status==0&Type==-1)>0,offers.minimum(Status==0&Type==-1,Price),\I);
+															    BestAsk=if(offers.count(same(Market)&Status==0&Type==-1)>0,offers.minimum(same(Market)&Status==0&Type==-1,Price),\I);
 															    }
 															
 															//Price highlighting
@@ -19049,7 +19049,7 @@ treatment "GIMS_v8.4.0_2019-12-16.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestBid=Price;
-															    BestAsk=if(offers.count(Status==0&Type==-1)>0,offers.minimum(Status==0&Type==-1,Price),\I);
+															    BestAsk=if(offers.count(same(Market)&Status==0&Type==-1)>0,offers.minimum(same(Market)&Status==0&Type==-1,Price),\I);
 															    }
 															
 															//Price highlighting
@@ -19675,7 +19675,7 @@ treatment "GIMS_v8.4.0_2019-12-16.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestAsk=Price;
-															    BestBid=if(offers.count(Status==0&Type==1)>0,offers.maximum(Status==0&Type==1,Price),\I);
+															    BestBid=if(offers.count(same(Market)&Status==0&Type==1)>0,offers.maximum(same(Market)&Status==0&Type==1,Price),\I);
 															
 															    }
 															
@@ -20172,7 +20172,7 @@ treatment "GIMS_v8.4.0_2019-12-16.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestAsk=Price;
-															    BestBid=if(offers.count(Status==0&Type==1)>0,offers.maximum(Status==0&Type==1,Price),\I);
+															    BestBid=if(offers.count(same(Market)&Status==0&Type==1)>0,offers.maximum(same(Market)&Status==0&Type==1,Price),\I);
 															
 															    }
 															
@@ -20653,7 +20653,7 @@ treatment "GIMS_v8.4.0_2019-12-16.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestAsk=Price;
-															    BestBid=if(offers.count(Status==0&Type==1)>0,offers.maximum(Status==0&Type==1,Price),\I);
+															    BestBid=if(offers.count(same(Market)&Status==0&Type==1)>0,offers.maximum(same(Market)&Status==0&Type==1,Price),\I);
 															
 															    }
 															
@@ -21136,7 +21136,7 @@ treatment "GIMS_v8.4.0_2019-12-16.ztt"{
 															    Accepter=::Subject;
 															    Phase=2;
 															    BestAsk=Price;
-															    BestBid=if(offers.count(Status==0&Type==1)>0,offers.maximum(Status==0&Type==1,Price),\I);
+															    BestBid=if(offers.count(same(Market)&Status==0&Type==1)>0,offers.maximum(same(Market)&Status==0&Type==1,Price),\I);
 															
 															    }
 															
